@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Myeongdong in 3D — GPS Walking Audio Guide</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗼</text></svg>" />
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body>
+  <!-- 3D map mounts here -->
+  <div id="map"></div>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div>
+      <div class="brand">Myeongdong<span class="dot">.</span>3D</div>
+      <div class="sub">GPS walking audio guide · Seoul</div>
+    </div>
+  </div>
+
+  <!-- Mode toggle -->
+  <div class="mode-toggle" id="modeToggle">
+    <button data-mode="sim" class="active">▶ Simulation</button>
+    <button data-mode="gps">📍 Live GPS</button>
+  </div>
+
+  <!-- Real-time Seoul clock + weather -->
+  <div class="env-chip" id="envChip">🕐 — Seoul</div>
+
+  <!-- Game HUD (top-center) -->
+  <div class="hud" id="hud">
+    <div class="hud-top">
+      <span class="hud-star">⭐</span>
+      <span class="hud-count" id="hudCount">0 / 50</span>
+      <div class="hud-bar"><div class="hud-fill" id="hudFill"></div></div>
+    </div>
+    <div class="hud-now" id="hudNow" hidden><span class="np-dot"></span><span id="hudNowText">—</span></div>
+  </div>
+
+  <!-- Discovery popup -->
+  <div class="discovery" id="discovery">
+    <div class="disc-badge">+1 ⭐ DISCOVERED</div>
+    <div class="disc-name" id="discName">—</div>
+    <div class="disc-ko" id="discKo">—</div>
+    <div class="disc-sub">명동 스팟 발견!</div>
+  </div>
+
+  <!-- Spot info card -->
+  <div class="spot-card" id="spotCard">
+    <button class="spot-close" id="spotClose" title="Close">✕</button>
+    <img class="spot-photo" id="spotPhoto" alt="" hidden />
+    <div class="spot-body">
+      <div class="idx"><span class="badge" id="spotType">FOOD</span><span id="spotIdx">3 / 50</span></div>
+      <h2 id="spotName">—</h2>
+      <div class="ko" id="spotKo">—</div>
+      <p id="spotBlurb">—</p>
+      <div class="tip" id="spotTip" style="display:none"></div>
+      <div class="addr-row" id="spotAddrRow">
+        <div class="addr-txt">
+          <div class="addr-label">ADDRESS — show this to a taxi driver</div>
+          <div class="addr-ko" id="spotAddr">—</div>
+        </div>
+        <button class="addr-copy" id="spotCopy" title="Copy Korean address">📋</button>
+      </div>
+      <div class="spot-actions">
+        <button class="spot-video" id="spotVideo">▶ Preview</button>
+        <a class="spot-gmap" id="spotGmap" target="_blank" rel="noopener">🗺️ Google Maps</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right sidebar: browsable list of the current course -->
+  <aside class="side" id="sidebar">
+    <div class="side-head">
+      <button class="side-fold" id="sideFold" title="Hide list">›</button>
+      <span id="sideTitle">⭐ Best of Myeongdong</span>
+      <span class="side-count" id="sideCount">0</span>
+    </div>
+    <div class="side-list" id="sideList"></div>
+  </aside>
+
+  <!-- Themed course picker -->
+  <div class="course-bar" id="courseBar"></div>
+
+  <!-- Bottom control dock -->
+  <div class="dock" id="dock">
+    <button class="btn primary" id="startBtn" disabled>▶ Start Walk</button>
+    <button class="btn ghost" id="pauseBtn" disabled>Pause</button>
+    <button class="btn ghost" id="skipBtn" disabled>Next ›</button>
+    <button class="btn ghost" id="resetBtn" title="Reset everything">↺</button>
+  </div>
+
+  <!-- Video preview modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="video-box">
+      <div class="video-head">
+        <span id="videoTitle">—</span>
+        <button id="videoClose">✕</button>
+      </div>
+      <div class="video-wrap"><iframe id="videoFrame" src="" title="Preview video"
+        allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+    </div>
+  </div>
+
+  <!-- Toast (GPS status / hints) -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Loading / error overlay -->
+  <div class="overlay" id="overlay">
+    <div class="spinner" id="spinner"></div>
+    <div class="title" id="overlayTitle">Building Myeongdong…</div>
+    <div class="msg" id="overlayMsg">Extruding 1,400 real buildings into a 3D miniature.</div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

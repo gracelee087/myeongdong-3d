@@ -1,0 +1,54 @@
+{
+  "id": "myeongdong-classic",
+  "title": "Myeongdong Classic Walk",
+  "city": "Seoul",
+  "language": "en",
+  "start": { "lat": 37.56062, "lng": 126.98573 },
+  "stops": [
+    {
+      "id": "station",
+      "name": "Myeongdong Station, Exit 6",
+      "nameKo": "명동역 6번 출구",
+      "lat": 37.56062,
+      "lng": 126.98573,
+      "blurb": "Welcome to Myeongdong! You're stepping out of Exit 6, the gateway to Seoul's most electric shopping district. Put your earphones in, and let's walk. Everything you see over the next twenty minutes is packed into just a few blocks.",
+      "tip": "Look up — the whole street is a canyon of neon and K-beauty signs."
+    },
+    {
+      "id": "shopping-street",
+      "name": "Myeongdong Shopping Street",
+      "nameKo": "명동 쇼핑거리",
+      "lat": 37.56218,
+      "lng": 126.98486,
+      "blurb": "This is the main artery of Myeongdong. By evening it transforms into one of Korea's greatest street-food markets — tornado potatoes, grilled lobster, egg bread, and gyeranppang steaming in the cold air. Follow the crowd; the crowd always knows.",
+      "tip": "Come after 5pm to catch the street-food carts at full swing."
+    },
+    {
+      "id": "kyoja",
+      "name": "Myeongdong Kyoja",
+      "nameKo": "명동교자 본점",
+      "lat": 37.56312,
+      "lng": 126.98559,
+      "blurb": "On your right is Myeongdong Kyoja, a noodle institution serving the same knife-cut kalguksu since 1966. The menu is basically one dish, and that's the point. Expect a line — it moves fast, and it's worth it.",
+      "tip": "Order the kalguksu and add their famous garlicky kimchi."
+    },
+    {
+      "id": "cathedral",
+      "name": "Myeongdong Cathedral",
+      "nameKo": "명동성당",
+      "lat": 37.56332,
+      "lng": 126.98730,
+      "blurb": "Rising above the shopping frenzy is Myeongdong Cathedral, completed in 1898 — Korea's first Gothic brick church and a quiet symbol of the country's democracy movement. Step inside; the hush after the busy streets is the whole experience.",
+      "tip": "The plaza below the cathedral often hosts small markets and coffee stands."
+    },
+    {
+      "id": "nanta",
+      "name": "Myeongdong Nanta Theatre",
+      "nameKo": "명동 난타극장",
+      "lat": 37.56129,
+      "lng": 126.98455,
+      "blurb": "We finish at the Nanta Theatre, home of Korea's beloved non-verbal comedy show set in a kitchen — all rhythm, knives, and slapstick. It's the perfect, wordless nightcap to a day in Myeongdong. Thanks for walking with me.",
+      "tip": "Book the evening show in advance; front rows get pulled on stage."
+    }
+  ]
+}

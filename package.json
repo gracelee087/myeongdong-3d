@@ -1,0 +1,19 @@
+{
+  "name": "myeongdong-3d-guide",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "명동 3D GPS 워킹 오디오 가이드 — DEV Weekend Challenge (Passion Edition)",
+  "scripts": {
+    "dev": "netlify dev",
+    "start": "netlify dev",
+    "refresh-data": "node scripts/fetch-pois.mjs && node scripts/gen-scripts.mjs && node scripts/translate-meta.mjs && node scripts/fetch-beauty.mjs && node scripts/enrich-beauty-hours.mjs"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1",
+    "sharp": "^0.35.3"
+  }
+}
