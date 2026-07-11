@@ -23,9 +23,9 @@
    "hours": "8:00–24:00",
    "rest": "Open year-round",
    "menu": "Groceries / Cosmetics / Shampoo / Crafts",
-   "enName": "Harmony Mart Myeongdong Station",
-   "script": "Harmony Mart is a convenient supermarket just a minute's walk from Myeongdong Station. It offers a variety of Korean snacks, kimchi, and ginseng products, perfect for souvenirs. Don't miss their popular seaweed snacks and ginseng tea!",
-   "scriptBy": "openai",
+   "enName": "Harmony Mart Myeongdong Station Branch",
+   "script": "This basement supermarket is a treasure trove for Korean snacks and souvenirs, located just steps from the station. It is the perfect final stop to stock up on crispy seasoned seaweed, sweet ginseng tea, and unique local treats. The friendly staff speak multiple languages and even accept foreign currency for easy checkout.",
+   "scriptBy": "gemini",
    "video": "himWKPlXPo0",
    "videoTitle": "【韓国旅行 ハーモニーマート 明洞】韓国土産 韓国コスメ"
   },
@@ -44,9 +44,9 @@
    "hours": "11:30–22:00",
    "rest": "Open year-round",
    "menu": "Spicy Ribs / Beef Tenderloin / Pork Ribs / Brisket",
-   "enName": "Wangbi house",
-   "script": "Wangbi House specializes in charcoal-grilled meat, offering a modern take on traditional Korean dining. The atmosphere is warm and inviting, perfect for enjoying premium cuts like marinated short ribs. Don't miss the sizzling sound of meat grilling right before your eyes!",
-   "scriptBy": "openai",
+   "enName": "Wangbijib",
+   "script": "This is Wangbijib, a premier spot to experience authentic Korean charcoal-grilled barbecue. Inside, premium Hanwoo beef and sweet, marinated galbi sizzle over glowing coals in a beautiful, modern-traditional setting. It’s highly recommended for their succulent lunch sets, which serve perfectly grilled meats alongside a colorful spread of traditional side dishes.",
+   "scriptBy": "gemini",
    "video": "Os0RzgqAfgY",
    "videoTitle": "명동 고기집 찾는다면 여기 무조건! 고기 직접 구워주는 왕비집 육호점 후기🔥 #왕비집육호점 #명동맛집 #명동고기집 #명동데이트코스 #myeongdong #seoulbbq"
   },
@@ -65,9 +65,9 @@
    "hours": "Open 24/7",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Myeongdong",
-   "script": "Myeongdong is a vibrant shopping district known for its bustling streets filled with global brands and local boutiques. Stroll along the kilometer-long stretch and indulge in street food delights like spicy rice cakes and hotteok. This area truly embodies the pulse of Seoul's fashion and culinary scene.",
-   "scriptBy": "openai",
+   "enName": "Myeongdong Shopping Street",
+   "script": "You are standing at the heart of Myeongdong, Seoul's ultimate fashion and street food paradise. This bustling district is where global trends meet historic alleyways. Take a moment to breathe in the rich aroma of grilled lobster and sweet hotteok pancakes wafting from the endless rows of neon-lit food carts.",
+   "scriptBy": "gemini",
    "video": "F2-2rXLZGgA",
    "videoTitle": "명동에 생긴 초대형 도매가 쇼핑 지옥😆"
   },
@@ -86,9 +86,9 @@
    "hours": "Varies by store",
    "rest": "Open year-round",
    "menu": "Clothing / Fashion Accessories / Cosmetics / Food",
-   "enName": "Millieore Myeongdong",
-   "script": "Millieore Myeongdong is a vibrant shopping mall located right at the exit 6 of Myeongdong Station. It features popular beauty and lifestyle brands like Olive Young, as well as unique fashion shops for young adults. Don't miss the K-POP section, where you can find the latest albums and rare merchandise!",
-   "scriptBy": "openai"
+   "enName": "Migliore Myeongdong",
+   "script": "Right outside Myeongdong Station Exit 6, Migliore is a newly remodeled lifestyle hub combining shopping and lodging. It's a fantastic stop to experience modern Seoul fashion and pop culture in one place. Head to the second floor to find All That K-Pop, packed with official idol light sticks and rare photo cards.",
+   "scriptBy": "gemini"
   },
   {
    "id": "403053",
@@ -106,8 +106,8 @@
    "rest": "Open year-round",
    "menu": "Dumplings / Bibim Noodles / Bean Noodles",
    "enName": "Myeongdong Kyoja",
-   "script": "Myeongdong Kyoja, established in 1966, is famous for its kalguksu, a traditional Korean noodle dish. The rich broth and tender noodles create a deep flavor that keeps locals and tourists coming back. Don't miss their dumplings, filled with finely chopped ingredients that perfectly complement the noodles.",
-   "scriptBy": "openai",
+   "script": "You’ve arrived at Myeongdong Kyoja, a legendary noodle institution serving hungry souls since 1966. It’s famous for its comforting kalguksu—handmade knife-cut noodles in a rich, smoky chicken broth. Don't miss their plump, thin-skinned pork dumplings, and be prepared for their famously spicy, garlic-heavy kimchi that packs a real punch.",
+   "scriptBy": "gemini",
    "video": "-zrvo-3ocnQ",
    "videoTitle": "연매출 100억 건물 세운 명동교자 근황"
   },
@@ -126,9 +126,9 @@
    "hours": "Mon–Thu 10:30–20:00, Fri–Sun 10:30–20:30",
    "rest": "Open year-round",
    "menu": "Shoes / Bags / Wallets / Belts",
-   "enName": "Geumgang Jehwa Myeongdong Main Store",
-   "script": "Geumgang Jehwa is renowned for its stylish footwear and accessories, especially the Regal brand's elegant dress shoes and handbags. Located in the bustling heart of Myeongdong, this store caters to both locals and tourists, offering custom orders and a unique selection for every foot size.",
-   "scriptBy": "openai"
+   "enName": "Kumkang Shoes Myeongdong Main Store",
+   "script": "This is the flagship store of Kumkang, Korea’s legendary heritage footwear brand. It’s the perfect stop to admire classic, high-quality leather dress shoes, especially from their famous 'Regal' line. If you have trouble finding your size, they even offer a specialized 'Big and Small' section alongside custom-tailored shoe services.",
+   "scriptBy": "gemini"
   },
   {
    "id": "1489369",
@@ -145,9 +145,9 @@
    "hours": "08:10–24:00",
    "rest": "Open year-round",
    "menu": "Marinated Crab / Shrimp",
-   "enName": "Odari House",
-   "script": "Odari House specializes in traditional Korean dishes like marinated crab and seasoned ribs. Their signature dish features premium crabs aged in a unique soy sauce blend for seven days, creating a rich flavor that's simply unforgettable. The restaurant's decor celebrates Korean pop culture, making it a vibrant stop for food and fun.",
-   "scriptBy": "openai",
+   "enName": "Odarijip",
+   "script": "You're standing outside Odarijip, a famous spot celebrated for its melt-in-your-mouth soy-marinated raw crab. Inside, the walls are covered in K-pop memorabilia, creating a lively Hallyu atmosphere. Don't miss their signature dish: premium, roe-filled female crabs aged for seven days in traditional clay jars with a secret herbal soy sauce.",
+   "scriptBy": "gemini",
    "video": "iiFiNbyC5Q0",
    "videoTitle": "해외까지 간장게장으로 유명해진 오다리집 아시나요??😍https://www.instagram.com/hungry_korean_chef/#간장게장#역삼역맛집#강남맛집#게장#오다리집"
   },
@@ -166,9 +166,9 @@
    "hours": "11:00–20:00",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Sejong Hotel Sejong Gallery",
-   "script": "Sejong Gallery, established in 1961, showcases a vibrant array of contemporary art. It's unique for transforming hotel spaces into galleries, offering a rich cultural experience. Don’t miss its striking window gallery that allows passersby to enjoy art even from the street!",
-   "scriptBy": "openai",
+   "enName": "Sejong Gallery",
+   "script": "This is Sejong Gallery, a pioneering art space nestled inside the historic Sejong Hotel. Since 1961, it has brought fine art into everyday life, turning the lobby and basement into vibrant exhibition halls. Peer into the unique show-window gallery to admire striking contemporary Korean paintings right from the sidewalk.",
+   "scriptBy": "gemini",
    "video": "2vPTjem_Iho",
    "videoTitle": "2021 무아,세종호텔세종갤러리,서울"
   },
@@ -188,8 +188,8 @@
    "rest": "Open year-round",
    "menu": "Chicken Soup / Ginseng Chicken Soup / Abalone Porridge",
    "enName": "Baekje Samgyetang",
-   "script": "Baekje Samgyetang has been serving traditional chicken soup since 1971, using only 49-day-old chickens raised on their own farm. The clear broth is made with ginseng, jujubes, glutinous rice, and garlic, creating a rich, authentic flavor. Don't miss their homemade side dishes, prepared fresh every day!",
-   "scriptBy": "openai",
+   "script": "Since 1971, Baekje Samgyetang has been serving comforting, traditional ginseng chicken soup made with tender young chicken. It’s worth stopping here to taste their legendary, crystal-clear broth simmered with Korean ginseng, jujubes, and garlic. Pair your steaming hot soup with their freshly made, crunchy kimchi for the ultimate Korean comfort meal.",
+   "scriptBy": "gemini",
    "video": "pnG5t3x9SRA",
    "videoTitle": "명동 백제삼계탕"
   },
@@ -208,9 +208,9 @@
    "hours": "Open 24/7",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Lee Jae-myung's Site of Resistance",
-   "script": "This site marks the courageous act of Lee Jae-myung in 1909, who attempted to assassinate the pro-Japanese collaborator Lee Wan-yong. As you stand here, imagine the tension as he charged with a dagger, shouting for independence, only to be captured and ultimately sacrificed for his cause.",
-   "scriptBy": "openai",
+   "enName": "Site of Lee Jae-myung's Patriotic Deed",
+   "script": "Right here on this bustling street, a dramatic moment of Korean resistance unfolded in 1909. Look for the small memorial stone marking where a young patriot named Lee Jae-myung stabbed the notorious pro-Japanese collaborator Yi Wan-yong. It’s a sobering reminder of the fierce struggle for independence hidden beneath Myeongdong's modern shopping district.",
+   "scriptBy": "gemini",
    "video": "J6Ahp3T4pvE",
    "videoTitle": "\"명동은 바가지 없답니다 ㅎㅎ\" 이재명 대통령의 센스에 전원 '폭소' / KNN"
   },
@@ -230,8 +230,8 @@
    "rest": "Open year-round",
    "menu": "",
    "enName": "Myeongdong Cathedral",
-   "script": "Myeongdong Cathedral is the first major Gothic-style Catholic church in Korea, marking the birthplace of the Korean Catholic community. Step inside to see the serene underground shrine housing the relics of martyrs, a sacred site that has witnessed both faith and history through tumultuous times.",
-   "scriptBy": "openai",
+   "script": "Standing tall on this hill is Myeongdong Cathedral, Korea’s first parish and a grand Gothic-style sanctuary completed in 1898. It’s a peaceful escape from the bustling shopping streets, historically famous as a hub for Korea's democracy movement. Take a moment to admire its striking red and gray brickwork and soaring pointed arches.",
+   "scriptBy": "gemini",
    "video": "8oeobfoaEP8",
    "videoTitle": "지금 가기 좋은 서울 핫플 추천 명동성당"
   },
@@ -251,8 +251,8 @@
    "rest": "Open year-round",
    "menu": "Tiramisu / Americano / Cafe Latte",
    "enName": "The Spot Fabulous",
-   "script": "The Spot Fabulous is a charming retro cafe located across from the Chinese Embassy. Housed in a stunning 1950s European-style building, it offers a serene escape with lush greenery visible through its large windows. Don't miss their signature desserts like cheesecake and cherry tiramisu, perfect for a sweet break.",
-   "scriptBy": "openai",
+   "script": "Step inside this 1950s European-style building, once a Chinese community hall and now a stylish \"newtro\" cafe. Upstairs, massive windows frame a surprising view of lush green trees, making you forget the bustling streets outside. It’s the perfect spot to recharge with a rich signature cream coffee and a slice of cherry tiramisu.",
+   "scriptBy": "gemini",
    "video": "K0-DcegUx0s",
    "videoTitle": "명동에서 만나는 최고의 감성 카페#더스팟패뷸러스#명동카페#명동맛집"
   },
@@ -272,8 +272,8 @@
    "rest": "",
    "menu": "Pad Thai / Rice Noodles",
    "enName": "Thai Garden",
-   "script": "Thai Garden offers authentic Thai cuisine prepared by skilled chefs. Be sure to try their famous Pad Thai, which bursts with fresh flavors and perfectly cooked noodles. The vibrant décor and aromatic spices create an inviting atmosphere for your meal.",
-   "scriptBy": "openai",
+   "script": "You're standing outside Thai Garden, a cozy escape where authentic Thai chefs prepare every dish from scratch. It's the perfect spot to pause your shopping and enjoy their signature Pad Thai, bursting with sweet and tangy tamarind flavors. The rich, aromatic steam rising from the kitchen will instantly transport you straight to Bangkok.",
+   "scriptBy": "gemini",
    "video": "_pr4Ak6p0ws",
    "videoTitle": "태국음식 원조1세대  명동 타이가든 탐방"
   },
@@ -293,8 +293,8 @@
    "rest": "Open year-round",
    "menu": "",
    "enName": "Namsan Yejang Park",
-   "script": "Namsan Yejang Park is a historic site that once served as a military training ground during the Joseon Dynasty. It features a peaceful pine forest and lush grasslands, making it a popular retreat for locals. Explore exhibits like ‘Memory 6,’ which recreates a former interrogation room, blending history with nature.",
-   "scriptBy": "openai",
+   "script": "This park was once a Joseon-era military training ground, but it also holds darker memories from the colonial and military dictatorship eras. It's worth stopping here to reflect on Seoul's turbulent path to democracy. Look for 'Memory 6,' a bright red structure standing on the exact site of a former interrogation room.",
+   "scriptBy": "gemini",
    "video": "wX7jTBCxI9g",
    "videoTitle": "여행기행02 - 명동에 이런곳이? 남산예장공원에 숨은공간"
   },
@@ -314,8 +314,8 @@
    "rest": "Closed Sundays",
    "menu": "Octopus / Noodle Soup",
    "enName": "Dadong Hwangso Makchang",
-   "script": "Dadong Hwangso Makchang specializes in grilled beef intestines that are tender and full of flavor. The smokiness from the grill combined with their special spicy sauce creates an unforgettable taste. Don't miss their refreshing cold noodle dish as a perfect finish after your meal!",
-   "scriptBy": "openai",
+   "script": "This beloved local spot is famous for its exceptionally chewy and savory grilled beef abomasum, prepared perfectly with no gamey smell. It is worth stopping to experience authentic Korean tavern dining in a comfortable indoor setting. Try pairing the sizzling meat with their spicy, smoky webfoot octopus, then finish with comforting banquet noodles.",
+   "scriptBy": "gemini",
    "video": "3suHjqNoYGc",
    "videoTitle": "도심 속 야장맛집 #다동황소막창 #노포야장 #을지로야장 #을지로맛집 #을지로막창 #막창맛집추천#을지로노포야장 #황소막창추천"
   },
@@ -335,8 +335,8 @@
    "rest": "Closed Sundays / Jan 1",
    "menu": "",
    "enName": "Beauty Play",
-   "script": "Beauty Play is a unique K-beauty experience center showcasing small domestic cosmetic brands. Here, you can enjoy free skin diagnoses and personalized makeup sessions. Don’t miss the chance to try out innovative products that are often hard to find, all while indulging in a vibrant atmosphere filled with beauty enthusiasts.",
-   "scriptBy": "openai",
+   "script": "This is Beauty Play, a free interactive space dedicated to Korea's best indie cosmetics. It’s the perfect stop to discover hidden-gem brands you won't find in mainstream shops. Step inside to get a complimentary, high-tech skin analysis or a personal color test from on-site beauty experts.",
+   "scriptBy": "gemini",
    "video": "nbLxh2Neihk",
    "videoTitle": "K-뷰티 토탈 체험 존, 뷰티플레이를 소개합니다! Let's introduce BEAUTY PLAY, a total K-beauty experience zone!"
   },
@@ -355,9 +355,9 @@
    "hours": "10:00–22:00",
    "rest": "Open year-round",
    "menu": "Pork Feet / Pork Belly / Seafood Pancake",
-   "enName": "Myeongdong Budaejjigae Myeongdong Hwanggi Jokbal",
-   "script": "This restaurant specializes in budaejjigae, a spicy stew made with ham, sausages, and kimchi. It's a beloved comfort food among locals. The aroma of simmering spices fills the air, making it hard to resist stepping inside for a hearty meal.",
-   "scriptBy": "openai",
+   "enName": "Myeongdong Budae Jjigae & Hwanggi Jokbal",
+   "script": "Tucked away in a cozy alley, this local favorite specializes in two Korean comfort classics: spicy budae jjigae, or army stew, and tender braised jokbal. It's the perfect stop for an authentic taste of Seoul, where you can watch rich, red broth bubble with savory sausages, ramen, and tangy kimchi right at your table.",
+   "scriptBy": "gemini",
    "video": "pZZyWVPX7KI",
    "videoTitle": "명동 부대찌개 황기 족발 : 아이닥 안경 추천 명동 맛집 #명동맛집 /#아이닥안경추천맛집 #아이닥안경 #명동부대찌개 #명동부대찌개황기족발 #점심정식"
   },
@@ -377,8 +377,8 @@
    "rest": "Closed Saturdays",
    "menu": "Jajangmyeon / Jjamppong / Shrimp Fried Rice",
    "enName": "Gaehwa",
-   "script": "Gaehwa is a beloved Chinese restaurant in Myeongdong, known for its hearty dishes. Try the spicy Jjamppong, packed with seafood and vibrant vegetables, or their signature crispy pork, which has a light batter and is seasoned with salt and pepper. The flavors here are sure to impress!",
-   "scriptBy": "openai",
+   "script": "Standing near the Chinese Embassy, Gaehwa is a historic Chinese restaurant beloved in Myeongdong for decades. You must try their signature gogi-twigim—crispy, thin-battered fried pork dipped simply in salt and pepper rather than sweet sauce. It pairs perfectly with their rich, minced-meat black bean noodles.",
+   "scriptBy": "gemini",
    "video": "zTLKMBnYFU4",
    "videoTitle": "명동 중국집 개화 (w/@melothebagger​⁠)｜퇴사 후 해외여행, 고기튀김, 난자완스 맛집"
   },
@@ -397,9 +397,9 @@
    "hours": "Open 24/7",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Lee Hoi-young Statue",
-   "script": "This statue honors Lee Hoi-young, a key figure in Korea's independence movement. He led efforts against the Eulsa Treaty in 1905 and later supported the establishment of the Shinhyeong Military Academy. Notice the intricate details of the statue, reflecting his unwavering spirit and commitment to Korea's freedom.",
-   "scriptBy": "openai",
+   "enName": "Bust of Woodang Lee Hoe-yeong",
+   "script": "This bust honors Lee Hoe-yeong, a heroic patriot who sold his entire family estate right here to fund Korea’s independence movement. He used that immense wealth to establish a military academy, training over three thousand freedom fighters. Take a moment to honor a man who gave up everything for his nation’s freedom.",
+   "scriptBy": "gemini",
    "video": "wOFuzdAmREY",
    "videoTitle": "명동성당 뒤 골목의 놀라운 역사, 전 재산 바친 독립운동가 우당 이회영 선생 흉상"
   },
@@ -418,9 +418,9 @@
    "hours": "10:00–17:00",
    "rest": "Closed Sat-Sun, reservation required",
    "menu": "",
-   "enName": "Chojun Textile and Quilt Museum",
-   "script": "This unique museum, established in 1998, showcases a stunning collection of textile art from Korea and around the world. Don't miss the exquisite traditional Korean patchwork on display, which reflects the rich heritage of textile artistry. It's a perfect stop for anyone interested in the intricate beauty of fabrics.",
-   "scriptBy": "openai",
+   "enName": "Chojun Textile & Quilt Museum",
+   "script": "You’re standing before the Chojun Textile and Quilt Museum, Korea's premier space dedicated to fiber art. It’s a hidden gem showcasing the preservation of traditional Korean jogakbo, or patchwork, alongside global contemporary designs. Take a moment to admire how humble, colorful scraps of fabric are meticulously hand-stitched into breathtaking, textured masterpieces.",
+   "scriptBy": "gemini",
    "video": "eT_5Nen4v7I",
    "videoTitle": "뮤지엄여행기 초전섬유퀼트박물관"
   },
@@ -440,8 +440,8 @@
    "rest": "Closed on department store holidays",
    "menu": "Matsuya Set / Udon Set / Pork Cutlet Udon / Matsuya Bento",
    "enName": "Matsuya",
-   "script": "Matsuya, meaning 'Pine Tree House', is a Japanese udon, soba, and sushi specialty restaurant located on the fifth floor of Shinsegae Department Store. The rich, savory broth used for their handmade udon is a must-try, showcasing authentic flavors crafted by skilled Japanese artisans.",
-   "scriptBy": "openai",
+   "script": "Located inside Shinsegae Department Store, Matsuya is a premium noodle house serving authentic Japanese udon and soba. It's worth stopping for their deeply flavorful broth, simmered for twelve hours using premium tuna flakes and sardines. Try the Zaru Soba set to dip chewy, handmade noodles into this rich soup alongside crispy tempura.",
+   "scriptBy": "gemini",
    "video": "OWt-dIhUfYo",
    "videoTitle": "신세계 백화점 명동본점 맛집/태어나 먹은 우동 중에 가장 맛있었던 가케우동 마쯔야"
   },
@@ -460,9 +460,9 @@
    "hours": "Mon–Sun 10:30–20:00",
    "rest": "",
    "menu": "Cosmetics / Clothing / Home Goods / Decor / Sports Gear",
-   "enName": "Shinsegae Department Store Main Branch",
-   "script": "Shinsegae Department Store is a landmark of modern retail in Korea, blending history with luxury. Explore the stunning sixth-floor Trinity Garden, where you can admire sculptures by renowned artists like Alexander Calder and Henry Moore. It's a perfect spot for relaxation after shopping amidst art and nature.",
-   "scriptBy": "openai",
+   "enName": "Shinsegae Department Store Main Store",
+   "script": "You are standing in front of Shinsegae Department Store, Korea’s very first department store. It's worth stopping to admire its historic neo-classical facade, which dates back to 1930. Don't miss the sixth-floor Trinity Garden, a peaceful rooftop oasis featuring world-class sculptures by Henry Moore and Joan Miró.",
+   "scriptBy": "gemini",
    "video": "JncGGpW3Od8",
    "videoTitle": "'마법이 펼쳐진다' 시민들 발걸음 멈추게 하는 신세계백화점 '크리스마스 영상' 공개｜지금 이 뉴스"
   },
@@ -481,9 +481,9 @@
    "hours": "Open 24/7",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Na Seok-joo Statue",
-   "script": "The Na Seok-joo Statue commemorates the heroic sacrifice of the independence activist who fought for Korea's freedom. Standing in front of the former Oriental Development Company, this statue captures his determination, with detailed bronze features reflecting the passion of his cause. It's a poignant reminder of Korea's struggle for independence.",
-   "scriptBy": "openai",
+   "enName": "Statue of Patriot Na Seok-ju",
+   "script": "This bronze monument honors Patriot Na Seok-ju, who launched a daring bomb attack here in 1926 against a Japanese colonial exploitation company. It’s a powerful reminder of Korea’s struggle for freedom, hidden right within this modern financial district. Notice his determined stance, clutching the pistol he used before sacrificing his life for independence.",
+   "scriptBy": "gemini",
    "video": "9Bm7dyJcA0g",
    "videoTitle": "CITY WALK |  Myeongdong -2- |  명동 |  나석주 의사 동상  | 2020 | SEOUL"
   },
@@ -502,9 +502,9 @@
    "hours": "10:00–22:00",
    "rest": "Closed Tuesdays",
    "menu": "Spicy Pork Cutlet / Cheese Cutlet / Namsan Udon",
-   "enName": "Wonjong Namsan King Tonkatsu",
-   "script": "This restaurant has been serving delicious tonkatsu since 1977, making it a beloved local staple. Known for its crispy batter and tender meat, their signature King Tonkatsu is a must-try. The retro vibes here add to its charm, making it a perfect stop for food lovers.",
-   "scriptBy": "openai",
+   "enName": "Original Namsan Wang Donkatsu",
+   "script": "Since 1977, this family-run institution has been serving up nostalgia on Namsan Mountain. It is famous for its legendary giant pork cutlet, or wang-donkatsu, which is pounded thin, fried to a golden crisp, and smothered in a rich, savory brown gravy. Grab a booth to experience a true, retro Seoul comfort food tradition.",
+   "scriptBy": "gemini",
    "video": "lcmRMKBVxB4",
    "videoTitle": "여기가 남산돈까스 찐찐원조! 라고 결판남. 오전 11시반에 가면 웨이팅 #shorts"
   },
@@ -523,9 +523,9 @@
    "hours": "11:00–21:00",
    "rest": "Open year-round",
    "menu": "Jjamppong Ramen / Cheese Pork Cutlet / Fish Cutlet / Sanuki Udon",
-   "enName": "Minamiya Main Branch",
-   "script": "Minamiya is a renowned katsu restaurant, famous for its giant pork cutlets. After enjoying a crispy, golden-brown katsu, take a stroll along the nearby walking paths that lead to attractions like Namsan Tower. It's a perfect stop for a hearty meal before exploring the area!",
-   "scriptBy": "openai",
+   "enName": "Minamiyama",
+   "script": "This is Minamiyama, a legendary spot famous for its Namsan-style pork cutlets. It is worth a stop to try their signature \"Wang-donkatsu\"—a massive, crispy, golden-fried pork cutlet served with a rich, savory gravy. After dining, you can head straight onto the scenic Namsan walking trail right next door.",
+   "scriptBy": "gemini",
    "video": "yLMrSNO_Ack",
    "videoTitle": "#미나미야마 #남산돈까스 #철판돈까스 #15,000원 #명동맛집 #남산맛집 #돈까스맛집 #돈까스 #mukbang #먹방 #서울맛집 #koreanfood #porkcutlet"
   },
@@ -545,8 +545,8 @@
    "rest": "",
    "menu": "",
    "enName": "Namsan Human Rights Forest",
-   "script": "Namsan Human Rights Forest is a poignant reminder of Korea's journey towards democracy. This serene space, once the site of the Central Intelligence Agency, now features monuments and informative plaques that educate visitors. Take a moment to reflect beneath the trees that symbolize freedom and resilience.",
-   "scriptBy": "openai",
+   "script": "This quiet grove is the Namsan Human Rights Forest, once the notorious headquarters of the Korean Central Intelligence Agency. It's a powerful place to reflect on Korea’s democratic journey, marked by memorial stones nestled among the trees. What was once a site of fear has been transformed into a peaceful sanctuary of remembrance.",
+   "scriptBy": "gemini",
    "video": "aSpByptNmMY",
    "videoTitle": "서울 한복판에 이런 숲길이 생겼다고요?🍃힘 하나도 안 들고 남산 정상까지 #무장애숲길"
   },
@@ -565,9 +565,9 @@
    "hours": "Mon–Thu 10:30–20:00, Fri–Sun 10:30–20:30",
    "rest": "Closed on holidays",
    "menu": "Food / Living / Fashion / Kids / Sports / Cosmetics",
-   "enName": "Lotte Department Store Main Branch",
-   "script": "Lotte Department Store Main Branch is a premier shopping destination in Myeongdong, featuring a wide array of premium global fashion brands. As you stroll through, you'll notice stunning art pieces displayed like a gallery. Plus, indulge in delicious meals from Korean to Western cuisine right inside!",
-   "scriptBy": "openai",
+   "enName": "Lotte Department Store Main Store",
+   "script": "This is the flagship Lotte Department Store, a legendary cornerstone of Korean retail. It's worth a stop to experience premium fashion houses alongside gallery-worthy art installations scattered throughout the floors. Don't miss the bustling basement food hall, where the aroma of freshly baked pastries and sizzling street food creates a sensory paradise.",
+   "scriptBy": "gemini",
    "video": "XjN-1OVnTOA",
    "videoTitle": "서울 명동거리 롯데백화점 영플라자 크리스마스 트리 Christmas tree, Lotte Department Store Young Plaza in Myeongdong, Seoul"
   },
@@ -586,9 +586,9 @@
    "hours": "10:30–20:00",
    "rest": "Check website before visiting",
    "menu": "Clothing / Accessories / Jewelry",
-   "enName": "Lotte Department Store Avenue L",
-   "script": "Avenue L is a luxury department store connected to the main Lotte Department Store, featuring high-end fashion and jewelry brands. Marvel at its unique garden and gallery concept as you shop for Chanel, Gucci, and Louis Vuitton. Don’t miss the vibrant photo zone designed for Instagram-worthy moments!",
-   "scriptBy": "openai"
+   "enName": "Lotte Department Store Main Store Avenuel",
+   "script": "You're standing outside Avenuel, Lotte's premier luxury fashion wing, designed with a unique garden-and-gallery concept. Inside, you'll find dazzling multi-story flagship boutiques from Chanel to Louis Vuitton, set against striking, art-filled interiors.",
+   "scriptBy": "gemini"
   },
   {
    "id": "2655928",
@@ -605,9 +605,9 @@
    "hours": "Open 24/7",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Memory of the World (Japanese Comfort Women Memorial)",
-   "script": "This memorial honors the victims of the Japanese comfort women during World War II. It's a poignant space filled with testimonies and records of their suffering. As you walk through, take a moment to reflect on the powerful stories etched into the surrounding walls.",
-   "scriptBy": "openai"
+   "enName": "The Site of Memory",
+   "script": "This is the Site of Memory, a peaceful memorial on Namsan dedicated to the victims of Japanese military sexual slavery. It’s a profound space to reflect on peace and human rights. Take a moment to look at the 'Earth of Screams' stone, which is engraved with the names and heartbreaking testimonies of the survivors.",
+   "scriptBy": "gemini"
   },
   {
    "id": "763989",
@@ -625,8 +625,8 @@
    "rest": "Open year-round",
    "menu": "Charcoal Grilled Ribs / Marinated Ribs / Beef Rib Stew",
    "enName": "Arirang",
-   "script": "Arirang is a Korean BBQ restaurant famous for its high-quality Hanwoo beef. It's the perfect spot for gatherings, especially to savor their marinated short ribs. The smoky aroma fills the air as the meat sizzles on the grill, creating a truly authentic dining experience.",
-   "scriptBy": "openai",
+   "script": "You're standing outside Arirang, a highly regarded Korean restaurant famous for its premium Hanwoo beef. It's the perfect spot to try their signature marinated galbi, grilled to tender perfection right at your table. Listen for the sizzle and catch the sweet, smoky aroma of charcoal-grilled ribs drifting through the air.",
+   "scriptBy": "gemini",
    "video": "kwSxgxojUFE",
    "videoTitle": "명동 아리랑"
   },
@@ -645,9 +645,9 @@
    "hours": "11:30–21:30",
    "rest": "Closed Mon–Tue",
    "menu": "500℃ T-Bone Steak Course / Candlelight Couple Set / Love Package",
-   "enName": "Chotbul 1978",
-   "script": "Chotbul 1978 is a romantic restaurant that has been creating love stories since 1978. Its warm brick exterior and vintage decor evoke a sense of nostalgia, making it a perfect spot for proposals. Just nearby, you can enjoy a scenic walk in Namsan Park, adding to the magic of your visit.",
-   "scriptBy": "openai",
+   "enName": "Candlelight 1978",
+   "script": "This is Candlelight 1978, Korea’s legendary romance restaurant. For over forty years, countless couples have shared life-changing proposals behind its rustic red-brick walls. Inside, the intimate high-backed booths and warm, glowing incandescent bulbs preserve the exact cozy atmosphere from the day it opened.",
+   "scriptBy": "gemini",
    "video": "CxIB273DE1A",
    "videoTitle": "명동역 레스토랑 맛집 남산데이트 '촛불1978'  #협찬 #남산데이트"
   },
@@ -667,8 +667,8 @@
    "rest": "Open year-round",
    "menu": "",
    "enName": "Namsan Cable Car",
-   "script": "The Namsan Cable Car offers a breathtaking ride from the base to the summit of Namsan Mountain, showcasing panoramic views of Seoul. This iconic attraction has been in operation since 1962, and the 600-meter ascent is a delightful experience. Don't miss the view of the sparkling cityscape as you glide up!",
-   "scriptBy": "openai",
+   "script": "Since 1962, the Namsan Cable Car has been gliding up the slopes of Mount Namsan, offering a classic Seoul experience. It is the perfect way to reach the iconic N Seoul Tower while enjoying panoramic city views. As you ascend, watch the bustling streets of Myeongdong shrink beneath you into a miniature world.",
+   "scriptBy": "gemini",
    "video": "xQ1rz2FHgTU",
    "videoTitle": "명동에서 곤돌라 타고 남산까지…“케이블카보다 저렴하게” | 뉴스A"
   },
@@ -688,8 +688,8 @@
    "rest": "Open year-round",
    "menu": "Traditional Korean Set Menu",
    "enName": "Mugunghwa at Lotte Hotel Seoul",
-   "script": "Mugunghwa is a Michelin-rated Korean restaurant located in the Lotte Hotel Seoul. This place offers exquisite Hanjeongshik, a traditional multi-course meal. Don't miss the beautifully presented dishes that showcase the artistry of Korean cuisine.",
-   "scriptBy": "openai",
+   "script": "This is Mugunghwa, a Michelin-recognized restaurant inside the Lotte Hotel specializing in exquisite, modern Korean course meals. It’s the ultimate spot to experience elevated royal court cuisine. As you dine, you’ll be treated to breathtaking, panoramic views of Mount Namsan through the massive floor-to-ceiling windows.",
+   "scriptBy": "gemini",
    "video": "8Wv6efitY_w",
    "videoTitle": "롯데호텔서울 무궁화 (Lotte Hotel Seoul MUGUNGHWA Korean Restaurant)"
   },
@@ -708,9 +708,9 @@
    "hours": "10:00–22:00",
    "rest": "Closed Sundays / Holidays",
    "menu": "Pork Bone Soup / Plate Sundae / Hong-eo Samhap",
-   "enName": "Dongwonjip",
-   "script": "This cozy eatery specializes in Gamjatang and Sundaeguk, offering three varieties of the rich, hearty soup. The broth is crystal clear, and the tender meat makes each bite a delight. Don't forget to dip the sundae in shrimp sauce for an unforgettable flavor twist!",
-   "scriptBy": "openai",
+   "enName": "Dongwonjib",
+   "script": "Dongwonjib is a legendary local favorite famous for its hearty pork bone soup and savory blood sausage soup. It’s the perfect stop to experience authentic, comforting Korean soul food that has fueled locals for decades. Be sure to dip the incredibly tender, fall-off-the-bone meat into their seasoned salted shrimp.",
+   "scriptBy": "gemini",
    "video": "MIOqzMiFmik",
    "videoTitle": "을지로 퇴계로 충무로 \"감자국\" 원탑! 40년 노포 전설의 동원집!  [맛있겠다 Yummy]"
   },
@@ -729,9 +729,9 @@
    "hours": "11:00–22:00",
    "rest": "Open year-round",
    "menu": "Bibim Naengmyeon / Warm Noodles / Yukgaejang / Dumpling Soup / Chogye-tang",
-   "enName": "Pyeongraeok",
-   "script": "Pyeongraeok is a renowned restaurant specializing in North Korean cuisine since 1950. Don't miss the refreshing Chogye-tang, featuring chilled chicken and buckwheat noodles topped with fresh vegetables. The vibrant colors and unique flavors make this a must-try for any foodie exploring Myeongdong.",
-   "scriptBy": "openai",
+   "enName": "Pyenglaeok",
+   "script": "Since 1950, Pyenglaeok has served authentic North Korean cuisine, most famous for its refreshing chokyethang—a chilled chicken soup loaded with buckwheat noodles and crisp cabbage. Be sure to try their legendary, complimentary dak-muchim, a spicy, vinegary shredded chicken salad. It’s a rare, savory taste of history you won't want to miss.",
+   "scriptBy": "gemini",
    "video": "ezT46B7YprA",
    "videoTitle": "명동 평래옥에서 매콤하게 빕니다. #오늘 #명동 #평래옥  #비빔냉면 #평양식 #평양냉면 #food #shorts"
   },
@@ -750,9 +750,9 @@
    "hours": "Weekdays 00:00–24:00, Sat 00:00–02:00, Sun 08:00–21:00",
    "rest": "",
    "menu": "Naju Gomtang / Galbitang",
-   "enName": "Geumsungwan Najugomtang",
-   "script": "This restaurant specializes in Najugomtang, a rich and hearty beef soup from the Jeolla region. It's known for its soothing flavors and tender meat, simmered to perfection. The aroma wafting from the kitchen will draw you in and warm your soul.",
-   "scriptBy": "openai",
+   "enName": "Geumseonggwan Naju Gomtang",
+   "script": "You’re standing in front of Geumseonggwan Naju Gomtang, a beloved spot famous for its traditional beef bone soup from the southern Naju region. Unlike the milky broths common in Seoul, this legendary soup is simmered to a crystal-clear, golden perfection. Pair it with their famously spicy, freshly made kimchi for the ultimate local comfort meal.",
+   "scriptBy": "gemini",
    "video": "AwRBq5MlFfc",
    "videoTitle": "남대문 줄서서 먹는 곰탕집 #shorts"
   },
@@ -771,9 +771,9 @@
    "hours": "Weekdays 10:00–22:00, Weekends 10:00–21:00",
    "rest": "",
    "menu": "Braised Short Ribs Set / Stir-fried Pork Set",
-   "enName": "Jjukkumi and Spicy Braised Short Ribs",
-   "script": "This popular Korean restaurant is a favorite among office workers, known for its delicious spicy braised short ribs. The rich aroma of simmering spices fills the air, inviting you to try their signature dish that promises a hearty and comforting meal.",
-   "scriptBy": "openai",
+   "enName": "Jjukkumi wa Maeun Galbijjim",
+   "script": "This is Jjukkumi wa Maeun Galbijjim, a beloved local spot where Chungmuro's office workers gather for comforting Korean food. Their signature dish is the spicy braised short ribs set menu. You'll love the tender, slow-cooked beef sliding off the bone in a rich, fiery red sauce that pairs perfectly with warm rice.",
+   "scriptBy": "gemini",
    "video": "5PPfgukXrxw",
    "videoTitle": "충무로 맛집, 쭈꾸미와 매운 갈비찜, 충무로 먹자골목명소 02-2266-3208"
   },
@@ -792,9 +792,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Clothing / Shoes / Accessories",
-   "enName": "Samik Fashion Town",
-   "script": "Samik Fashion Town is a bustling shopping hub in the heart of Namdaemun Market, featuring over 1,500 stores across 15 floors. This is the place to find everything from women's and children's apparel to shoes and accessories, all under one roof. Don’t miss the vibrant children’s clothing market on the first floor!",
-   "scriptBy": "openai"
+   "enName": "Samick Fashion Town",
+   "script": "You’re standing before Samick Fashion Town, a massive indoor shopping hub that has energized Namdaemun Market since 1985. It’s the perfect spot to escape the outdoor bustle and hunt for budget-friendly fashion across ten floors. Don't miss the lively children's wear on the first floor or the dedicated shoe department on the sixth.",
+   "scriptBy": "gemini"
   },
   {
    "id": "820648",
@@ -812,8 +812,8 @@
    "rest": "Open year-round",
    "menu": "Jeonju Bean Sprout Soup / Marinated Ribs / Fresh Ribs / Spicy Beef Soup / Bibimbap",
    "enName": "Jeonju Hoegwan",
-   "script": "Jeonju Hoegwan is a traditional Korean restaurant that has been serving authentic dishes for over 50 years. Try their famous Jeonju Stone Pot Bibimbap, rich with fresh vegetables and nuts, served in a hot stone bowl that keeps your meal warm until the last bite.",
-   "scriptBy": "openai",
+   "script": "Jeonju Hoegwan has served authentic Korean comfort food for over fifty years. Their signature Gopdol Bibimbap is served in a heavy pot carved from genuine Jangsu jade stone. Sizzling with over thirty ingredients like fresh mountain herbs, walnuts, and ginkgo nuts, this nourishing dish stays piping hot until your very last bite.",
+   "scriptBy": "gemini",
    "video": "tQ7VHgx7YPI",
    "videoTitle": "🇰🇷명동에서 찾은 진짜 한식! 왕비도 반한 비빔밥🍚"
   },
@@ -833,8 +833,8 @@
    "rest": "Open year-round",
    "menu": "Loach Soup / Smoked Duck Shabu Shabu / Stir-fried Pork / Kimchi Stew / Pork Belly",
    "enName": "Nammun Tobang",
-   "script": "Nammun Tobang is a popular restaurant in the bustling Namdaemun Market, famous for its eel soup, or 'chueotang.' Here, you can savor the rich flavor of ground eel and crispy whole eels. Don't miss their unique smoked duck shabu-shabu, a delightful combination of savory broth and fresh vegetables.",
-   "scriptBy": "openai",
+   "script": "Tucked away in Namdaemun Market, Nammun Tobang is a local favorite famous for its traditional Gyeongsang-style chueotang, or loach soup. It's the perfect stop to recharge with a rich, earthy broth made from finely ground domestic loach. For a delightful crunch, try their golden, crispy deep-fried whole loach.",
+   "scriptBy": "gemini",
    "video": "DMEcSuoxVNQ",
    "videoTitle": "NAMMOONTOBANG namdaemoon market seoul KOREAN RESTAURANT WHICH KOREANS LOVE 남문토방 남대문시장 추어탕"
   },
@@ -853,9 +853,9 @@
    "hours": "Day 09:30–17:00, Night 22:00–05:00",
    "rest": "Closed Sundays during the day / Closed Fri–Sat nights",
    "menu": "Children's Clothing",
-   "enName": "Burdeng",
-   "script": "Burdeng is a well-known children's clothing store offering a variety of sizes and styles for kids. It's a hub for quality children's goods, perfect for both wholesale and retail shoppers. Look for the vibrant displays showcasing everything from baby items to trendy outfits for older kids.",
-   "scriptBy": "openai"
+   "enName": "Burdeng Children's Clothing Market",
+   "script": "You're standing outside Burdeng, the undisputed capital of Korean children's fashion. This bustling market is packed with high-quality baby and kids' wear at unbeatable wholesale prices. Peer inside to see endless rows of colorful, trendy miniature outfits that local parents and global buyers travel miles to bargain for.",
+   "scriptBy": "gemini"
   },
   {
    "id": "130209",
@@ -872,9 +872,9 @@
    "hours": "10:00–17:00",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Junggu Cultural Center",
-   "script": "The Junggu Cultural Center, established in 1995, serves as a hub for cultural events in the Junggu area. It's dedicated to preserving local traditions, hosting activities like the Chungmugong Birth Celebration and cultural classes. Look out for its gallery, showcasing emerging artists and affordable exhibitions.",
-   "scriptBy": "openai",
+   "enName": "Jung-gu Cultural Center",
+   "script": "You're standing before the Jung-gu Cultural Center, a local hub dedicated to preserving Seoul's rich heritage and community arts. It's a wonderful stop to catch intimate, rotating art exhibitions by passionate local students and rising artists. Step inside to see how contemporary creativity breathes life into this historic neighborhood's traditions.",
+   "scriptBy": "gemini",
    "video": "mXchgOawGqM",
    "videoTitle": "서울중구 문화관광해설사와 함께하는 명동 투어"
   },
@@ -894,8 +894,8 @@
    "rest": "Closed Sundays / Lunar holidays",
    "menu": "Fig pound cake / Strawberry latte / Vacation coffee",
    "enName": "Vacance Coffee",
-   "script": "Vacance Coffee is a rooftop café on the ninth floor with stunning views of Euljiro. Here, you can savor unique drinks like the signature Vacance Latte, a delightful blend of orange and vanilla. The décor mimics a French vacation home, creating a serene escape in the heart of the city.",
-   "scriptBy": "openai",
+   "script": "Head up to the ninth floor to find Vacance Coffee, a minimalist rooftop sanctuary offering stunning views of Euljiro. The unique interior is styled like a French holiday home draped in protective white sheets. Grab a seat by the window and try their signature Vacance Latte, which pairs sweet vanilla with a bright hint of orange.",
+   "scriptBy": "gemini",
    "video": "jYo1kjQTOwg",
    "videoTitle": "을지로입구 카페 한적한 대형카페 바캉스커피"
   },
@@ -915,8 +915,8 @@
    "rest": "Closed Mondays",
    "menu": "",
    "enName": "Namsangol Hanok Village",
-   "script": "Namsangol Hanok Village is a beautifully restored traditional Korean village nestled in the heart of Seoul. Here, you can experience authentic cultural activities like wearing hanbok or making hanji paper. Don’t miss the serene pond and the stunning architecture of the five hanoks that transport you back in time.",
-   "scriptBy": "openai",
+   "script": "Step into Namsangol Hanok Village, a peaceful oasis of five beautifully restored Joseon-era houses relocated from across Seoul. It’s the perfect place to escape the modern city rush and experience traditional Korean life. Don't miss the quiet pond near the entrance, where you can see the elegant Cheonugak Pavilion reflecting in the water.",
+   "scriptBy": "gemini",
    "video": "mHyEQWop5eQ",
    "videoTitle": "서울 도심 속 전통 여행! 남산골 한옥마을에서 즐기는 한국의 옛 멋 I 서울 지하철 여행 추천 I 충무로역 가볼 만한 곳 I Korean Hanok Maeul (Village)"
   },
@@ -935,9 +935,9 @@
    "hours": "Apr–Oct 09:00–21:00, Nov–Mar 09:00–20:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Namsangol Park Time Capsule Plaza",
-   "script": "This plaza features a unique time capsule commemorating 600 years of Seoul's history. Buried 42 meters below ground, it holds 600 artifacts representing modern life, including newspapers and everyday items. Imagine what future generations will think when they unearth these treasures in 400 years!",
-   "scriptBy": "openai",
+   "enName": "Seoul Millennium Time Capsule Plaza",
+   "script": "You are standing at the Seoul Millennium Time Capsule Plaza, a crater-shaped monument holding a massive capsule buried in 1994. It preserves six hundred everyday items—from bus tokens to pantyhose—to be opened in the year 2394. Peer down into the sunken plaza, designed like a crater to symbolize the flow of time.",
+   "scriptBy": "gemini",
    "video": "4axao5K_QVU",
    "videoTitle": "남산골공원의 모든뷰 🌲 남산국악당, 한옥마을, 타임캡슐광장을 잇는 조깅코스 3km 풀영상 - Virtual Run in Korea"
   },
@@ -956,9 +956,9 @@
    "hours": "09:00–21:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Namsan Traditional Korean Music Hall",
-   "script": "The Namsan Traditional Korean Music Hall, built in 2007, showcases the beauty of traditional Korean performing arts. Its unique design features a sunken garden that resembles the royal Gyeongbokgung Palace, creating a serene atmosphere filled with natural light, even underground. It's a perfect blend of culture and nature.",
-   "scriptBy": "openai",
+   "enName": "Seoul Namsan Gukakdang",
+   "script": "This is the Seoul Namsan Gukakdang, a premier venue dedicated to traditional Korean performing arts. Step inside to appreciate how the elegant wooden hanok architecture on the surface seamlessly hides a modern theater underground. Don't miss the sunken garden downstairs, styled after a royal palace courtyard, which bathes the lobby in soft, natural light.",
+   "scriptBy": "gemini",
    "videoTitle": "서울남산국악당"
   },
   {
@@ -977,8 +977,8 @@
    "rest": "Varies by store",
    "menu": "Ginseng / Health products",
    "enName": "Namdaemun Ginseng Market",
-   "script": "Namdaemun Ginseng Market is a vibrant hub within Namdaemun Market, specializing in high-quality ginseng. Here, you can find over twenty shops offering prices 20 to 30% lower than retail. The market's lively atmosphere is enhanced by the rich aroma of ginseng products, from fresh roots to herbal teas.",
-   "scriptBy": "openai"
+   "script": "You are standing at the Namdaemun Ginseng Market, where about twenty specialized shops offer Korea’s famous medicinal root. Buying directly from growers, these vendors offer high-quality fresh ginseng and red ginseng teas at wholesale prices. Take a deep breath to catch the earthy, bittersweet aroma of roots stacked high in glass jars.",
+   "scriptBy": "gemini"
   },
   {
    "id": "985952",
@@ -995,9 +995,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Imported goods / Household items / Accessories",
-   "enName": "Daedo General Shopping Mall",
-   "script": "Daedo General Shopping Mall is a bustling shopping hub within Namdaemun Market, offering a delightful range of household items and unique decor. With its vibrant displays of kitchenware and quirky accessories, you'll find countless treasures waiting to be discovered. Don't miss the chance to explore its diverse array of interior design products!",
-   "scriptBy": "openai",
+   "enName": "Daedo Comprehensive Shopping Mall",
+   "script": "You're standing before Daedo Comprehensive Shopping Mall, a bustling treasure trove hidden inside Namdaemun Market. It's famous for housing Seoul’s largest collection of unique home decor, kitchenware, and imported goods. Step inside to explore narrow, vibrant aisles packed to the ceiling with hand-painted ceramic tableware, brass ornaments, and quirky vintage trinkets.",
+   "scriptBy": "gemini",
    "video": "vjsdVyMrIQ4",
    "videoTitle": "리뉴얼로 완전히 달라진 남대문 시장 새 얼굴 공개-깨끗하고 쾌적한 시장 중심 대도종합상가  보물 창고"
   },
@@ -1017,8 +1017,8 @@
    "rest": "Closed Sundays / Holidays lunch",
    "menu": "Butter & Romano cheese pasta / Mushroom sauce pasta / Alfredo sauce pasta",
    "enName": "La Cantina",
-   "script": "La Cantina offers a modern take on traditional Italian cuisine in a chic yet cozy setting. It's the perfect spot for anything from casual meals to special celebrations, with classic dishes made from fresh ingredients. Don't miss their exquisite wine pairings that elevate your dining experience to a new level.",
-   "scriptBy": "openai",
+   "script": "You are standing outside La Cantina, Korea's very first Italian restaurant, serving classic dishes since 1967. Step inside to travel back in time, where white tablecloths, dark wood paneling, and retro arched brickwork create a cozy, mid-century European atmosphere. Don't miss their legendary linguine con le vongole, packed with fresh, garlic-infused clams.",
+   "scriptBy": "gemini",
    "video": "Qqq3153IkLI",
    "videoTitle": "[라칸티나] 대한민국 최초의 이탈리안레스토랑"
   },
@@ -1038,8 +1038,8 @@
    "rest": "Varies by store",
    "menu": "Clothing / Fashion items / Kitchen / Agricultural products",
    "enName": "Namdaemun Market",
-   "script": "Namdaemun Market is a bustling hub where around 300,000 visitors come daily. Here, you'll find nearly 10,000 shops selling everything from clothes to traditional crafts. Don't miss the delicious local food stalls, offering unique dishes like kalguksu and hotteok that you can only experience right here.",
-   "scriptBy": "openai",
+   "script": "You are standing at the entrance of Namdaemun Market, Korea’s oldest and largest traditional market. It’s a bustling labyrinth of over ten thousand stalls where you can experience authentic local life. Follow your nose down the famous Hairtail Alley for spicy braised fish, or grab a piping-hot, crispy vegetable hotteok.",
+   "scriptBy": "gemini",
    "video": "o5sVbylB9A4",
    "videoTitle": "46년 만에 처음 가 본 남대문 시장 정시아 지갑을 열다 (남대문시장 VLOG⭐)"
   },
@@ -1058,9 +1058,9 @@
    "hours": "Open 24/7",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Namsan Circular Trail",
-   "script": "The Namsan Circular Trail offers a serene escape in the heart of Seoul, winding around the iconic Namsan Mountain. This 7.3-kilometer path showcases stunning views and features accessible walkways for everyone. Don’t miss the ‘Love Locks’ at Namsan Seoul Tower, a romantic spot filled with colorful padlocks.",
-   "scriptBy": "openai",
+   "enName": "Namsan Circuit Trail",
+   "script": "You’ve arrived at the Namsan Circuit Trail, a peaceful forested path looping around Seoul's iconic mountain. It’s a wonderful, vehicle-free escape where you can walk beneath a lush canopy of cherry blossoms or autumn maples. Look closely at the ground—the central tactile paving blocks make this beautiful path accessible to everyone.",
+   "scriptBy": "gemini",
    "video": "WTNjRgAm5vI",
    "videoTitle": "[4K HDR] 가을 남산 순환 나들길 북측 구간 걷기 | Walking Tour"
   },
@@ -1079,9 +1079,9 @@
    "hours": "06:30–18:30",
    "rest": "Closed Sundays",
    "menu": "Household items / Clothing / Miscellaneous",
-   "enName": "Sungnyemun (Namdaemun) Import Market",
-   "script": "This is the Sungnyemun Import Market, a standout building in the bustling Namdaemun area. It's famous for its wide array of imported goods, especially audio equipment and cameras. As you explore, you might discover unique outdoor gear and household appliances that you won’t find elsewhere.",
-   "scriptBy": "openai",
+   "enName": "Sungnyemun Import Market",
+   "script": "You're standing outside the Sungnyemun Import Market, tucked beneath the tall Daehan building. This subterranean treasure trove is famous for rare imported goods, especially vintage cameras and high-end audio gear. Step downstairs to explore narrow aisles packed with everything from retro German lenses to hard-to-find global home goods.",
+   "scriptBy": "gemini",
    "video": "gISA-vmRo2k",
    "videoTitle": "[남대문 숭례문수입상가 쇼핑 V-log] 여름을 책임질 수입양산 . 잡화 | 실리콘 제품 여기서 못사면 어디서도 못산다 종류 최고 값은 최저가  | 할미교수"
   },
@@ -1100,9 +1100,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Miscellaneous / Electronics / Glasses",
-   "enName": "Namdaemun Comprehensive Shopping Center",
-   "script": "Namdaemun Comprehensive Shopping Center is a treasure trove for unique finds, featuring countless products not easily found elsewhere. Just steps from the traditional Namdaemun Market, this shopping center offers a blend of modern convenience and local charm, with rare camera parts and various regional specialties waiting to be discovered.",
-   "scriptBy": "openai",
+   "enName": "Namdaemun General Shopping Mall",
+   "script": "This historic shopping complex is a treasure hunter's paradise, blending traditional market charm with modern shopping. It is famous for carrying rare goods you won't find anywhere else in Seoul. Take a look inside to spot vintage camera parts and regional specialties brought in from every corner of Korea.",
+   "scriptBy": "gemini",
    "video": "HwmRfHCDQj4",
    "videoTitle": "Soulful Seoul: Namdaemun Underground Shopping Center & Market + Lotte World Mall + Myeongdong"
   },
@@ -1121,9 +1121,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Wholesale & retail accessories",
-   "enName": "Namdaemun Accessories Market",
-   "script": "This market is famous for being the largest accessory hub in Korea, featuring over 2,000 specialized shops. You can find everything from elegant gold-plated jewelry to unique hairpins. It's a treasure trove of styles and materials, perfect for finding that one-of-a-kind piece.",
-   "scriptBy": "openai"
+   "enName": "Namdaemun Accessory Market",
+   "script": "You’re standing outside the Namdaemun Accessory Market, Korea’s largest hub for wholesale jewelry and fashion pieces. Inside, over two thousand stalls create a glittering labyrinth of delicate silver rings, beaded bracelets, and colorful hairpins. It’s the ultimate treasure hunt to find unique, budget-friendly pieces handcrafted right here by local artisans.",
+   "scriptBy": "gemini"
   },
   {
    "id": "986038",
@@ -1140,9 +1140,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Women's items / Hanbok / Accessories",
-   "enName": "Namdaemun Central Market",
-   "script": "Namdaemun Central Market is a vibrant shopping hub filled with unique women’s fashion and traditional Korean crafts. On the first floor, you can find an array of stylish clothing and accessories, while the second floor showcases exquisite folk art and traditional wedding items, making it a treasure trove for shoppers.",
-   "scriptBy": "openai"
+   "enName": "Namdaemun Central Shopping Mall",
+   "script": "You are standing in front of Namdaemun Central Shopping Mall, a treasure trove of Korean fashion and heritage. The first floor is packed with trendy women's apparel and accessories from all over the country. Head up to the second floor to find beautiful traditional crafts, colorful embroidery, and authentic wedding garments that make perfect souvenirs.",
+   "scriptBy": "gemini"
   },
   {
    "id": "398342",
@@ -1159,9 +1159,9 @@
    "hours": "11:30–22:00",
    "rest": "Open year-round",
    "menu": "Frozen dumplings / Salt-grilled meat / Pork ribs",
-   "enName": "Samseong Red Spicy Marinade Charcoal Grill",
-   "script": "This iconic spot has been serving flavorful charcoal-grilled meat since 1972. Their signature red marinade, made with chili powder, garlic, and ginger, gives the pork a vibrant hue and a spicy kick. Try the 'jumulleok' for a tender, marinated experience that's beloved by locals.",
-   "scriptBy": "openai",
+   "enName": "Samsung Charcoal BBQ",
+   "script": "Since 1972, this legendary spot has been famous for its vibrant, spicy red-seasoned pork grilled over charcoal. You must try their signature \"donggeurangttaeng\"—thin, circular cuts of pork coated in a secret garlic and chili glaze that caramelizes beautifully over the fire. It's a fiery, smoky taste of local Seoul history.",
+   "scriptBy": "gemini",
    "video": "2uF-W3m0igs",
    "videoTitle": "한 번만 간 사람은 없다는 50년 넘은 인생 고기집"
   },
@@ -1180,9 +1180,9 @@
    "hours": "11:30–21:00",
    "rest": "Open year-round",
    "menu": "Seafood udon / Jajangmyeon / Noodles",
-   "enName": "Andong Jang",
-   "script": "Andong Jang is a renowned Chinese restaurant just a minute from Euljiro 3-ga Station. Famous for its rich, flavorful seafood jjambong, especially the three-seafood jjambong rice, it pairs perfectly with a savory broth. The spacious, tidy interior makes it ideal for groups.",
-   "scriptBy": "openai",
+   "enName": "Andongjang",
+   "script": "Established in 1948, Andongjang is Seoul’s oldest active Chinese restaurant, famous for pioneering Korea's beloved oyster jjamppong. Step inside to try their signature spicy noodle soup, packed with plump, fresh oysters in a rich, comforting broth. It is a legendary taste of local culinary history that still draws daily crowds.",
+   "scriptBy": "gemini",
    "video": "ilbQTVo0XoU",
    "videoTitle": "서울에서 가장 오래된 중국집 안동장 (과거와 현재) #과거와현재 #thenandnow"
   },
@@ -1201,9 +1201,9 @@
    "hours": "Open 24/7",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Shin Seok-koo's Residence Site",
-   "script": "This site marks the residence of Shin Seok-koo, one of the 33 leaders of the March 1st Movement in 1919. Here, he boldly read the Declaration of Independence, risking his life for Korea's freedom. Imagine the courage it took to stand here, knowing the risks he faced.",
-   "scriptBy": "openai",
+   "enName": "Site of Shin Seok-gu's Residence",
+   "script": "This is the former home site of Shin Seok-gu, one of the thirty-three national leaders of the 1919 Independence Movement. As a devoted Methodist minister, he chose years of imprisonment over colonial submission. Look around for the memorial marker honoring the quiet courage that helped ignite Korea's fight for freedom.",
+   "scriptBy": "gemini",
    "video": "DAq-qv3IWig",
    "videoTitle": "[CBS 뉴스] 두 발로 기억하는 140년 복음의 역사 '감신대 순례길'"
   },
@@ -1222,9 +1222,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "",
-   "enName": "Chungmuro Printing Alley",
-   "script": "Chungmuro Printing Alley is a historic hub for Korea's printing industry, lined with both small and large printing shops. It's fascinating to see the blend of traditional and digital printing techniques coexisting, with vibrant storefronts showcasing everything from business cards to large banners.",
-   "scriptBy": "openai",
+   "enName": "Chungmuro Print Alley",
+   "script": "You are standing in Chungmuro Print Alley, the historic heart of Seoul's publishing industry. It's worth stopping to feel the raw, industrial energy where decades-old printing heritage meets modern digital design. Listen closely and you’ll hear the rhythmic clattering of heavy machinery and catch the sharp, nostalgic scent of fresh ink.",
+   "scriptBy": "gemini",
    "video": "1AMsvFXIQ0I",
    "videoTitle": "충무로,카메라 인쇄골목&리뉴얼 인현시장먹거리(충무로3,4가 골목길)Chungmuro Printing Alley & Inhyeon Market EP377"
   },
@@ -1243,9 +1243,9 @@
    "hours": "Mon–Sat 11:00–20:00",
    "rest": "",
    "menu": "",
-   "enName": "O! 재미동",
-   "script": "O! 재미동 is a public cultural space located in the basement of Chungmuro Station. It's a great spot to experience and enjoy a variety of video culture. The vibrant exhibitions and screenings make it an engaging stop for art and film enthusiasts.",
-   "scriptBy": "openai",
+   "enName": "Chungmuro Video Center Oh! Zemidong",
+   "script": "You’re standing outside Oh! Zemidong, a hidden cultural oasis tucked inside Chungmuro Subway Station, the historic heart of Korean cinema. This public space invites you to browse film books, view indie movies, and explore tiny art exhibitions. Grab a seat in a cozy viewing booth to experience Seoul’s underground creative scene.",
+   "scriptBy": "gemini",
    "video": "oawFUZvuFUI",
    "videoTitle": "[현장] \"충무로 영상센터 오!재미동 일방적 운영종료 즉각 중단하라\""
   },
@@ -1264,9 +1264,9 @@
    "hours": "07:00–20:00",
    "rest": "Every other Sunday",
    "menu": "Mackerel stew / Grilled fish / Cheonggukjang / Kimchi stew",
-   "enName": "Honam Restaurant",
-   "script": "Honam Restaurant is a hidden gem in the bustling Namdaemun Market, famous for its unique braised cutlassfish. Unlike other places, they add potatoes for a delightful twist. With recipes passed down from a mother in Gwangju, it's a favorite among locals and visitors alike.",
-   "scriptBy": "openai",
+   "enName": "Honam Sikdang",
+   "script": "Tucked inside Namdaemun’s Hairtail Alley, Honam Sikdang is a local favorite famous for spicy braised hairtail fish. Unlike neighboring spots, this second-generation restaurant stews its fish with tender potatoes using a secret family recipe. It's so flavorful that even the busy market merchants crowd the tables here for lunch.",
+   "scriptBy": "gemini",
    "video": "ybTAN-7ZwtA",
    "videoTitle": "[유튜브 홍보영상] 명동맛집 추천~ 목멱산방/호남식당 : 한러요우"
   },
@@ -1285,9 +1285,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Imported goods",
-   "enName": "Cheongja Import Market",
-   "script": "Cheongja Import Market features unique kitchenware and lifestyle goods from abroad, hard to find elsewhere in Korea. Explore the underground for women's clothing and accessories, then unwind at a café on the upper floors, surrounded by the buzz of Myeongdong.",
-   "scriptBy": "openai"
+   "enName": "Cheongja Imported Goods Center",
+   "script": "This is the Cheongja Imported Goods Center, a multi-story market filled with rare international kitchenware, fashion, and household items. It's a fantastic stop to hunt for unique global finds, especially in the basement where shelves overflow with imported dishes. Afterward, you can recharge at one of the cozy cafes on the upper floors.",
+   "scriptBy": "gemini"
   },
   {
    "id": "748018",
@@ -1304,9 +1304,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "",
-   "enName": "Namsan Grilled Hairtail Alley",
-   "script": "This alley is renowned for its spicy braised hairtail, a dish that became popular in the late 1980s. Each restaurant here has its own unique recipe, often using top-quality fish from regions like Jeju and Yeosu. The rich aroma of simmering seafood fills the air, inviting you to savor this local delicacy.",
-   "scriptBy": "openai",
+   "enName": "Namdaemun Hairtail Alley",
+   "script": "Step into Namdaemun Hairtail Alley, a bustling lane filled with the mouthwatering aroma of spicy braised fish. Since 1988, locals have gathered here for galchi-jorim, tender hairtail simmered in a fiery red pepper sauce. Watch for the bubbling, seasoned metal pots lining the narrow path—it’s the ultimate Korean comfort food experience.",
+   "scriptBy": "gemini",
    "video": "uVdQ-yKs7Rc",
    "videoTitle": "추억의 멸치국수부터 매콤칼칼 갈치조림까지‼ 외국인+한국인 마음 다 사로잡은 남대문시장💕 [ENG]"
   },
@@ -1325,9 +1325,9 @@
    "hours": "09:00–22:00",
    "rest": "Open year-round",
    "menu": "Fish cutlet / Half-half cutlet / Cheese cutlet / Soft tofu",
-   "enName": "Namsan Donkatsu 1992",
-   "script": "Namsan Donkatsu has been serving its famous pork cutlets since 1992. Known for its generous portions and unique spicy sauce, this is a favorite among locals and taxi drivers alike. Don't miss the endless refills of soup and sides, making each visit a hearty experience.",
-   "scriptBy": "openai",
+   "enName": "1992 Namsan Pork Cutlet",
+   "script": "This is the legendary 1992 Namsan Pork Cutlet, which started as a beloved diner for local taxi drivers. It's famous for serving massive, crispy, golden-brown cutlets. Don't miss the unique local tradition of eating your rich, saucy pork alongside a fresh green chili pepper dipped in savory ssamjang.",
+   "scriptBy": "gemini",
    "video": "Njy00z47Ga0",
    "videoTitle": "남산 돈가스 원조 논란, 92년 설립인가? 내쫒았는가?"
   },
@@ -1346,9 +1346,9 @@
    "hours": "Apr–Oct 09:00–21:00, Nov–Mar 09:00–20:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Min's House in Gwanhun-dong",
-   "script": "Min's House is a historic residence of the influential Min family from the late Joseon period. It's fascinating to see how this beautifully restored hanok reflects the wealth and power of its original owner, Min Young-hwi, who lived here during the Japanese occupation. The intricate wooden structures transport you back in time.",
-   "scriptBy": "openai"
+   "enName": "Min Family House in Namsangol Hanok Village",
+   "script": "You are standing before the Min Family House, a grand late-Joseon Dynasty residence relocated here to preserve its history. Once belonging to one of Seoul's wealthiest elites, it offers a rare glimpse into aristocratic life. Notice the exceptionally high, curved tiled roofs and the fine woodwork of the spacious wooden veranda.",
+   "scriptBy": "gemini"
   },
   {
    "id": "1964978",
@@ -1366,8 +1366,8 @@
    "rest": "Open year-round",
    "menu": "Tail soup / Bone soup / Brisket soup",
    "enName": "Eunho Restaurant",
-   "script": "Eunho Restaurant has been serving delicious oxtail soup since 1932, making it a cherished institution. The rich, flavorful broth is simmered for hours using only the finest Hanwoo beef tails, resulting in tender meat and a deep taste. Don't miss their other offerings like bone soup and hangover soup!",
-   "scriptBy": "openai",
+   "script": "Since 1932, this legendary four-generation eatery has been serving Seoul’s finest oxtail soup, or kkori-gomtang. Step inside to smell the rich, comforting broth, simmered for hours using premium Korean Hanwoo beef until the meat literally falls off the bone. It’s the ultimate Korean comfort food, perfected over nearly a century.",
+   "scriptBy": "gemini",
    "video": "JPSZSJJfK8c",
    "videoTitle": "#은호식당#꼬리곰탕 #남대문맛집#90년이넘은 노포"
   },
@@ -1386,9 +1386,9 @@
    "hours": "Weekdays 11:30–22:00, Sat 13:00–22:00",
    "rest": "Closed Sundays",
    "menu": "Clam noodle soup / Oyster pancakes / Rice cake soup",
-   "enName": "Incheon House",
-   "script": "Incheon House specializes in traditional Korean cuisine and is a favorite among local office workers for lunch. Try their unique oyster bossam, where fresh oysters are served atop spicy kimchi, creating a delightful contrast of flavors. This place transforms into a lively bar at night, perfect for enjoying a drink with friends.",
-   "scriptBy": "openai",
+   "enName": "Incheonjib",
+   "script": "This is Incheonjib, a beloved local favorite famous for its incredible bossam, or tender boiled pork. Unlike other spots, they top their crisp, unsweetened kimchi with fresh oysters for a perfect flavor harmony. Pair this savory wrap with their comforting clam noodle soup to eat like a true Seoul office worker.",
+   "scriptBy": "gemini",
    "video": "IHnl-ejPwyo",
    "videoTitle": "이게 4만원이면 어떠신가요? 인천에서보다 서울에서 더 유명한 인천집"
   },
@@ -1407,9 +1407,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Stationery / Clothing / Food",
-   "enName": "Namdaemun Bondon Clothing Market",
-   "script": "This is Namdaemun Bondon Clothing Market, nestled in the historic Namdaemun Market. Here, you’ll find discounted luxury clothing and a variety of fashion boutiques. Don’t miss the vibrant alleyways filled with traditional food stalls offering local favorites like braised mackerel.",
-   "scriptBy": "openai"
+   "enName": "Namdaemun Bondong Clothing Market",
+   "script": "This is the Namdaemun Bondong Clothing Market, a bustling two-story hub for bargain fashion and wholesale apparel. It’s the perfect spot to experience the lively chaos of Seoul's oldest traditional market. As you browse the colorful racks, listen for the energetic shouts of vendors and catch the rich aroma of nearby hairtail stew.",
+   "scriptBy": "gemini"
   },
   {
    "id": "985961",
@@ -1426,9 +1426,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "Stationery / Toys / Packaging",
-   "enName": "Namdaemun Shopping Center",
-   "script": "Namdaemun Shopping Center is a bustling hub for stationery, toys, and packaging supplies. It's famous for its unique and inventive products, attracting many creative minds. Browse through colorful aisles filled with everything from school supplies to art materials, making it a one-stop shop for all your needs.",
-   "scriptBy": "openai",
+   "enName": "Namdaemun Stationery Market",
+   "script": "You're standing at the Namdaemun Stationery Market, a vibrant alley dedicated to quirky school supplies, toys, and crafts. It's a treasure hunt for creative minds, packed with inventive Korean pens and colorful notebooks. Unlike most wholesale spots, vendors here gladly let you buy these charming, budget-friendly items individually.",
+   "scriptBy": "gemini",
    "video": "BYeVTiPJy_g",
    "videoTitle": "동대문보다 재밌는 남대문 투어"
   },
@@ -1447,9 +1447,9 @@
    "hours": "Apr–Oct 09:00–21:00, Nov–Mar 09:00–20:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Sunjung Hyo Wanghu Yoon's House",
-   "script": "This historic home showcases the architecture of Korea's highest social class during the Joseon Dynasty. Notably, its unique 'ㅁ' shaped layout and the elegant pavilion offer stunning views of the surrounding area, making it a perfect spot for history enthusiasts.",
-   "scriptBy": "openai"
+   "enName": "Empress Sunjeonghyo's Birthplace",
+   "script": "You are standing before the birthplace of Empress Sunjeonghyo, the last empress of the Joseon Dynasty. This reconstructed Hanok showcases the peak of late-dynasty aristocratic luxury. Notice the guest quarters, or Sarangchae, where the intricate wooden window lattices are slightly offset to create a beautiful, subtle pattern.",
+   "scriptBy": "gemini"
   },
   {
    "id": "132820",
@@ -1467,8 +1467,8 @@
    "rest": "2nd, 4th, 5th Sundays",
    "menu": "Mudfish fry / Dried pollack / Grilled deodeok",
    "enName": "Yonggeumok",
-   "script": "Yonggeumok is a traditional restaurant specializing in Cheonggukjang, open since 1932. Known as the birthplace of Seoul-style Cheonggukjang, it features a rich broth made from fresh loach, seasoned to perfection. The cozy, nostalgic atmosphere adds to the experience, making it a hidden gem for authentic flavors.",
-   "scriptBy": "openai",
+   "script": "Since 1932, Yonggeumok has been serving Seoul’s original loach soup, or chueotang. Unlike other regional styles, their signature dish uses a rich beef-brisket broth that tastes more like a spicy beef stew than fish. Step inside this historic spot to try a recipe that has comforted locals for nearly a century.",
+   "scriptBy": "gemini",
    "video": "F7O-M9DGF74",
    "videoTitle": "서울에서 3번째로 오래된 식당, 을지로 노포식당 용금옥입니다 1932년 개업"
   },
@@ -1488,8 +1488,8 @@
    "rest": "Closed Sundays",
    "menu": "Spicy beef / Busan steamed dish / Boiled pork",
    "enName": "Buminok",
-   "script": "Buminok has been serving delicious food since 1956, famous for its beef soup and spicy beef salad. The soup features tender meat and green onions in a light, flavorful broth, making it a beloved lunch spot for locals.",
-   "scriptBy": "openai",
+   "script": "Since 1956, Buminok has been a beloved fixture of Seoul's culinary scene, famous for its comforting bowls of yukgaejang. This rich beef soup is packed with tender meat and sweet green onions in a mild, savory broth. Locals also flock here for the exceptionally tender, seasoned beef tripe, a true delicacy.",
+   "scriptBy": "gemini",
    "video": "KBUwBdimEX0",
    "videoTitle": "Seoul 무교동 부민옥 육개장/ korean food(hot spicy meat stew),양무침,양곰탕,한우수육"
   },
@@ -1509,8 +1509,8 @@
    "rest": "Varies by store",
    "menu": "",
    "enName": "Euljiro Nogari Alley",
-   "script": "Euljiro Nogari Alley is a bustling gem filled with locals enjoying cold beer and grilled dried fish at makeshift tables. Under vibrant lights, hundreds gather here, creating a lively atmosphere. This alley, born from the 1980s, has transformed into a beloved late-night spot for delicious nogari and refreshing drinks.",
-   "scriptBy": "openai",
+   "script": "This is Euljiro Nogari Alley, a lively outdoor hotspot where locals gather after dark. It started in the 1980s for hardworking printing press laborers looking for a cheap drink. Pull up a colorful plastic stool, order a cold draft beer, and try the signature grilled nogari—chewy dried young pollack served with spicy sauce.",
+   "scriptBy": "gemini",
    "video": "1vf8FiVWH9I",
    "videoTitle": "을지로 노가리 골목의 상징, 하루아침에 사라져버렸습니다 / 스브스뉴스"
   },
@@ -1529,9 +1529,9 @@
    "hours": "11:00–22:00",
    "rest": "Closed Sat, Sun",
    "menu": "Stir-fried pork / Steamed pollack / Mung bean pancake",
-   "enName": "Doenjang Art and Alcohol",
-   "script": "Doenjang Art and Alcohol is a cozy Korean restaurant specializing in doenjang, or fermented soybean paste. It's famous for its signature dish, a hearty doenjang set meal where you mix fresh veggies and tofu for a rich flavor. The atmosphere is simple yet inviting, perfect for a taste of authentic Korean cuisine.",
-   "scriptBy": "openai",
+   "enName": "Doenjang Yesulgwa Sul",
+   "script": "You're standing outside Doenjang Yesulgwa Sul, which translates to 'Soybean Paste Art and Alcohol.' Customers loved their rich, savory stew so much they called it 'art,' prompting the legendary name change. Try their signature set meal, mixing the thick, tofu-filled paste with fresh chives, lettuce, and warm rice.",
+   "scriptBy": "gemini",
    "video": "Nr5bUiW7Z6E",
    "videoTitle": "된장예술과 술!!! 종로의 맛집깡패 된장왕을 소개합니다."
   },
@@ -1550,9 +1550,9 @@
    "hours": "Weekdays 11:00–22:00, Sat 11:00–21:00",
    "rest": "Closed Sundays",
    "menu": "Pork neck / Aged sirloin / Fresh sirloin",
-   "enName": "ChamSutGol",
-   "script": "ChamSutGol specializes in premium charcoal-grilled meats sourced from a renowned clean region. The tantalizing aroma of real charcoal enhances the flavor of their expertly aged meats. Don't miss the unique dishes that require a reservation, like their savory beef bone soup and nutritious stone pot rice.",
-   "scriptBy": "openai",
+   "enName": "Chamsootgol",
+   "script": "Chamsootgol is a beloved local BBQ institution famous for its premium, house-aged beef. It's worth a stop to taste the incredible flavor of meat grilled over genuine, glowing hardwood charcoal. Be sure to pair your meal with their signature sizzling stone-pot rice, a comforting favorite among nearby office workers.",
+   "scriptBy": "gemini",
    "video": "1FprOSE7oxE",
    "videoTitle": "신내동 참숯골 삼겹살 꽃"
   },
@@ -1572,8 +1572,8 @@
    "rest": "Closed Sundays",
    "menu": "Special sirloin / Sirloin set / Black pork belly",
    "enName": "Nakdonggang",
-   "script": "Nakdonggang is a beloved restaurant specializing in grilled sirloin, popular since 1968. Try the thinly sliced sirloin grilled with salt, served alongside rice and soybean paste. The interior, adorned with wood and hanji paper, evokes the charm of a traditional Korean house.",
-   "scriptBy": "openai",
+   "script": "Since 1968, Nakdonggang has been a beloved sanctuary for local office workers craving premium beef sirloin. It’s famous for paper-thin slices of frozen sirloin that sear to perfection in seconds. Inside, the rustic wood and traditional hanji paper walls make you feel like you’ve stepped back into mid-century Seoul.",
+   "scriptBy": "gemini",
    "video": "a6fBlBl-4nI",
    "videoTitle": "[뉴스 인사이드-현장] 4대강 보 개방 낙동강 살리나? (2017.6.3.토)"
   },
@@ -1592,9 +1592,9 @@
    "hours": "Weekdays 09:00–21:00, Weekends 09:00–18:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Seoul Library",
-   "script": "Seoul Library, located next to City Hall, is a hub for knowledge and culture. It offers extensive resources on history, culture, and urban planning. Enjoy the outdoor reading spaces, like the Book Reading Plaza, where you can relax with a book amidst the vibrant city atmosphere.",
-   "scriptBy": "openai"
+   "enName": "Seoul Metropolitan Library",
+   "script": "You’re standing before the Seoul Metropolitan Library, housed in the grand, 1926 former City Hall building. It’s a wonderful stop to appreciate Seoul's history and grab a quiet moment. Inside, you'll be greeted by a breathtaking, three-story-high wooden wall of books stretching up toward the ceiling.",
+   "scriptBy": "gemini"
   },
   {
    "id": "2739478",
@@ -1612,8 +1612,8 @@
    "rest": "Closed Mondays",
    "menu": "",
    "enName": "Jeon Tae-il Memorial Hall",
-   "script": "The Jeon Tae-il Memorial Hall honors the life of labor activist Jeon Tae-il. Here, you can explore exhibitions detailing his struggles and the labor movement in Korea. Notice the poignant display on the third floor, which vividly captures the spirit of Jeon's fight for workers' rights.",
-   "scriptBy": "openai"
+   "script": "This is the Jeon Tae-il Memorial Hall, dedicated to the young tailor who sparked South Korea's modern labor rights movement. It offers a moving look into the struggles of the workers who built modern Korea. Inside, you can see his handwritten diaries and a recreation of the cramped, low-ceilinged sweatshops of the 1960s.",
+   "scriptBy": "gemini"
   },
   {
    "id": "3094138",
@@ -1630,9 +1630,9 @@
    "hours": "10:00–22:00",
    "rest": "Open year-round",
    "menu": "Sweet and sour pork / Fried eggplant",
-   "enName": "Xiaobao Beef Noodle",
-   "script": "This is a specialty beef noodle shop known for its authentic Lanzhou-style noodles. The hand-pulled noodles are made fresh and served in a rich, homemade broth infused with 20 herbal ingredients. Be sure to try the tender beef and their signature spicy chili oil for a truly memorable meal.",
-   "scriptBy": "openai",
+   "enName": "Xiaobao Beef Noodles Jongno Main Branch",
+   "script": "This is Xiaobao Beef Noodles, famous for serving authentic Lanzhou-style noodles hand-pulled right before your eyes. It’s the perfect stop to customize your meal by choosing from eight different noodle thicknesses. Each bowl features a rich, twelve-hour broth seasoned with twenty traditional Chinese herbs and a splash of fiery chili oil.",
+   "scriptBy": "gemini",
    "video": "t08rU_ffSaY",
    "videoTitle": "연매출 15억! 사장님이 중국에서 비법 배워왔다는? 정통 중국식 고기 국수 우육면 / Chinese spicy beef noodles / korean street food"
   },
@@ -1651,9 +1651,9 @@
    "hours": "Weekdays 09:00–17:00, Sat 09:00–14:00",
    "rest": "Closed Sundays",
    "menu": "Hair ties / Keychains",
-   "enName": "Jangan Accessories Market",
-   "script": "Jangan Accessories Market is a treasure trove of unique and creative accessories. Known for its competitive prices, each shop here showcases distinct products that reflect Korean craftsmanship. Be sure to check out the vibrant displays filled with colorful jewelry and quirky gadgets!",
-   "scriptBy": "openai"
+   "enName": "Jangan Accessory Shopping Mall",
+   "script": "This is the Jangan Accessory Shopping Mall, a bustling wholesale haven packed with budget-friendly jewelry and fashion pieces. It is worth stopping here because local designers constantly create one-of-a-kind items you won't find anywhere else. Picture narrow, vibrant aisles overflowing with sparkling hairpins, handmade earrings, and quirky keychains.",
+   "scriptBy": "gemini"
   },
   {
    "id": "129418",
@@ -1670,9 +1670,9 @@
    "hours": "Open all day",
    "rest": "Open year-round",
    "menu": "",
-   "enName": "Baekbeom Square (Statue of Kim Gu)",
-   "script": "Baekbeom Square honors Kim Gu, a revered independence activist and educator. Standing tall at 10 meters, the statue is a striking symbol of his dedication to Korea's freedom. Enjoy the lush green lawns as you pause to reflect on his legacy.",
-   "scriptBy": "openai"
+   "enName": "Baekbeom Square",
+   "script": "You are standing in Baekbeom Square, a peaceful hilltop park dedicated to Kim Koo, a revered leader of Korea's independence movement. This scenic plaza was deliberately built over a demolished Japanese Shinto shrine to reclaim Korean heritage. Look up at his towering ten-meter bronze statue, framed beautifully by Namsan Mountain and the ancient city walls.",
+   "scriptBy": "gemini"
   },
   {
    "id": "403044",
@@ -1689,9 +1689,9 @@
    "hours": "Mon–Fri 07:00–20:00, Sat–Sun 07:00–15:00",
    "rest": "Open year-round",
    "menu": "Cod soup",
-   "enName": "Mugyo-dong Bugeogukjip",
-   "script": "Mugyo-dong Bugeogukjip specializes in a rich, comforting bowl of bugeoguk, a traditional dried pollack soup. Established in 1968, the thick, milky broth is perfect for a chilly day, and you can enjoy endless refills of rice and soup for an unbeatable price.",
-   "scriptBy": "openai",
+   "enName": "Mugyodong Bugeokukjib",
+   "script": "Since 1968, this legendary spot has served just one dish: a rich, comforting dried pollack soup. It is Seoul's ultimate hangover cure, beloved for its deeply savory, milky-white broth. Grab a seat and watch the steam rise from a bowl that locals have lined up for daily for decades.",
+   "scriptBy": "gemini",
    "video": "5cmyT9RClMw",
    "videoTitle": "을지로 직장인들의 최애 북어국집 #무교동북어국집 #무교동 #북어국 #맛집 #선주후면"
   },
@@ -1710,9 +1710,9 @@
    "hours": "Summer 09:00–21:00, Winter 09:00–20:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Haepung Buwongun Yun Taek-young's House",
-   "script": "This house was built by Yun Taek-young, the father-in-law of Emperor Sunjong, when his daughter was appointed as a crown princess in 1906. Its unique U-shaped architecture and the use of wood from Gyeongun Palace make it a fascinating glimpse into Korea's royal past.",
-   "scriptBy": "openai",
+   "enName": "House of Yun Taek-yeong",
+   "script": "This elegant Hanok was built in 1906 by the father-in-law of Korea's last emperor, using premium red pine salvaged from a royal palace. It is architecturally unique, laid out in the shape of the Chinese character meaning \"first.\" Notice how the central courtyard creates a highly private, solemn space designed for ancestral rituals.",
+   "scriptBy": "gemini",
    "video": "SYmipIxjUg4",
    "videoTitle": "[서울시 기록 영상] 서울문화유산답사기 35회 - 장위동 김진흥가, 해풍부원군 윤택영댁재실"
   },
@@ -1731,9 +1731,9 @@
    "hours": "Varies by exhibition",
    "rest": "Varies by exhibition",
    "menu": "",
-   "enName": "Picnic",
-   "script": "Picnic is a vibrant cultural space that seamlessly blends art and dining. With its stylish café, exhibition hall, and rooftop, it offers stunning views of the surrounding area. Notably, the impressive chandelier in the café adds a touch of elegance to your visit.",
-   "scriptBy": "openai",
+   "enName": "Piknic",
+   "script": "Tucked away on the slopes of Namsan, Piknic is a trendy cultural complex beautifully repurposed from an old pharmaceutical office. It's a beloved creative sanctuary hosting world-class art exhibitions, topped with a scenic rooftop. Step inside the ground-floor cafe to admire its stunning, oversized chandeliers reflecting against the lush garden outside.",
+   "scriptBy": "gemini",
    "video": "z-bvXGh1HAo",
    "videoTitle": "서울에서 1시간, 강 보며 돗자리 피크닉 되는  물멍 카페"
   },
@@ -1752,9 +1752,9 @@
    "hours": "10:00–22:00",
    "rest": "Closed Sundays",
    "menu": "Raw meat kimchi stew / Raw pork belly",
-   "enName": "Songgamyeongga",
-   "script": "Songgamyeongga is a popular Korean restaurant, famous for its fresh meat kimchi stew. The rich flavors and the sizzling sound of the stew bubbling in the pot create a warm atmosphere. It's a great spot for a hearty meal or a night out with friends.",
-   "scriptBy": "openai",
+   "enName": "Songa Myeongga",
+   "script": "This is Songa Myeongga, a favorite local haunt where nearby office workers gather after hours. It’s famous for its bubbling raw-meat kimchi stew, packed with thick, tender cuts of fresh pork. Stop here to experience a true, comforting Seoul soul-food dinner amidst the lively chatter of a traditional Korean tavern.",
+   "scriptBy": "gemini",
    "video": "cOP6Q9UUFxE",
    "videoTitle": "서울 종각 맛집 손가명가 한식맛집 흑돼지맛집 in Seoul"
   },
@@ -1774,8 +1774,8 @@
    "rest": "Open year-round",
    "menu": "",
    "enName": "Namsan Park",
-   "script": "Namsan Park is a serene natural retreat right in the heart of Seoul, perfect for a breath of fresh air. It's a hub of leisure activities, including scenic walks and the famous love locks near N Seoul Tower. Take a moment to read the heartfelt messages on the locks as you stroll through.",
-   "scriptBy": "openai",
+   "script": "You are standing at the entrance of Namsan Park, Seoul's central natural oasis. It's a perfect escape from the bustling city, offering scenic walking trails that lead all the way up to N Seoul Tower. As you climb, look out for the thousands of colorful 'love locks' latched onto the metal fences.",
+   "scriptBy": "gemini",
    "video": "CUd-_Hx1GSg",
    "videoTitle": "남산타워 버스타고 가는 법!  #myeongdong #seoul #korea #namsanseoultower #travel #howto #남산타워 #버스 #가는길 #명동 #서울"
   },
@@ -1794,9 +1794,9 @@
    "hours": "10:00–22:00",
    "rest": "Open year-round",
    "menu": "Eel soup / Green onion kimchi stew",
-   "enName": "Jangsu Village Grilled Eel",
-   "script": "This restaurant specializes in grilled eel, offering a clean and spacious environment perfect for families and groups. The eel here is known for its mild and savory flavor, making it an ideal pairing with local fruit wines. Enjoy the cozy seating as you dive into a delicious dining experience.",
-   "scriptBy": "openai",
+   "enName": "Jangsuchon Pungcheon Jangeo",
+   "script": "This is Jangsuchon Pungcheon Jangeo, a local favorite specializing in grilled eel. Unlike other spots, their eel is prized for its exceptionally clean, savory flavor without any greasiness. For the ultimate local experience, sink into their comfortable seats and pair the crispy, grilled-to-perfection eel with a sweet glass of traditional black raspberry wine.",
+   "scriptBy": "gemini",
    "video": "np_MJ2OyWjI",
    "videoTitle": "장수촌풍천장어직판장#shorts#장어#장수촌#종각맛집#저녁메뉴#추천#젊음의거리#스테미너#종로맛집#중구맛집#장어"
   },
@@ -1815,9 +1815,9 @@
    "hours": "General: 09:00–21:00, Exhibition: Varies",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Deoksugung Daehanmun Gate",
-   "script": "Deoksugung Daehanmun Gate is the main entrance to Deoksugung Palace, symbolizing the prosperity of Hanyang. This gate was relocated in the 1970s and stands proudly today, showcasing its unique blend of Korean and Western architectural styles. Take a moment to appreciate the intricate details carved into the wooden structure.",
-   "scriptBy": "openai",
+   "enName": "Daehanmun Gate",
+   "script": "You are standing before Daehanmun, the historic main gate of Deoksugung Palace. It's famous for hosting the vibrant Royal Guard Changing Ceremony. If you look closely at the road behind you, this massive gate actually stood thirty-three meters further forward until it was pushed back in the 1970s to widen the street.",
+   "scriptBy": "gemini",
    "video": "lW0j77RTmvM",
    "videoTitle": "서울 덕수궁 대한문 수문장 교대식 (Seoul Deoksu-Gung Palace Daehan-Moon Gate Keeper Change Ceremony) #shorts"
   },
@@ -1836,9 +1836,9 @@
    "hours": "Weekdays 11:00–21:00, Weekends 10:30–20:00",
    "rest": "Open year-round",
    "menu": "Kimchi rice / Dumpling hot pot",
-   "enName": "Ibugmandu",
-   "script": "Ibugmandu specializes in North Korean-style dumplings, nestled in a cozy alley behind City Hall. Their signature dish, Ibugmandu Guk, features large dumplings in a light, clear broth that lets the subtle flavors shine through. Don't miss the refreshing Kimchi Moolbap, perfect for a hot summer day!",
-   "scriptBy": "openai",
+   "enName": "Yibuk Mandu",
+   "script": "Tucked away in a quiet alley, Yibuk Mandu specializes in authentic, North Korean-style dumplings. You'll love their signature soup, featuring massive, hand-stuffed dumplings in an incredibly clean, minimalist broth. For a refreshing twist, try the cold kimchi-broth rice bowl topped with crunchy cucumbers.",
+   "scriptBy": "gemini",
    "video": "Prlbh_wOZ5Q",
    "videoTitle": "#명동맛집 #미성옥 #명동미성옥 #서울시청맛집 #이북만두 #아트스페이스호화"
   },
@@ -1857,9 +1857,9 @@
    "hours": "11:00–22:00",
    "rest": "",
    "menu": "Marinated ribs / Soybean paste stew",
-   "enName": "Geumdonghwa Charcoal Grill",
-   "script": "This Korean BBQ spot is famous for its Galbi Sal Jumeok, marinated short ribs grilled to perfection. The sizzling sound and smoky aroma will draw you in, making it a must-try for an authentic Korean dining experience.",
-   "scriptBy": "openai",
+   "enName": "Geumdong Charcoal Grill",
+   "script": "You’ve arrived at Geumdong Charcoal Grill, a beloved neighborhood spot specializing in authentic Korean BBQ. It’s worth a stop to experience the lively, local dining scene just steps from the main streets. You'll immediately smell the sweet, smoky aroma of their signature marinated beef rib fingers sizzling over glowing charcoal embers.",
+   "scriptBy": "gemini",
    "video": "IPRFX-fLR7c",
    "videoTitle": "이틀간 15끼먹은 광주 찐맛집 족보정리"
   },
@@ -1879,8 +1879,8 @@
    "rest": "Varies by store",
    "menu": "Food / Miscellaneous / Clothing",
    "enName": "Inhyeon Market",
-   "script": "Inhyeon Market is a traditional marketplace with over 50 years of history, nestled between modern high-rises. Known as a 'paradise of flavors,' it offers hidden culinary gems at affordable prices. As you stroll through its narrow 2-meter wide alley, you'll find 110 diverse shops waiting to be explored.",
-   "scriptBy": "openai"
+   "script": "Tucked behind Chungmuro's historic printing presses, Inhyeon Market is a narrow, 200-meter alleyway dating back to the 1950s. It’s a beloved local food paradise where office workers gather after hours for affordable, comforting eats. Stop here to experience retro Seoul and smell the savory Korean pancakes sizzling in cozy, decades-old stalls.",
+   "scriptBy": "gemini"
   },
   {
    "id": "1957600",
@@ -1897,9 +1897,9 @@
    "hours": "Varies by store",
    "rest": "Varies by store",
    "menu": "",
-   "enName": "Myeongdong and Namdaemun Tourist Area",
-   "script": "This vibrant area is a bustling hub for shopping and dining in Seoul, attracting tourists with its mix of luxury brands and local boutiques. As you stroll through the lively streets, the aroma of street food like tteokbokki fills the air, tempting you to indulge in delicious Korean snacks.",
-   "scriptBy": "openai",
+   "enName": "Myeong-dong, Namdaemun, Bukchang-dong, Da-dong and Mugyo-dong Special Tourist Zone",
+   "script": "This sprawling special tourist zone is the vibrant beating heart of Seoul's shopping, culture, and street food. It connects the historic Namdaemun Market with the trendy fashion alleys of Myeong-dong. Stop here to experience the sensory overload of sizzling hotteok griddles alongside glittering department stores.",
+   "scriptBy": "gemini",
    "video": "y2AqXkBo1DY",
    "videoTitle": "중구_관광특구에서 야외영업 가능해졌다(서울경기케이블TV뉴스)"
   },
@@ -1918,9 +1918,9 @@
    "hours": "09:00–18:00",
    "rest": "Closed Mondays",
    "menu": "",
-   "enName": "Sungnyemun",
-   "script": "Sungnyemun, also known as Namdaemun, is the oldest wooden structure in Seoul and a symbol of the city. This impressive gate features a unique double-roof design and has stood since 1396, witnessing centuries of history, including wars and restorations. Take a moment to admire the intricate details of its traditional architecture.",
-   "scriptBy": "openai"
+   "enName": "Sungnyemun Gate",
+   "script": "Before you stands Sungnyemun Gate, Seoul's historic southern entrance and its oldest wooden structure. This resilient monument was painstakingly restored to its former glory after a tragic fire in 2008. Take a moment to admire the grand stone archway and the unique vertical calligraphy on the hanging plaque.",
+   "scriptBy": "gemini"
   },
   {
    "id": "126516",
@@ -1938,8 +1938,8 @@
    "rest": "Open year-round",
    "menu": "",
    "enName": "Bosingak Bell Pavilion",
-   "script": "Bosingak Bell Pavilion is the historic site where the bell signaling time for the city used to hang. This striking two-story structure was rebuilt in 1979 and offers a fascinating glimpse into Seoul's past. Each New Year's Eve, thousands gather here to witness the traditional bell-ringing ceremony.",
-   "scriptBy": "openai"
+   "script": "You are standing before Bosingak, a historic belfry that announced the daily opening and closing of Seoul's city gates during the Joseon Dynasty. Today, it’s most famous for the massive New Year’s Eve ceremony. Every December thirty-first, thousands gather right here to hear thirty-three resonant strikes ring out, welcoming the start of a new year.",
+   "scriptBy": "gemini"
   },
   {
    "id": "2788820",
@@ -1957,8 +1957,8 @@
    "rest": "Open year-round",
    "menu": "Sashimi omakase / Sushi omakase",
    "enName": "Donghaedo Gwanghwamun",
-   "script": "This is a sushi specialty restaurant known for its rotating sushi buffet. Here, you can savor a variety of fresh sushi made with fish caught the same day, like succulent salmon and crispy tempura shrimp. The vibrant colors of the sushi on the conveyor belt are a feast for the eyes!",
-   "scriptBy": "openai",
+   "script": "This is Donghaedo Gwanghwamun, a beloved conveyor-belt sushi buffet famous for its daily-sourced seafood. It's the perfect spot to satisfy your cravings with premium, all-you-can-eat plates. Watch the vibrant parade of soy-marinated shrimp, freshly torched salmon, and crispy tempura glide right past your seat.",
+   "scriptBy": "gemini",
    "video": "eVU6fKNxIdc",
    "videoTitle": "정말 죄송합니다 사장님...솔직하게 리뷰 할게요....동해도 스시 광화문점...."
   },
@@ -1978,8 +1978,8 @@
    "rest": "Closed weekends",
    "menu": "Andong rice soup / Dumpling hot pot",
    "enName": "Homyeonjeong",
-   "script": "This restaurant specializes in Andong-guksu, a traditional noodle dish from the Andong region. The noodles are thin, chewy, and served in a clear, flavorful broth that warms the soul. It's a great spot for groups, located just 200 meters from Jonggak Station.",
-   "scriptBy": "openai",
+   "script": "Tucked away in the basement here is Homyeonjeong, a hidden gem serving authentic Andong-style noodle soup. It's worth a stop to try their incredibly thin, hand-rolled wheat noodles swimming in a delicate, savory broth. Be sure to pair these silky-smooth noodles with their seasoned perilla leaves for the ultimate local bite.",
+   "scriptBy": "gemini",
    "video": "O2Sx3qFYc7A",
    "videoTitle": "명동에서 혼자노는 아싸가 있다?"
   },
@@ -1998,9 +1998,9 @@
    "hours": "10:00–22:00",
    "rest": "Open year-round",
    "menu": "Books / Stationery / Gifts",
-   "enName": "Youngpoong Bookstore",
-   "script": "Youngpoong Bookstore, opened in 1992, is a cultural hub in Jongno. Here, you can explore everything from bestsellers to classics, stationery, and gifts. With cozy reading spaces and frequent cultural events, it’s a paradise for book lovers right in the heart of the city.",
-   "scriptBy": "openai"
+   "enName": "Youngpoong Bookstore Jongno Main Branch",
+   "script": "This is Youngpoong Bookstore, a massive underground literary oasis that has been a Jongno landmark since 1992. Beyond the endless shelves of Korean and foreign books, it's a treasure trove of quirky Korean stationery, lifestyle goods, and cozy reading corners. It's the perfect quiet escape to pick up a unique Seoul souvenir.",
+   "scriptBy": "gemini"
   },
   {
    "id": "2804500",
@@ -2018,8 +2018,8 @@
    "rest": "Closed Mon–Wed",
    "menu": "Coriander cake / Strawberry matcha sorbet",
    "enName": "Wonhyeongdeul",
-   "script": "This hidden gem is a dessert bar nestled on the fourth floor of an old building, featuring no sign or door to find it. It's celebrated for its unique offerings like cilantro cake and dill cake, making it a must-visit for adventurous foodies. Enjoy the airy atmosphere and diverse seating options.",
-   "scriptBy": "openai",
+   "script": "You’ve arrived at Wonhyeongdeul, a hidden dessert bar tucked away on the fourth floor of this signless, unassuming building. It's famous for turning savory herbs into avant-garde sweets. Don't miss their striking pink cilantro cake—it's a surprisingly delicious masterpiece that pairs perfectly with a glass of natural wine by the window.",
+   "scriptBy": "gemini",
    "video": "ibPKpKM7D94",
    "videoTitle": "vlog | 힙지로 원형들. 패션5. 명동교자. 쉑쉑버거. 생일선물받고 만보걷는 일상 브이로그"
   },
@@ -2039,8 +2039,8 @@
    "rest": "Closed Sundays",
    "menu": "Mixed stew / Kimchi fried rice",
    "enName": "Jinju Hoegwan",
-   "script": "Jinju Hoegwan has been serving cold soybean noodles since 1962, using only the finest native Korean ingredients. The rich, nutty broth complements the chewy noodles perfectly, creating a delightful experience. Don't forget to try their spicy kimchi, which adds a refreshing kick!",
-   "scriptBy": "openai",
+   "script": "Since 1962, Jinju Hoegwan has served Seoul’s ultimate kongguksu, a refreshing cold noodle soup. It's worth a stop to experience the incredibly thick, velvety broth made from locally sourced yellow soybeans. Pair each chewy bite with their famously sweet, tangy kimchi for the perfect flavor balance.",
+   "scriptBy": "gemini",
    "video": "oYvDra9jKdM",
    "videoTitle": "전국에서 가장 비싼 콩국수 맛집. 줄 서서 먹는 이유"
   },
@@ -2059,9 +2059,9 @@
    "hours": "Weekdays 10:30–22:00, Weekends 11:30–22:00",
    "rest": "Open year-round",
    "menu": "Seafood paella / Steak",
-   "enName": "D Lifestyle Kitchen Gwanghwamun",
-   "script": "D Lifestyle Kitchen is a unique restaurant run by a team of Michelin-star chefs, focusing on both taste and health. They use no added sugar, relying on natural sweeteners and domestic honey. Try their fusion dishes, like the royal mentaiko bibimbap or creamy mentaiko pasta, for a delightful experience.",
-   "scriptBy": "openai",
+   "enName": "D'Lifestyle Kitchen Gwanghwamun",
+   "script": "D'Lifestyle Kitchen offers guilt-free, low-carb dining crafted by a team of Michelin-starred chefs. It's worth stopping here to experience rich, flavorful Korean-Western fusion dishes prepared entirely without refined sugar. Treat yourself to their signature pollock roe cream pasta, sweetened naturally with local honey.",
+   "scriptBy": "gemini",
    "video": "Gp-zEJ_J-mM",
    "videoTitle": "인테리어 넘 멋진 “디라이프스타일키친 광화문점”"
   },
@@ -2080,11 +2080,11 @@
    "rest": "",
    "menu": "",
    "overview": "도심 속 복원 하천. 밤이면 조명이 켜지고 산책로가 이어진다.",
-   "script": "Cheonggyecheon is Seoul's beloved restored stream, a sunken walkway running eleven kilometres through downtown. Step down from street level and the city noise fades — come after dark when the banks glow with lights, just a short stroll north of Myeongdong.",
-   "scriptBy": "manual",
+   "script": "This is Cheonggyecheon, a beautifully restored historic stream flowing right through the heart of Seoul's concrete jungle. It’s a peaceful sanctuary where you can escape the city bustle and walk right alongside the rushing water. At night, colorful lights illuminate the stone pathways, making it the perfect spot for a romantic evening stroll.",
+   "scriptBy": "gemini",
    "video": "",
    "videoTitle": ""
   }
  ],
- "scriptProvider": "openai"
+ "scriptProvider": "gemini"
 }

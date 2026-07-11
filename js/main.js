@@ -384,6 +384,13 @@ function addGooglePlace(g, row) {
     };
     state.pois.push(poi);
     addPin(poi, TYPE_GLYPH.custom);
+    // Gemini writes a real guide script for this place in the background
+    fetch("/api/narrate", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({ name: g.name, kind: g.kind, addr: g.addr }),
+    }).then((r) => r.json()).then(({ script }) => {
+      if (script) { poi.script = script; poi.scriptBy = "gemini"; prefetch(script); savePicks(); }
+    }).catch(() => { /* template script stays */ });
   }
   state.picks.add(id);
   savePicks();

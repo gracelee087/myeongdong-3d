@@ -9,7 +9,7 @@ const env = fs.readFileSync(".env", "utf8");
 const get = (k) => (env.match(new RegExp("^" + k + "=(.+)$", "m")) || [])[1]?.trim();
 const GEMINI = get("GEMINI_API_KEY");
 const OPENAI = get("OPENAI_API_KEY");
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = "gemini-3.5-flash";
 
 const provider = GEMINI ? "gemini" : OPENAI ? "openai" : null;
 if (!provider) { console.error("Need GEMINI_API_KEY or OPENAI_API_KEY in .env"); process.exit(1); }
@@ -55,7 +55,18 @@ async function viaGemini(p) {
   });
   if (!r.ok) throw new Error("gemini " + r.status + " " + (await r.text()).slice(0, 120));
   const j = await r.json();
-  return JSON.parse(j.candidates[0].content.parts[0].text);
+  return firstJSON(j.candidates[0].content.parts[0].text);
+}
+
+// gemini sometimes appends stray text after the JSON — take the first balanced object
+function firstJSON(t) {
+  const s = t.indexOf("{");
+  let d = 0;
+  for (let i = s; i < t.length; i++) {
+    if (t[i] === "{") d++;
+    else if (t[i] === "}") { d--; if (!d) return JSON.parse(t.slice(s, i + 1)); }
+  }
+  throw new Error("no JSON in reply");
 }
 
 const gen = provider === "gemini" ? viaGemini : viaOpenAI;
