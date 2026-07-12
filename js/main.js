@@ -3,7 +3,7 @@
 // you walk the real streets and famous places explain themselves (ElevenLabs),
 // with Myeongdong filler commentary between.
 import { playNarration, prefetch, stop as audioStop, pause as audioPause, resume as audioResume, isPlaying } from "./audio.js";
-import { initScene, followCam, orbitCam, moveAvatar3d, markVisited, resetPins, render, setEnvironment, updateRoute, setPinActive, addPin, removePin, highlightCourse } from "./scene.js";
+import { initScene, followCam, orbitCam, moveAvatar3d, markVisited, resetPins, render, setEnvironment, updateRoute, setPinActive, addPin, removePin, highlightCourse, resetOrbit, flyTo, beginPeek, endPeekCam } from "./scene.js";
 
 const el = (id) => document.getElementById(id);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -12,6 +12,7 @@ const WALK_SPEED = 12;         // metres / second along the street path
 const ROT_SPEED = 4;           // idle overview spin, deg/s
 const POI_TRIGGER = 40;        // metres — "you're in front of it"
 const FILLER_EVERY_M = 190;
+const FILLER_GUARD_M = 90;     // no new story this close to the next stop
 const TYPE_GLYPH = { food: "🍜", attraction: "📸", culture: "🎭", shopping: "🛍️", beauty: "💄", custom: "🎯" };
 
 // themed courses — different travellers want different Myeongdongs
@@ -25,6 +26,9 @@ const COURSES = [
   { id: "culture", icon: "📸", name: "Culture & History", pick: (p) => p.type === "attraction" || p.type === "culture" },
   { id: "all", icon: "🌟", name: "Everything", pick: () => true },
   { id: "picks", icon: "🎯", name: "My Picks", pick: (p) => state.picks.has(p.id) },
+  // trip journal — every place the guide narrated (or you ✓-marked) lands here,
+  // saved on this device so you can relive the trip back home
+  { id: "journal", icon: "📒", name: "My Trip", pick: (p) => state.tripLog.has(p.id) },
 ];
 
 // nearby subway stations — every tourist arrives underground
@@ -35,20 +39,65 @@ const SUBWAY = [
   { name: "회현역", en: "Hoehyeon", lines: [{ n: "4", c: "#00a4e3" }], lng: 126.97860, lat: 37.55860 },
 ];
 
-// spoken the moment the walk starts (also pre-baked to mp3 by scripts/bake-audio.mjs)
+// spoken the moment the walk starts (written by Gemini; pre-baked to mp3 by
+// scripts/bake-audio.mjs — keep byte-identical to the copy there)
 const INTRO =
-  "You're standing at Myeongdong Station, Exit six — the front door of Myeongdong. " +
-  "Pop your earphones in and follow the yellow line. Every time we pass somewhere special, I'll tell you all about it. Let's go.";
+  "Welcome to Seoul! I'm so glad you're here, standing right outside Myeongdong Station Exit 6. " +
+  "You are stepping into a place unlike anywhere else in Korea—this is the country's most expensive land, welcoming up to a million visitors every single day. " +
+  "But Myeongdong is so much more than just shopping; back in the 1950s, it was Seoul's very own Montmartre, where artists and poets filled the cozy tea rooms. " +
+  "Ever since, almost every major Korean trend has started right on these streets. " +
+  "Now, pop your earphones in, follow the yellow line, and I'll share its stories as we walk.";
+
+// real, famous photo spots — woven into EVERY course: when you pass one, the
+// guide tells you WHY it's famous and how to take the shot (no separate category).
+// Narrations below are fallbacks; data/photo-spots.json (written by Gemini via
+// scripts/gen-photo-tips.mjs) replaces them at boot.
+const PHOTO_SPOTS = [
+  {
+    id: "ps-cathedral", enName: "Cathedral Front Steps", ko: "명동성당 앞계단", type: "photo",
+    lng: 126.98715, lat: 37.5633,
+    tip: "Photo spot! This is THE Myeongdong Cathedral shot — stand at the bottom of the front steps and shoot upward, so the brick spire fills the whole sky. Around sunset the red brick glows.",
+  },
+  {
+    id: "ps-mainstreet", enName: "Main Street Neon Canyon", ko: "명동거리 네온", type: "photo",
+    lng: 126.9851, lat: 37.56348,
+    tip: "Photo spot! Look down the main street — layers of glowing signs stack into a neon canyon. Shoot from the middle of the walkway; it's most famous after dark, when every sign is lit.",
+  },
+  {
+    id: "ps-cheonggye", enName: "Cheonggye Plaza · Spring", ko: "청계광장 스프링", type: "photo",
+    lng: 126.9779, lat: 37.5689,
+    tip: "Photo spot! The giant red-and-blue Spring sculpture marks the start of Cheonggyecheon. Frame it with the stream falling away behind it — or go down to the water and shoot back up.",
+  },
+  {
+    id: "ps-bok", enName: "Bank of Korea Fountain", ko: "한국은행 분수광장", type: "photo",
+    lng: 126.9817, lat: 37.5599,
+    tip: "Photo spot! Across the fountain stands the 1912 Bank of Korea building — Seoul's favourite European-style backdrop. Shoot low over the fountain so the water frames the stone facade.",
+  },
+  {
+    id: "ps-plaza", enName: "Seoul Plaza Lawn", ko: "서울광장", type: "photo",
+    lng: 126.978, lat: 37.5656,
+    tip: "Photo spot! The oval lawn of Seoul Plaza, with the glass wave of the new City Hall curling over the old stone hall — one frame, a hundred years of Seoul. Sit on the grass for the classic shot.",
+  },
+  {
+    id: "ps-cablecar", enName: "Namsan Cable Car View", ko: "남산케이블카 뷰", type: "photo",
+    lng: 126.9819, lat: 37.5565,
+    tip: "Photo spot! From here you can catch the cable cars gliding up Namsan with N Seoul Tower on the ridge above. Zoom in as a car passes the treeline — everyone's favourite Seoul postcard.",
+  },
+];
 
 const state = {
   pois: [], coursePois: [], courseId: "best", picks: new Set(), fillers: [],
-  zones: [], usedFacts: new Set(), fi: 0,
+  zones: [], usedFacts: new Set(), fi: 0, photoDone: new Set(),
+  tips: null, tipI: 0, tipsUsed: new Set(), tripLog: new Map(),
   graph: null, route: [], walkPath: [], cum: [], pathLen: 0, cumI: 1,
   // simulation always begins at Myeongdong Station Exit 6 — the main Myeongdong-street exit
   center: { lng: 126.9855, lat: 37.5615 }, start: { lng: 126.98565, lat: 37.56070 },
   activeId: null, visited: new Set(),
   mode: "sim", walkDist: 0, camHeading: 20, avatarPos: null,
   tour: { running: false, paused: false }, gps: { watchId: null, heading: 0 },
+  peek: null,          // POI being "peeked at" mid-walk (camera detour)
+  courseMods: {},      // per-course edits: { removed:Set, order:[ids] }
+  photos: [],          // stamp-rally: {id, poiId|null, name, lng, lat, ts, dataUrl}
 };
 
 // ---------- geo ----------
@@ -127,6 +176,30 @@ function buildRoute(start, pois) {
   while (rem.length) { let bi = 0, bd = Infinity; for (let i = 0; i < rem.length; i++) { const d = metersBetween([cur.lng, cur.lat], [rem[i].lng, rem[i].lat], cur.lat); if (d < bd) { bd = d; bi = i; } } cur = rem[bi]; route.push(rem.splice(bi, 1)[0]); }
   return route;
 }
+// routing-artifact fix: Dijkstra sometimes circles a tiny block (e.g. the
+// cathedral's ring driveway) and pops out where it entered — walking that
+// looks silly, so splice out short loops that don't serve any stop
+function pruneWalkLoops(path, pois) {
+  if (path.length < 8) return path;
+  const cum = [0];
+  for (let i = 1; i < path.length; i++) cum[i] = cum[i - 1] + metersBetween(path[i - 1], path[i], path[i][1]);
+  for (let i = 0; i < path.length - 3; i++) {
+    for (let j = i + 3; j < path.length && cum[j] - cum[i] < 110; j++) {
+      if (metersBetween(path[i], path[j], path[i][1]) >= 14) continue;
+      const loopServes = pois.some((p) => {
+        if (metersBetween(path[i], [p.lng, p.lat], p.lat) < 42) return false; // trigger fires at the junction anyway
+        for (let k = i + 1; k < j; k++) if (metersBetween(path[k], [p.lng, p.lat], p.lat) < 40) return true;
+        return false;
+      });
+      if (!loopServes) {
+        path.splice(i + 1, j - i - 1);
+        return pruneWalkLoops(path, pois);    // re-scan after the splice
+      }
+    }
+  }
+  return path;
+}
+
 function buildWalkPath(g, start, ordered) {
   const wps = [start, ...ordered]; let coords = [];
   for (let i = 0; i < wps.length - 1; i++) {
@@ -224,14 +297,24 @@ function showSpot(poi) {
   el("spotGmap").href = gmapsUrl(poi);
   el("spotCard").classList.add("show");
 }
-function showFillerCard(text, where = "") {
+function showPhotoCard(ps) {
+  el("spotType").textContent = "📸 PHOTO SPOT"; el("spotType").className = "badge beauty";
+  el("spotIdx").textContent = ""; el("spotName").textContent = ps.enName;
+  el("spotKo").textContent = ps.ko || "인생샷 명소"; el("spotBlurb").innerHTML = `<span class="audio-dot"></span>${ps.tip}`;
+  el("spotAddrRow").style.display = "none";
+  el("spotPhoto").hidden = true;
+  document.querySelector(".spot-actions").style.display = "none";
+  el("spotCard").classList.add("show");
+}
+function showFillerCard(text, where = "", zoneImg = "") {
   el("spotType").textContent = where ? "LOCAL STORY" : "MYEONGDONG"; el("spotType").className = "badge attraction";
   el("spotIdx").textContent = ""; el("spotName").textContent = where || "About Myeongdong";
   el("spotKo").textContent = "이 거리 이야기"; el("spotBlurb").innerHTML = `<span class="audio-dot"></span>${text}`;
   el("spotAddrRow").style.display = "none";
-  // Myeongdong street photo (from the 명동 POI) so the story card isn't bare
+  // the zone's own photo — every story shows the place it talks about
   const img = el("spotPhoto");
-  if (state.mdImage) { img.src = state.mdImage; img.hidden = false; } else img.hidden = true;
+  const src = zoneImg || state.mdImage;
+  if (src) { img.src = src; img.hidden = false; } else img.hidden = true;
   document.querySelector(".spot-actions").style.display = "none";
   el("spotCard").classList.add("show");
 }
@@ -242,15 +325,167 @@ function nearestUnvisitedWithin(lng, lat, r) {
   for (const p of state.coursePois) { if (state.visited.has(p.id)) continue; const d = metersBetween([lng, lat], [p.lng, p.lat], lat); if (d < bd) { bd = d; best = p; } }
   return best;
 }
+// tiny synthesized arrival chimes — you HEAR what kind of stop this is,
+// even before the guide speaks (no audio files, no TTS credits)
+let earCtx;
+function earcon(kind) {
+  try {
+    earCtx ??= new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = earCtx.currentTime;
+    const TUNES = {
+      arrive: [[784, 0, .16], [1175, .15, .26]],                    // ding-dong — a course stop
+      food: [[659, 0, .11], [880, .1, .11], [1319, .2, .24]],       // rising — something tasty
+      photo: [[1568, 0, .05], [1046, .07, .1]],                     // camera click-clack
+      tip: [[880, 0, .08], [1109, .09, .08], [1480, .18, .2]],      // sparkle — insider tip
+    };
+    for (const [f, at, dur] of TUNES[kind] || TUNES.arrive) {
+      const o = earCtx.createOscillator(), gn = earCtx.createGain();
+      o.type = "sine"; o.frequency.value = f;
+      gn.gain.setValueAtTime(0.0001, t0 + at);
+      gn.gain.exponentialRampToValueAtTime(0.2, t0 + at + 0.02);
+      gn.gain.exponentialRampToValueAtTime(0.0001, t0 + at + dur);
+      o.connect(gn).connect(earCtx.destination);
+      o.start(t0 + at); o.stop(t0 + at + dur + 0.05);
+    }
+  } catch { /* no WebAudio — skip the chime */ }
+}
+// the instant the guide starts talking, the sidebar row gets its green check
+function checkOffSidebar(id) {
+  document.querySelectorAll(`.side-item[data-id="${id}"]`).forEach((it) => {
+    it.classList.add("done", "just");
+    it.querySelector(".si-been")?.classList.add("on");
+    it.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    setTimeout(() => it.classList.remove("just"), 1600);
+  });
+}
 async function narratePoi(poi) {
-  state.activeId = poi.id; state.visited.add(poi.id); markVisited(poi.id);
+  state.activeId = poi.id; state.visited.add(poi.id); markVisited(poi.id); logVisit(poi);
+  earcon(poi.type === "food" ? "food" : "arrive");
+  checkOffSidebar(poi.id);
+  const side = sideOf(poi);
   showSpot(poi); updateHud(); showDiscovery(poi); setNowPlaying(`🎧 ${poi.enName || poi.title}`);
   const next = state.coursePois.find((p) => !state.visited.has(p.id));
   if (next) prefetch(next.script);
+  if (side) await playNarration(`Look to your ${side}.`);
   await playNarration(poi.script || poi.overview || `${poi.enName || poi.title}, a favourite spot in Myeongdong.`);
+  // non-food stops earn an insider tip matched to the live weather/time
+  if (poi.type !== "food") {
+    const tip = pickLocalTip();
+    if (tip) {
+      state.tipI++;
+      earcon("tip");
+      showTipCard(state.tipI, tip); setNowPlaying(`💡 Local tip #${state.tipI}`);
+      // separate clips so every part hits the baked-audio cache
+      await playNarration(`Local tip number ${state.tipI}.`);
+      await playNarration(tip.text);
+      if (tip.rec) {
+        await playNarration(`Locals' favourite for this is ${tip.rec.name}, just around here.`);
+        if (tip.rec.tip) await playNarration(tip.rec.tip);
+      }
+    }
+  }
 }
 // pick a story about WHERE you are right now: zone facts (real local history)
 // first, generic Myeongdong lines only when the area's stories run out
+// ---------- turn-by-turn hints (works on the same route graph in sim & GPS) ----------
+const angDiff = (a, b) => ((b - a + 540) % 360) - 180;
+function sideOf(poi) {
+  const a = state.avatarPos, h = state.lastHeading;
+  if (!a || h == null) return "";
+  const d = angDiff(h, bearingTo(a, [poi.lng, poi.lat]));
+  if (Math.abs(d) < 25 || Math.abs(d) > 155) return "";   // ahead/behind — no callout
+  return d > 0 ? "right" : "left";
+}
+// simulation: next sharp corner within 26 m of the avatar's progress
+function upcomingTurn() {
+  const { cum, walkPath: path } = state;
+  for (let i = 1; i < path.length - 1; i++) {
+    if (cum[i] <= state.walkDist) continue;
+    if (cum[i] - state.walkDist > 26) return null;
+    const d = angDiff(bearingTo(path[i - 1], path[i]), bearingTo(path[i], path[i + 1]));
+    if (Math.abs(d) < 38) continue;
+    return { i, dir: d > 0 ? "right" : "left" };
+  }
+  return null;
+}
+// GPS: nearest sharp corner within 28 m of the real position
+function gpsUpcomingTurn(a) {
+  let bi = -1, bd = 28;
+  const path = state.walkPath;
+  for (let i = 1; i < path.length - 1; i++) {
+    const d = metersBetween(a, path[i], a[1]);
+    if (d < bd) { bd = d; bi = i; }
+  }
+  if (bi < 1) return null;
+  const d = angDiff(bearingTo(path[bi - 1], path[bi]), bearingTo(path[bi], path[bi + 1]));
+  if (Math.abs(d) < 38) return null;
+  return { i: bi, dir: d > 0 ? "right" : "left" };
+}
+
+// pick an insider tip matching the REAL current conditions (live weather/time)
+function pickLocalTip() {
+  if (!state.tips) return null;
+  const w = env.weather || {}, hr = envDate().getHours();
+  const order = [];
+  if (w.kind === "rain") order.push("rain");
+  if (w.kind === "snow") order.push("snow");
+  if (w.temp != null && w.temp >= 27) order.push("hot");
+  if (w.temp != null && w.temp <= 8) order.push("cold");
+  if (hr >= 18 || hr < 5) order.push("night");
+  if (hr >= 6 && hr < 11) order.push("morning");
+  order.push("any");
+  for (const k of order)
+    for (const t of state.tips[k] || []) {
+      const key = t.text || t;
+      if (!state.tipsUsed.has(key)) {
+        state.tipsUsed.add(key);
+        return typeof t === "string" ? { text: t, rec: null } : t;
+      }
+    }
+  return null;
+}
+function showTipCard(n, tip) {
+  el("spotType").textContent = `💡 LOCAL TIP #${n}`; el("spotType").className = "badge custom";
+  el("spotIdx").textContent = ""; el("spotName").textContent = "Like a Local";
+  el("spotKo").textContent = "토박이 꿀팁";
+  const text = tip.text || tip;                 // tolerate plain-string tips
+  const rec = tip.rec
+    ? `<br><br>📍 <b>${tip.rec.name}</b>${tip.rec.addr ? " · " + tip.rec.addr.replace(/,?\s*South Korea/, "") : ""}` +
+      (tip.rec.tip ? `<br>👉 ${tip.rec.tip}` : "") +
+      (tip.rec.lng !== undefined ? `<br><button class="tip-save">🎯 Save for later</button>` : "")
+    : "";
+  el("spotBlurb").innerHTML = `<span class="audio-dot"></span>${text}${rec}`;
+  el("spotBlurb").querySelector(".tip-save")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    saveTipRec(n, tip);
+    e.target.textContent = "✓ Saved to My Picks";
+    e.target.disabled = true;
+  });
+  el("spotAddrRow").style.display = "none";
+  const img = el("spotPhoto");
+  if (tip.rec?.image) { img.src = tip.rec.image; img.hidden = false; } else img.hidden = true;
+  document.querySelector(".spot-actions").style.display = "none";
+  el("spotCard").classList.add("show");
+}
+// tip recommendation → a real My Picks stop, tagged so you remember why it's there
+function saveTipRec(n, tip) {
+  const r = tip.rec;
+  if (!r || r.lng === undefined) return;
+  addGooglePlace({
+    id: "tip" + n + "-" + r.name.replace(/\W+/g, "").slice(0, 14),
+    name: r.name, kind: `💡 Local tip #${n}`, addr: r.addr || "",
+    lng: r.lng, lat: r.lat, image: r.image || "", hours: null,
+  }, null);
+}
+function nearestPhotoSpot(pos, r) {
+  let best = null, bd = r;
+  for (const p of PHOTO_SPOTS) {
+    if (state.photoDone.has(p.id)) continue;
+    const d = metersBetween(pos, [p.lng, p.lat], p.lat);
+    if (d < bd) { bd = d; best = p; }
+  }
+  return best;
+}
 function localStory(pos) {
   let z = null, bd = Infinity;
   for (const zone of state.zones) {
@@ -259,9 +494,9 @@ function localStory(pos) {
   }
   if (z) {
     const fact = z.facts.find((t) => !state.usedFacts.has(t));
-    if (fact) { state.usedFacts.add(fact); return { text: fact, where: z.name }; }
+    if (fact) { state.usedFacts.add(fact); return { text: fact, where: z.name, img: z.image }; }
   }
-  return { text: state.fillers[state.fi++ % state.fillers.length], where: "" };
+  return { text: state.fillers[state.fi++ % state.fillers.length], where: "", img: "" };
 }
 async function walkNarrationLoop() {
   let lastNarrateDist = -FILLER_EVERY_M;
@@ -272,14 +507,30 @@ async function walkNarrationLoop() {
       const poi = nearestUnvisitedWithin(a[0], a[1], POI_TRIGGER);
       if (poi) {
         state.tour.paused = true;
+        // never cut a story mid-sentence — let it finish before the spot intro
+        while (isPlaying() && state.tour.running) await sleep(150);
+        if (!state.tour.running) break;
         toast(`📍 ${poi.enName || poi.title}`);
         await narratePoi(poi);
         state.tour.paused = false;
         lastNarrateDist = state.walkDist;
-      } else if (!isPlaying() && state.walkDist - lastNarrateDist > FILLER_EVERY_M) {
-        const { text, where } = localStory(a);
-        showFillerCard(text, where); setNowPlaying(`🎧 ${where || "About Myeongdong"}`); playNarration(text);
-        lastNarrateDist = state.walkDist;
+      } else if (!isPlaying()) {
+        const turn = upcomingTurn();
+        const ps = turn ? null : nearestPhotoSpot(a, 40);
+        if (turn && state._turnIdx !== turn.i) {
+          state._turnIdx = turn.i;
+          playNarration(`Coming up — turn ${turn.dir}.`);
+        } else if (ps) {
+          state.photoDone.add(ps.id);
+          earcon("photo");
+          showPhotoCard(ps); setNowPlaying(`📸 ${ps.enName}`); playNarration(ps.tip);
+          lastNarrateDist = state.walkDist;
+        } else if (state.walkDist - lastNarrateDist > FILLER_EVERY_M
+                   && !nearestUnvisitedWithin(a[0], a[1], FILLER_GUARD_M)) {
+          const { text, where, img } = localStory(a);
+          showFillerCard(text, where, img); setNowPlaying(`🎧 ${where || "About Myeongdong"}`); playNarration(text);
+          lastNarrateDist = state.walkDist;
+        }
       }
     }
     updateHud();
@@ -297,10 +548,19 @@ function applyCourse(id) {
   state.courseId = id;
   const course = COURSES.find((c) => c.id === id);
   state.coursePois = state.pois.filter(course.pick);
+  // user edits: ✕-removed stops drop out, dragged order wins over auto-routing
+  const mods = state.courseMods[id];
+  if (mods) {
+    state.coursePois = state.coursePois.filter((p) => !mods.removed.has(p.id));
+    if (mods.order) {
+      const rank = new Map(mods.order.map((x, i) => [x, i]));
+      state.coursePois.sort((a, b) => (rank.get(a.id) ?? 1e9) - (rank.get(b.id) ?? 1e9));
+    }
+  }
   if (state.coursePois.length) {
     const origin = routeOrigin();
-    state.route = buildRoute(origin, state.coursePois);
-    state.walkPath = buildWalkPath(state.graph, origin, state.route);
+    state.route = mods?.order ? state.coursePois.slice() : buildRoute(origin, state.coursePois);
+    state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, origin, state.route), state.coursePois);
     state.cum = [0]; for (let i = 1; i < state.walkPath.length; i++) state.cum[i] = state.cum[i - 1] + metersBetween(state.walkPath[i - 1], state.walkPath[i], state.walkPath[i][1]);
     state.pathLen = state.cum[state.cum.length - 1];
     updateRoute(state.walkPath);
@@ -326,6 +586,160 @@ function loadPicks() {
     for (const id of ids || []) if (state.pois.find((p) => p.id === id)) state.picks.add(id);
   } catch { /* fresh start */ }
 }
+// ---------- trip journal (다녀간 곳) ----------
+function saveTrip() { localStorage.setItem("md3d-trip", JSON.stringify([...state.tripLog])); }
+function loadTrip() {
+  try { for (const [id, ts] of JSON.parse(localStorage.getItem("md3d-trip") || "[]")) state.tripLog.set(id, ts); }
+  catch { /* fresh start */ }
+}
+// ---------- stamp rally: snap a photo, it's tagged to where you are ----------
+function savePhotos() {
+  // photos are ~100 KB each; if localStorage overflows, drop the oldest
+  for (;;) {
+    try { localStorage.setItem("md3d-photos", JSON.stringify(state.photos)); return; }
+    catch { if (!state.photos.length) return; state.photos.shift(); }
+  }
+}
+function loadPhotos() {
+  try { state.photos = JSON.parse(localStorage.getItem("md3d-photos") || "[]"); }
+  catch { /* fresh start */ }
+}
+function compressImage(file, maxW = 720) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file);
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, maxW / im.width);
+      const cv = document.createElement("canvas");
+      cv.width = Math.round(im.width * k); cv.height = Math.round(im.height * k);
+      cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+      URL.revokeObjectURL(url);
+      res(cv.toDataURL("image/jpeg", 0.72));
+    };
+    im.onerror = rej;
+    im.src = url;
+  });
+}
+function nearestSpotName(pos) {
+  let best = null, bd = 130;
+  for (const x of state.pois) { const d = metersBetween(pos, [x.lng, x.lat], pos[1]); if (d < bd) { bd = d; best = x; } }
+  return best ? "near " + (best.enName || best.title) : "Myeongdong";
+}
+function snapPhoto(poi) {
+  state._camTarget = poi || null;
+  const inp = el("camInput");
+  inp.value = "";
+  inp.click();          // phone: opens the camera; desktop: file picker
+}
+async function onCamPick(e) {
+  const f = e.target.files?.[0];
+  if (!f) return;
+  let dataUrl;
+  try { dataUrl = await compressImage(f); } catch { toast("Couldn't read that photo"); return; }
+  const p = state._camTarget;
+  const pos = p ? [p.lng, p.lat] : (state.avatarPos || [state.start.lng, state.start.lat]);
+  const entry = {
+    id: "shot-" + Date.now(), poiId: p?.id || null,
+    name: p ? (p.enName || p.title) : nearestSpotName(pos),
+    lng: pos[0], lat: pos[1], ts: Date.now(), dataUrl,
+  };
+  state.photos.push(entry);
+  savePhotos();
+  if (p) logVisit(p);
+  earcon("photo");
+  toast(`📸 Tagged at ${entry.name} — stamped into your trip`);
+  renderSidebar();
+}
+
+// ---------- the album: Gemini narrates your day, ElevenLabs speaks it ----------
+function albumTimeline() {
+  const scenes = [];
+  for (const [id, ts] of state.tripLog) {
+    const p = state.pois.find((x) => x.id === id);
+    if (!p) continue;
+    const shot = state.photos.filter((s) => s.poiId === id).pop();
+    scenes.push({ name: p.enName || p.title, img: shot?.dataUrl || fixImg(p.image), ts, photo: !!shot });
+  }
+  for (const s of state.photos) if (!s.poiId) scenes.push({ name: s.name, img: s.dataUrl, ts: s.ts, photo: true });
+  scenes.sort((a, b) => a.ts - b.ts);
+  return scenes.filter((s) => s.img).slice(0, 14);
+}
+async function makeAlbum() {
+  const scenes = albumTimeline();
+  if (!scenes.length) { toast("Nothing to remember yet — ✓ places you visit or snap 📷 photos first!"); return; }
+  toast("🎞 Gemini is writing your album…");
+  let story = null;
+  try {
+    const r = await fetch("/api/album", {
+      method: "POST", headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        stops: scenes.map((s) => ({
+          name: s.name, photo: s.photo,
+          time: new Date(s.ts).toTimeString().slice(0, 5),
+        })),
+      }),
+    });
+    story = (await r.json());
+    if (!Array.isArray(story?.scenes) || !story.scenes.length) story = null;
+  } catch { /* fall back to the template below */ }
+  if (!story) story = {
+    title: "Our Myeongdong Day",
+    intro: "So — remember this day? We wandered all over Myeongdong together.",
+    scenes: scenes.map((s) => `Then we stopped at ${s.name} — such a good call.`),
+    outro: "What a day that was. Next time, we eat even more.",
+  };
+  if (state.tour.running) endPeekMode();
+  audioStop();
+  state._album = { scenes, story, on: true };
+  el("album").hidden = false;
+  runAlbum();
+}
+async function runAlbum() {
+  const A = state._album;
+  const img = el("albumImg"), cap = el("albumCap"), ttl = el("albumTitle");
+  ttl.textContent = A.story.title; ttl.classList.add("show");
+  img.src = A.scenes[0].img; img.className = "kb1"; cap.textContent = "";
+  await playNarration(A.story.intro);
+  if (!A.on) return;
+  ttl.classList.remove("show");
+  for (let i = 0; i < A.scenes.length && A.on; i++) {
+    img.src = A.scenes[i].img; img.className = i % 2 ? "kb2" : "kb1";
+    cap.textContent = A.scenes[i].name;
+    await playNarration(A.story.scenes[i] || A.scenes[i].name);
+    if (!A.on) return;
+    await sleep(400);
+  }
+  if (!A.on) return;
+  ttl.textContent = A.story.title; ttl.classList.add("show");
+  await playNarration(A.story.outro);
+  await sleep(1200);
+  closeAlbum();
+}
+function closeAlbum() {
+  if (state._album) state._album.on = false;
+  state._album = null;
+  audioStop();
+  el("album").hidden = true;
+  el("albumTitle").classList.remove("show");
+}
+function journalChip() {
+  const chip = document.querySelector('#courseBar button[data-course="journal"] .cs');
+  if (chip) chip.textContent = `${state.tripLog.size} spots`;
+}
+function logVisit(poi) {
+  if (state.tripLog.has(poi.id)) return;
+  state.tripLog.set(poi.id, Date.now());
+  saveTrip(); journalChip();
+}
+function toggleBeen(poi) {
+  state.tripLog.has(poi.id) ? state.tripLog.delete(poi.id) : state.tripLog.set(poi.id, Date.now());
+  saveTrip(); journalChip();
+  if (state.courseId === "journal") applyCourse("journal");
+  else document.querySelectorAll(`.side-item[data-id="${poi.id}"] .si-been`)
+    .forEach((b) => b.classList.toggle("on", state.tripLog.has(poi.id)));
+  toast(state.tripLog.has(poi.id) ? `📒 Saved to My Trip (${state.tripLog.size})` : `Removed from My Trip`);
+}
+
 function togglePick(poi) {
   state.picks.has(poi.id) ? state.picks.delete(poi.id) : state.picks.add(poi.id);
   savePicks();
@@ -406,6 +820,7 @@ function poiDistance(p) {
   return metersBetween(from, [p.lng, p.lat], p.lat);
 }
 function renderSidebar() {
+  el("sidebar").classList.remove("wide");   // fresh rows start collapsed
   const course = COURSES.find((c) => c.id === state.courseId);
   el("sideTitle").textContent = `${course.icon} ${course.name}`;
   el("sideCount").textContent = `${state.coursePois.length}`;
@@ -427,27 +842,100 @@ function renderSidebar() {
       list.append(h);
     }
   }
-  const pois = state.courseId === "picks" ? state.coursePois : [...state.coursePois].sort((a, b) => poiDistance(a) - poiDistance(b));
+  if (state.courseId === "journal") {
+    // the payoff: Gemini writes your day like a friend, ElevenLabs tells it
+    const b = document.createElement("button");
+    b.className = "album-make";
+    b.textContent = "🎞 Make my album — Gemini writes it, Matilda tells it";
+    b.addEventListener("click", makeAlbum);
+    list.append(b);
+    if (!state.coursePois.length && !state.photos.length) {
+      const h = document.createElement("div");
+      h.className = "g-hint";
+      h.textContent = "Your trip diary is empty — walk a course, tap ✓ on places, or snap 📷 photos, and your day is saved here even after you fly home.";
+      list.append(h);
+    }
+  }
+  const pois = (state.courseMods[state.courseId]?.order || state.courseId === "picks") ? state.coursePois
+    : state.courseId === "journal"
+      ? [...state.coursePois].sort((a, b) => (state.tripLog.get(a.id) || 0) - (state.tripLog.get(b.id) || 0))
+      : [...state.coursePois].sort((a, b) => poiDistance(a) - poiDistance(b));
   for (const p of pois) {
     const item = document.createElement("div");
     item.className = "side-item" + (state.visited.has(p.id) ? " done" : "");
     item.dataset.id = p.id;
-    const img = p.image ? `<img loading="lazy" src="${fixImg(p.image)}" alt="">`
+    const img = p.image ? `<img loading="lazy" draggable="false" src="${fixImg(p.image)}" alt="">`
       : `<div class="si-ph">${TYPE_GLYPH[p.type] || "📍"}</div>`;
-    item.innerHTML = `${img}
+    const shots = state.photos.filter((s) => s.poiId === p.id).length;
+    item.innerHTML = `<div class="si-stamp">✓</div>${shots ? `<div class="si-shot">📸${shots > 1 ? shots : ""}</div>` : ""}${img}
       <div class="si-body">
         <div class="si-name">${p.enName || p.title}</div>
         <div class="si-ko">${p.title}</div>
-        <div class="si-meta">📍 <span class="si-km">${fmtKm(poiDistance(p))}</span>${p.hours ? " · ⏰ " + p.hours.slice(0, 26) : ""}</div>
+        <div class="si-meta">${state.courseId === "journal" && state.tripLog.get(p.id)
+          ? "📒 " + new Date(state.tripLog.get(p.id)).toLocaleDateString("en-US", { month: "short", day: "numeric" }) + " · "
+          : ""}📍 <span class="si-km">${fmtKm(poiDistance(p))}</span>${p.hours ? " · ⏰ " + p.hours.slice(0, 26) : ""}</div>
         ${p.menu ? `<div class="si-menu">${TYPE_GLYPH[p.type] || ""} ${p.menu.slice(0, 34)}</div>` : ""}
       </div>
-      <button class="si-vid" title="Video preview">🎬</button>
-      <button class="si-add${state.picks.has(p.id) ? " on" : ""}" title="Add to My Picks">＋</button>`;
+      <button class="si-more" title="Actions — photo, video, been-here, save, remove">⋯</button>
+      <div class="si-acts">
+        <button class="si-cam" title="Snap a photo here — stamp this spot for your album">📷</button>
+        <button class="si-vid" title="Video preview">🎬</button>
+        <button class="si-been${state.tripLog.has(p.id) ? " on" : ""}" title="I've been here — save to My Trip">✓</button>
+        <button class="si-add${state.picks.has(p.id) ? " on" : ""}" title="Add to My Picks">＋</button>
+        <button class="si-x" title="Remove from this route (been already?)">✕</button>
+      </div>`;
+    item.querySelector(".si-more").addEventListener("click", (e) => {
+      e.stopPropagation();
+      item.classList.toggle("acts");
+      // the box breathes: widen while any row's actions are out, shrink back after
+      el("sidebar").classList.toggle("wide", !!document.querySelector(".side-item.acts"));
+    });
+    item.querySelector(".si-cam").addEventListener("click", (e) => { e.stopPropagation(); snapPhoto(p); });
     item.querySelector(".si-vid").addEventListener("click", (e) => { e.stopPropagation(); openVideo(p); });
+    item.querySelector(".si-been").addEventListener("click", (e) => { e.stopPropagation(); toggleBeen(p); });
     item.querySelector(".si-add").addEventListener("click", (e) => { e.stopPropagation(); togglePick(p); });
-    item.addEventListener("click", () => showSpot(p));
+    item.querySelector(".si-x").addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (state.tour.running) { toast("Finish or ↺ reset the walk to edit the route"); return; }
+      const mods = (state.courseMods[state.courseId] ??= { removed: new Set(), order: null });
+      mods.removed.add(p.id);
+      if (mods.order) mods.order = mods.order.filter((x) => x !== p.id);
+      applyCourse(state.courseId);
+      toast(`✕ ${p.enName || p.title} removed — route updated`);
+    });
+    // drag to re-order the walking route (desktop)
+    item.draggable = true;
+    item.addEventListener("dragstart", (e) => {
+      if (state.tour.running) { e.preventDefault(); return; }
+      state._dragOrder = [...document.querySelectorAll("#sideList .side-item")].map((it) => it.dataset.id).join();
+      item.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+    });
+    item.addEventListener("dragend", () => { item.classList.remove("dragging"); commitSidebarOrder(); });
+    item.addEventListener("click", () => {
+      showSpot(p);
+      if (!state.tour.running) {
+        // browsing before the walk: fly the camera there + speak the story now
+        flyTo(p.lng, p.lat);
+        audioStop();
+        setNowPlaying(`🎧 ${p.enName || p.title}`);
+        playNarration(p.script || p.overview || `${p.enName || p.title}, a favourite spot in Myeongdong.`);
+      } else {
+        // mid-walk: pause the journey, peek at the spot, come back with the button
+        startPeek(p);
+      }
+    });
     list.append(item);
   }
+}
+// after a drag: whatever order you see is the order you'll walk
+function commitSidebarOrder() {
+  const ids = [...document.querySelectorAll("#sideList .side-item")].map((it) => it.dataset.id);
+  if (ids.join() === state._dragOrder) return;      // dropped back where it was
+  const mods = (state.courseMods[state.courseId] ??= { removed: new Set(), order: null });
+  mods.order = ids;
+  applyCourse(state.courseId);
+  toast("↕ Route re-ordered — path rebuilt");
 }
 function refreshSidebarDistances() {
   for (const item of document.querySelectorAll(".side-item")) {
@@ -497,6 +985,7 @@ function startWalk() {
   walkNarrationLoop();
 }
 function endWalk() {
+  endPeekMode();
   state.tour.running = false; state.tour.paused = false; audioStop();
   state.activeId = null; setNowPlaying(""); showHud(false);
   el("courseBar").classList.remove("hidden");
@@ -513,17 +1002,21 @@ function setControls(on) {
 let lastTs = 0;
 function frame(ts) {
   if (!lastTs) lastTs = ts; const dt = Math.min((ts - lastTs) / 1000, 0.05); lastTs = ts;
-  if (state.mode === "sim" && state.tour.running) {
+  if (state.peek) {
+    orbitCam(dt, 0);                     // free camera while peeking at a spot
+  } else if (state.mode === "sim" && state.tour.running) {
     if (!state.tour.paused) {
       state.walkDist += WALK_SPEED * dt;
       if (state.walkDist >= state.pathLen) { state.walkDist = state.pathLen; endWalk(); }
     }
     const { pos, heading } = pointAlongPath(state.walkDist);
     state.avatarPos = pos;
+    state.lastHeading = heading;
     const diff = ((heading - state.camHeading + 540) % 360) - 180;
     state.camHeading = (state.camHeading + diff * 0.12 + 360) % 360;
     followCam(pos[0], pos[1], state.camHeading, dt);
   } else if (state.mode === "gps" && state.avatarPos) {
+    state.lastHeading = state.gps.heading;
     followCam(state.avatarPos[0], state.avatarPos[1], state.gps.heading, dt);
   } else {
     orbitCam(dt, ROT_SPEED);
@@ -568,7 +1061,19 @@ async function gpsNarrationLoop() {
     if (a && !isPlaying()) {
       const poi = nearestUnvisitedWithin(a[0], a[1], POI_TRIGGER);
       if (poi) { toast(`📍 ${poi.enName || poi.title}`); await narratePoi(poi); lastPing = Date.now(); }
-      else {
+      else if (nearestPhotoSpot(a, 40)) {
+        const ps = nearestPhotoSpot(a, 40);
+        state.photoDone.add(ps.id);
+        earcon("photo");
+        showPhotoCard(ps); setNowPlaying(`📸 ${ps.enName}`);
+        await playNarration(ps.tip); lastPing = Date.now();
+      } else {
+        const turn = gpsUpcomingTurn(a);
+        if (turn && state._turnIdx !== turn.i) {
+          state._turnIdx = turn.i;
+          await say(`Coming up — turn ${turn.dir}.`);
+          await sleep(700); continue;
+        }
         const next = nextStop();
         const d = state.walkPath.length ? distToRoute(a[0], a[1]) : 0;
         if (d > 45 && !offRoute && Date.now() - lastNavTalk > 25000) {
@@ -637,24 +1142,48 @@ function startEnv() {
 // ---------- controls ----------
 function resetAll() {
   // stop everything
+  endPeekMode();
   state.tour.running = false; state.tour.paused = false; audioStop(); stopGPS();
+  state.courseMods = {};                 // undo list removals / re-ordering
   // clear picks (incl. Google-added custom places) + progress
   localStorage.removeItem("md3d-picks");
   state.picks.clear();
   for (const p of state.pois) if (p.type === "custom") removePin(p.id);
   state.pois = state.pois.filter((p) => p.type !== "custom");
-  state.visited.clear(); state.activeId = null; state.avatarPos = null;
+  state.visited.clear(); state.photoDone.clear(); state.tipsUsed.clear(); state.tipI = 0;
+  state.activeId = null; state.avatarPos = null;
   // back to defaults
   el("spotCard").classList.remove("show"); closeVideo(); setNowPlaying(""); showHud(false);
   setControls(false); el("startBtn").textContent = "▶ Start Walk";
   moveAvatar3d(state.start.lng, state.start.lat, 20);
+  resetOrbit();
   renderCourseBar();
   setMode("sim");
   applyCourse("best");
   toast("↺ Reset — back to Myeongdong Station Exit 6");
 }
 function startExperience() { if (state.mode === "gps") startGPS(); else startWalk(); }
-function togglePause() { const t = state.tour; if (!t.running) return; t.paused = !t.paused; el("pauseBtn").textContent = t.paused ? "Resume" : "Pause"; t.paused ? audioPause() : audioResume(); }
+// mid-walk peek: pause the journey, fly to a list spot, tell its story now
+function startPeek(p) {
+  const wasPeeking = !!state.peek;
+  state.peek = p;
+  if (state.mode === "sim") { state.tour.paused = true; el("pauseBtn").textContent = "Resume"; }
+  audioStop();
+  if (!wasPeeking) beginPeek();          // seamless follow-cam → orbit-cam handoff
+  flyTo(p.lng, p.lat);
+  setNowPlaying(`🎧 ${p.enName || p.title}`);
+  playNarration(p.script || p.overview || `${p.enName || p.title}, a favourite spot in Myeongdong.`);
+  el("peekBackBtn").classList.remove("hidden");
+}
+function endPeekMode() {
+  if (!state.peek) return;
+  state.peek = null;
+  audioStop(); setNowPlaying("");
+  endPeekCam();                          // glide back behind the walker
+  el("peekBackBtn").classList.add("hidden");
+  if (state.mode === "sim" && state.tour.running) { state.tour.paused = false; el("pauseBtn").textContent = "Pause"; }
+}
+function togglePause() { if (state.peek) { endPeekMode(); return; } const t = state.tour; if (!t.running) return; t.paused = !t.paused; el("pauseBtn").textContent = t.paused ? "Resume" : "Pause"; if (t.paused) audioPause(); else audioResume(); }
 function skip() { if (state.mode === "sim" && state.tour.running) { audioStop(); state.tour.paused = false; } }
 function setMode(mode) {
   state.mode = mode;
@@ -666,7 +1195,7 @@ function setMode(mode) {
 // ---------- boot ----------
 async function boot() {
   try {
-    const [pois, streets, fillers, buildings, beauty, water, zones] = await Promise.all([
+    const [pois, streets, fillers, buildings, beauty, water, zones, photoTips, localTips] = await Promise.all([
       fetch("./data/myeongdong-pois.json").then((r) => r.json()),
       fetch("./data/myeongdong-streets.json").then((r) => r.json()),
       fetch("./data/myeongdong-fillers.json").then((r) => r.json()),
@@ -674,15 +1203,19 @@ async function boot() {
       fetch("./data/myeongdong-beauty.json").then((r) => r.json()).catch(() => ({ shops: [] })),
       fetch("./data/myeongdong-water.json").then((r) => r.json()).catch(() => ({ lines: [] })),
       fetch("./data/myeongdong-zones.json").then((r) => r.json()).catch(() => ({ zones: [] })),
+      fetch("./data/photo-spots.json").then((r) => r.json()).catch(() => null),
+      fetch("./data/local-tips.json").then((r) => r.json()).catch(() => null),
     ]);
     state.pois = [...pois.pois, ...beauty.shops]; state.fillers = fillers.fillers;
     state.zones = zones.zones || [];
+    if (photoTips?.spots?.length) { PHOTO_SPOTS.length = 0; PHOTO_SPOTS.push(...photoTips.spots); }
+    state.tips = localTips?.tips || null;
     state.mdImage = fixImg(pois.pois.find((p) => p.title === "명동")?.image || "");
     state.center = pois.center ? { lng: pois.center.mapX, lat: pois.center.mapY } : state.center;
 
     state.graph = buildGraph(streets);
     state.coursePois = state.pois;
-    state.walkPath = buildWalkPath(state.graph, state.start, buildRoute(state.start, state.pois));
+    state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, state.start, buildRoute(state.start, state.pois)), state.pois);
 
     initScene({
       container: el("map"), buildings, streets,
@@ -694,6 +1227,9 @@ async function boot() {
     window.__s = state;
     startEnv();
     loadPicks();                          // restore saved My Picks (incl. Google adds)
+    loadTrip();                           // restore the trip journal (다녀간 곳)
+    loadPhotos();                         // restore stamp-rally photos
+    for (const ps of PHOTO_SPOTS) addPin(ps, "📸");   // photo spots live on every course
     renderCourseBar();
     applyCourse(state.courseId);          // default: Best of Myeongdong
     setInterval(refreshSidebarDistances, 4000); // live km while walking
@@ -709,6 +1245,20 @@ function wireControls() {
   el("pauseBtn").addEventListener("click", togglePause);
   el("skipBtn").addEventListener("click", skip);
   el("resetBtn").addEventListener("click", resetAll);
+  el("peekBackBtn").addEventListener("click", endPeekMode);
+  el("snapBtn").addEventListener("click", () => snapPhoto(null));
+  el("camInput").addEventListener("change", onCamPick);
+  el("albumClose").addEventListener("click", closeAlbum);
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && state._album) closeAlbum(); });
+  // drag-sorting: move the dragged card under the cursor as it travels
+  el("sideList").addEventListener("dragover", (e) => {
+    e.preventDefault();
+    const dragging = el("sideList").querySelector(".side-item.dragging");
+    if (!dragging) return;
+    const after = [...el("sideList").querySelectorAll(".side-item:not(.dragging)")]
+      .find((it) => e.clientY < it.getBoundingClientRect().top + it.offsetHeight / 2);
+    after ? el("sideList").insertBefore(dragging, after) : el("sideList").append(dragging);
+  });
   el("sideFold").addEventListener("click", () => el("sidebar").classList.toggle("folded"));
   el("sidebar").addEventListener("click", () => {
     if (el("sidebar").classList.contains("folded")) el("sidebar").classList.remove("folded");

@@ -1,0 +1,59 @@
+{
+ "generator": "gemini-3.5-flash",
+ "spots": [
+  {
+   "id": "ps-cathedral",
+   "enName": "Cathedral Front Steps",
+   "ko": "명동성당 앞계단",
+   "lng": 126.98715,
+   "lat": 37.5633,
+   "type": "photo",
+   "tip": "Photo spot! This breathtaking 1898 Gothic cathedral stood as a defiant, brave sanctuary for democracy protestors risking their lives in the 1980s. To capture its dramatic scale, stand at the very bottom of these steps and tilt your camera upward to frame the majestic spire against the afternoon sky."
+  },
+  {
+   "id": "ps-mainstreet",
+   "enName": "Main Street Neon Canyon",
+   "ko": "명동거리 네온",
+   "lng": 126.9851,
+   "lat": 37.56348,
+   "type": "photo",
+   "tip": "Photo spot! This canyon of stacked neon signs and bustling food carts captures the electric heartbeat of Seoul. As dusk falls, these glowing, layered storefronts transform the street into a dazzling, futuristic wonderland. Stand in the center of the path at twilight, angling your camera upward to frame yourself against the towering lights."
+  },
+  {
+   "id": "ps-cheonggye",
+   "enName": "Cheonggye Plaza · Spring",
+   "ko": "청계광장 스프링",
+   "lng": 126.9779,
+   "lat": 37.5689,
+   "type": "photo",
+   "tip": "Photo spot! This vibrant, spiraling sculpture marks the head of Cheonggyecheon, a stream miraculously reborn from a concrete highway into a peaceful urban oasis. It stands as a colorful symbol of Seoul's green rebirth against a backdrop of towering skyscrapers. Stand on the lower stone bridge at dusk, angling upward to capture the glowing sculpture framed by cascading waterfalls and city lights."
+  },
+  {
+   "id": "ps-bok",
+   "enName": "Bank of Korea Fountain",
+   "ko": "한국은행 분수광장",
+   "lng": 126.9817,
+   "lat": 37.5599,
+   "type": "photo",
+   "tip": "Photo spot! You are looking at a rare Renaissance-style granite palace from 1912 rising behind a dancing fountain. Once a colonial bank, this majestic facade offers a stunning slice of European elegance amidst modern skyscrapers. Stand near the fountain at dusk, angling your camera low to frame the glowing water against the illuminated stone arches."
+  },
+  {
+   "id": "ps-plaza",
+   "enName": "Seoul Plaza Lawn",
+   "ko": "서울광장",
+   "lng": 126.978,
+   "lat": 37.5656,
+   "type": "photo",
+   "tip": "Photo spot! This vibrant lawn is where Seoul's history collides, framing the majestic 1926 stone City Hall right beneath the futuristic glass wave curling above it. Millions gathered on this very grass to cheer during the historic 2002 World Cup. Stand near the center of the lawn at sunset, angling your camera upward to capture the dramatic contrast of old and new."
+  },
+  {
+   "id": "ps-cablecar",
+   "enName": "Namsan Cable Car View",
+   "ko": "남산케이블카 뷰",
+   "lng": 126.9819,
+   "lat": 37.5565,
+   "type": "photo",
+   "tip": "Photo spot! Since 1962, Korea's very first commercial cable car has been carrying dreamers up this forested mountain. This exact view captures the iconic cabins gliding toward N Seoul Tower, creating Seoul's most nostalgic postcard scene. Stand on the wooden steps below the station, tilt your lens upward to frame a passing cabin, and shoot during the late afternoon golden hour."
+  }
+ ]
+}

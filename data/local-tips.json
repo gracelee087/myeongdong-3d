@@ -1,0 +1,240 @@
+{
+ "generator": "gemini-3.5-flash",
+ "tips": {
+  "hot": [
+   {
+    "text": "Phew, it is absolutely scorching in Myeongdong today, you must be melting! You need some patbingsu, our favorite summer dessert of fluffy shaved ice topped with sweet red beans and chewy rice cakes. Head into that cafe right there and order a classic patbingsu to instantly cool down!",
+    "rec": {
+     "name": "Sulbing",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZPPCF5dTEcu3RKJkQMmOz0Ig2eA-TrU3XHJ6qS2OSnoUx6nL9n3hiQ17loA5l3PVLpSnhkqwE1JTxogTyEZADA98rqwgBrVctl9kNuj_JDQOEuG0vuaWqwScoahUJEZ_yPDwZMlcPCuaIcz=s4800-w400",
+     "addr": "27 Myeongdong 3-gil, Jung District, Seoul, South Korea",
+     "lng": 126.98340560000001,
+     "lat": 37.564866699999996,
+     "tip": "Head inside Sulbing and order the classic Injeolmi red bean bingsu topped with chewy rice cakes to instantly cool down."
+    }
+   },
+   {
+    "text": "Wow, this Seoul summer heat is no joke today, you must be sweating so much! To beat this, we practice yi-yeol-chi-yeol, which means fighting heat with heat. Koreans love recharging our energy with boiling ginseng chicken soup, so head inside and order a steaming bowl of Samgyetang!",
+    "rec": {
+     "name": "Baekje Samgyetang",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZNaNigpmBfzmiF9D6YlLOIlXnjykeYT2G-aAmRyJryfnf0GG-nyhLqZ9zKcSaWBb5Ohaz_PMFGg-TMyBVIwfBySMxFVn860664kTIQesD0BSaoPfRxRSu64R3Pjsy2tBx7xPxVAfwn8T3nWKg=s4800-w400",
+     "addr": "8-10 Myeongdong 8-gil, Jung District, Seoul, South Korea",
+     "lng": 126.9841225,
+     "lat": 37.5633343,
+     "tip": "Head inside Baekje Samgyetang and order a steaming bowl of their signature wild ginseng chicken soup served with ginseng wine."
+    }
+   },
+   {
+    "text": "Oh man, this Seoul summer heat is no joke, you must be melting! Let's cool off with our favorite hack: the DIY ice cup. Koreans love how cheap and refreshing it is. Just grab a plastic cup of ice from the freezer, pick a pouch drink like peach iced tea, and pour it right in!",
+    "rec": {
+     "name": "CU convenience store (Myeongdong main)",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMi2BcTVdZ8j1GzbOqRi2cpoqbk5yZQDfsWTfO5EBCCD3nxY2k0vIMmsmoevDKz2bjmTItPEsPwSMg_TZJAFDFcGiTu-dt2pP-XYJt_jySu_qeNuxxptcMLCF5s9d9zAJ7wIlCX19eWbKwsTJysRP2Q-Q=s4800-w400",
+     "addr": "127 Toegye-ro, Jung District, Seoul, South Korea",
+     "lng": 126.9858497,
+     "lat": 37.5611499,
+     "tip": ""
+    }
+   },
+   {
+    "text": "This Seoul summer heat is brutal, so here's the real local survival move — shop-hopping through the air conditioning. Nobody minds you browsing just to cool off; half the people inside are doing exactly the same. Step into the nearest Olive Young, find the tester zone, and spray a cooling mist on your face before you head back out.",
+    "rec": {
+     "name": "OLIVE YOUNG Central Myeongdong Town Branch",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMD8eKLt9VCH1-1kVxRLwv36cymKL_Drk5DjlNftDOMNlTKIBRwpwgdgQZTgk5LQ9HudmMo0NBeu0ZQqu8r-atBt245gUEKIwI65ldl-2SVJjqeIx_QeWmSlDW9N0VkW19FkSMyFT70TcAGo8NGGhn-VA=s4800-w400",
+     "addr": "27 Myeongdong 8-gil, Jung District, Seoul, South Korea",
+     "lng": 126.9849507,
+     "lat": 37.5625274,
+     "tip": "Head to the tester zone inside this massive Myeongdong branch and spray some cooling mist to instantly beat the summer heat."
+    }
+   }
+  ],
+  "cold": [
+   {
+    "text": "Your hands must be absolutely freezing in this bitter cold! You need to try odeng, delicious fish cake skewers that come with free hot broth, which Koreans love for instant warmth. Just order one skewer at a Myeongdong cart, grab a paper cup, and scoop up that comforting soup to warm your hands!",
+    "rec": {
+     "name": "the Myeongdong street-food carts",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZPSrYI-iD6WhBkOUHK4OYqettvWWHnvTz6qYqVpiFRxuU7BQa1pG0DTmVlMON-DEho6cU0-w_1qmD874DYamLIWyu7WSJzAywpNfHpKHr-pHOtdn8-QKa_PXoGzs76cum_hu-BWlYoKx0CWeWY=s4800-w640",
+     "addr": "Myeongdong-gil (main street), Jung-gu, Seoul",
+     "lng": 126.98525,
+     "lat": 37.56335,
+     "tip": "Order one odeng skewer, then help yourself to the hot broth — refilling your paper cup again and again is exactly what everyone does."
+    }
+   },
+   {
+    "text": "Oh no, your hands must be absolutely freezing in this bitter cold! You need a Korean 'hot-pack,' or hat-pack, which are shake-to-heat warmers we swear by all winter. Just run into any convenience store, grab one by the counter, shake it up, and slip it right into your coat pocket to stay cozy.",
+    "rec": {
+     "name": "CU convenience store (Myeongdong main)",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMi2BcTVdZ8j1GzbOqRi2cpoqbk5yZQDfsWTfO5EBCCD3nxY2k0vIMmsmoevDKz2bjmTItPEsPwSMg_TZJAFDFcGiTu-dt2pP-XYJt_jySu_qeNuxxptcMLCF5s9d9zAJ7wIlCX19eWbKwsTJysRP2Q-Q=s4800-w400",
+     "addr": "127 Toegye-ro, Jung District, Seoul, South Korea",
+     "lng": 126.9858497,
+     "lat": 37.5611499,
+     "tip": "Pop into this Myeongdong CU, grab a hot-pack by the register, and shake it to warm your hands instantly."
+    }
+   },
+   {
+    "text": "Oh, your hands must be freezing in this bitter Seoul cold! You should head straight to a cozy jjimjilbang, a traditional bathhouse where Koreans go to melt away the winter chill. Once inside, make sure to order a freezing cold, sweet sikhye rice drink and some roasted sauna eggs to snack on!",
+    "rec": {
+     "name": "SPAREX Jjimjilbang GoodMorning City",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZPxcsnVecfrdnkBXj1B3tKbLPDRJa6UukLrhkX5ejKZAGd44VXIv2-SvQ_Jg7aDw6DxfU_SkcE2OuTJ4KD4ssKZXEqDiryQGoyyn-36wHK0mZLMC7VgqdA2sd52PLVz-D9x_tsQPLRY-WjJ_w=s4800-w400",
+     "addr": "247 Jangchungdan-ro, Jung District, Seoul, South Korea",
+     "lng": 127.0072811,
+     "lat": 37.5668728,
+     "tip": "Once inside SPAREX Jjimjilbang GoodMorning City, order a freezing cold sikhye and roasted sauna eggs to melt the winter chill away."
+    }
+   }
+  ],
+  "rain": [
+   {
+    "text": "Don't let this rain ruin your day, because it's actually the perfect weather for pajeon and makgeolli! Koreans crave this savory green onion pancake when it pours because its sizzling sound mimics the rain. Duck into a cozy Myeongdong tavern right now and order a crispy haemul pajeon with a bowl of sweet rice wine.",
+    "rec": {
+     "name": "Myeongdong Jijimi (pajeon house)",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZOjvy0N5QG9SXn1fmswIcV8roWHX0b0nse-L553_ecHnIbhChPelKFTPgfuoKJbv14EDyHI9uCs8duRnNcX3nKEWHWjCShbYIvShcMnir_HjfvQkRZaB14Ity6EjCoRt4eAIXLzAF1LjKJRvQauNIHM=s4800-w400",
+     "addr": "South Korea, Seoul, Jung District, 퇴계로 147-9",
+     "lng": 126.98806200000001,
+     "lat": 37.5618045,
+     "tip": "Grab a table at Myeongdong Jijimi and order a crispy haemul pajeon paired with a bowl of sweet makgeolli."
+    }
+   },
+   {
+    "text": "Oh no, it is suddenly pouring here in Myeongdong! Don't worry, Koreans rarely carry umbrellas in advance because we just buy cheap clear ones at convenience stores on the spot. We love them because you can see the beautiful city lights through them, so pop into that GS25 and grab a five-thousand-won binil-usan!",
+    "rec": {
+     "name": "GS25 convenience store",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZPhrZOf0YWV3FQxmMzLQKzUzTzt9_SDFHZz9ACRr7umpvuanBJZydLaTnpZ2-q6u-FurFRmjB6SXEosDv-dY7euVCyFjURTy4JgqrIQlOIORISlKYnl5V5M_zFV003EHICtzwBO-KqCf92KKpjZCACqxQ=s4800-w400",
+     "addr": "15 Namdaemun-ro 7-gil, Jung District, Seoul, South Korea",
+     "lng": 126.9809621,
+     "lat": 37.563742500000004,
+     "tip": "Buy a five thousand won clear plastic binil-usan inside GS25 to watch the glowing Myeongdong neon lights through it."
+    }
+   }
+  ],
+  "snow": [
+   {
+    "text": "Wow, look at the beautiful snow falling over Myeongdong! In Korea, the first snow, or cheotnun, is super romantic because we believe wishes made now come true. You should text someone special right now and say 'It is snowing' to share this magical moment with them.",
+    "rec": null
+   },
+   {
+    "text": "Wow, look at the snow falling over Myeongdong! To stay warm, you must try *gungoguma*, which are roasted sweet potatoes. Koreans love them because they are incredibly sweet, comforting, and warm your freezing hands. Find a street vendor with a giant metal drum and buy a hot bag of sweet potatoes and roasted chestnuts!",
+    "rec": {
+     "name": "Myeongdong Shopping Street",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMyQTQx-WC57SfieBJv5urTOUd3TfUHq-D5Ob2AvUQc75CDBASg8nxyaF_tFUc6phzaWZOieFW3231sd-mQzKjoN62RrUpYxN1VRZeBcOsk9z5o-uauqARW87q7n7mA5IRbnr0a7v9ze5q2bg=s4800-w400",
+     "addr": "1-5 Myeong-dong, Jung District, Seoul, South Korea",
+     "lng": 126.98611799999998,
+     "lat": 37.5641885,
+     "tip": "Head to Myeongdong Shopping Street and buy a hot bag of roasted sweet potatoes from a street vendor's giant metal drum."
+    }
+   }
+  ],
+  "night": [
+   {
+    "text": "Look at those gorgeous neon signs glowing tonight! It is the perfect time to experience our street food carts, which we love for their quick, delicious bites. You should order a sweet, warm hotteok and eat it standing right next to the cart—that is the most authentic way to enjoy it!",
+    "rec": {
+     "name": "Namdaemun Vegetable Hotteok",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMMIiDbsQ-6cfRFuLb2smKkrJlGY83Dnnafmd4uM9OpkPOv-YcC6Q84JHY_GUFVGOp93ohMGGLWOYcwsk9gMK_V4cNFRuwPv0E3cmnYryNnpSTlFWI4viK_UGAKr8JUdXAAjZgXivsM2SUuKQ=s4800-w400",
+     "addr": "12 Namdaemun-ro, Jung District, Seoul, South Korea",
+     "lng": 126.9772952,
+     "lat": 37.5606787,
+     "tip": "Order the signature vegetable hotteok tonight, brush it with savory soy sauce, and eat it standing right next to the cart."
+    }
+   },
+   {
+    "text": "Look at those gorgeous neon signs lighting up Myeongdong tonight! This is the perfect time to experience our 2-cha culture, where we keep the night going in rounds to stretch the fun. After dinner, head to a nearby noraebang for round two and order some cold draft beer!",
+    "rec": {
+     "name": "JUNCO MUSIC TOWN Jonggak",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMPEjSNndSVQMg2NuZAergZnRiUI6EJA52tD6j2h0g0oEiQL51fumcsK7UE-Mi7hmfDflynmd_5wVyUJuDY6gyZKDBar4_WKBqGRLm88WO6ZR9NVut9KU0901Px3gdH0maOQ95V-5M_q7wDXw=s4800-w400",
+     "addr": "63-8 Jong-ro, Jongno District, Seoul, South Korea",
+     "lng": 126.9848856,
+     "lat": 37.5705987,
+     "tip": "Keep your 2-cha night going at Junco Jonggak by ordering cold draft beer and enjoying their legendary unlimited free ramen."
+    }
+   },
+   {
+    "text": "Look at all these bright neon signs lighting up the Myeongdong night! You should head upstairs to a 'noraebang,' or private singing room, which Koreans love for destressing since no one can hear you. Just grab a tambourine, choose a song on the remote, and sing your heart out!",
+    "rec": {
+     "name": "K-Pop Coin Karaoke",
+     "image": "",
+     "addr": "87-14 Garwol-dong, Yongsan District, Seoul, South Korea",
+     "lng": 126.97177959999999,
+     "lat": 37.5439644,
+     "tip": "Slip into a neon-lit booth at K-Pop Coin Karaoke tonight, grab a tambourine, and belt out your favorite BTS song."
+    }
+   }
+  ],
+  "morning": [
+   {
+    "text": "Good morning! It is super quiet right now because Myeongdong is a night owl that wakes up around eleven. Locals love using quiet mornings for peaceful palace strolls. You should grab a warm sweet potato latte at a nearby cafe now, and save Myeongdong's shopping and street food for the vibrant evening!",
+    "rec": {
+     "name": "Deoksugung Palace",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZO5rUeoCvxZ6mX4VOP-TphE8xRBp-e7MdMouKXD4iT554Q6nQI9zmLcbxndqnrzecxd8hUFKDM1aUbMpqPT1nZOAb17ld_of-iZQqaP6zZGa6Gb4PHVGjP02daexrw-nenc_xHIjWeXcFGxoQ=s4800-w400",
+     "addr": "South Korea, Seoul, Jung District, Sejong-daero, 99 덕수궁",
+     "lng": 126.97490169999999,
+     "lat": 37.5658862,
+     "tip": "Stroll Deoksugung Palace’s quiet stone-wall path this morning, then head inside to see the unique, Western-designed Jeonggwanheon Pavilion."
+    }
+   },
+   {
+    "text": "Good morning! Myeongdong is so peaceful with the shops just opening up, isn't it? To start your day, you must try our beloved grilled breakfast toast at Isaac Toast. We locals love this sweet and savory combo for a quick morning boost, so go order the Ham Special Toast with its famous sweet sauce!",
+    "rec": {
+     "name": "Isaac Toast & Coffee Myeongdong Cathedral",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZPLY_n3C84MB7qL676fE7kdRNX4CBY9eCTuSL9kn6-9MD_PSTVO-U-s2T9M5QxpBtZJw-O5Wii4bHPFjfgj7fgLJb2hT1YgWpwSsQLrvGjRYod9Z6-aF81y6-3kHwegT5bCoBPYubxEvSfYl7OyTVT6CQ=s4800-w400",
+     "addr": "17-1 Myeongdong 10-gil, Jung District, Seoul, South Korea",
+     "lng": 126.98548780000002,
+     "lat": 37.5629753,
+     "tip": "Order the Ham Special Toast with its famous sweet sauce for a quick, satisfying breakfast when they open this morning."
+    }
+   }
+  ],
+  "any": [
+   {
+    "text": "Myeongdong is always so buzzing, your hands must be getting full of shopping bags! In Korea, beauty shops generously tuck free skincare samples, called 'saem-peul', into your bag because we love trying new trends. Be sure to accept them politely, and when you check out, just say 'Sample juseyo' to get some extra goodies!",
+    "rec": {
+     "name": "OLIVE YOUNG Central Myeongdong Town Branch",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMD8eKLt9VCH1-1kVxRLwv36cymKL_Drk5DjlNftDOMNlTKIBRwpwgdgQZTgk5LQ9HudmMo0NBeu0ZQqu8r-atBt245gUEKIwI65ldl-2SVJjqeIx_QeWmSlDW9N0VkW19FkSMyFT70TcAGo8NGGhn-VA=s4800-w400",
+     "addr": "27 Myeongdong 8-gil, Jung District, Seoul, South Korea",
+     "lng": 126.9849507,
+     "lat": 37.5625274,
+     "tip": "When checking out at OLIVE YOUNG Central Myeongdong Town, politely say 'Sample juseyo' to score extra skincare samples with your haul."
+    }
+   },
+   {
+    "text": "Those tired feet deserve the subway, so grab a T-money card — one tap covers every subway, bus and taxi in Korea. Buy one at any convenience store counter, and top it up with cash there — or at the English-menu machines inside every subway station. Then do what we all do on the way out: grab a yellow-cap banana milk from the fridge. We've loved it since 1974.",
+    "rec": {
+     "name": "CU convenience store (Myeongdong main)",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMi2BcTVdZ8j1GzbOqRi2cpoqbk5yZQDfsWTfO5EBCCD3nxY2k0vIMmsmoevDKz2bjmTItPEsPwSMg_TZJAFDFcGiTu-dt2pP-XYJt_jySu_qeNuxxptcMLCF5s9d9zAJ7wIlCX19eWbKwsTJysRP2Q-Q=s4800-w400",
+     "addr": "127 Toegye-ro, Jung District, Seoul, South Korea",
+     "lng": 126.9858497,
+     "lat": 37.5611499,
+     "tip": "Head to the counter to buy a Kakao Friends T-money card and load it with cash for your Myeongdong travels."
+    }
+   },
+   {
+    "text": "Shopping in bustling Myeongdong can get so hectic, right? To show respect, Koreans always receive change or shopping bags with both hands, which locals absolutely love because it shows polite manners. When you pay at the next cosmetic shop, use both hands to take your receipt—you will get the warmest smiles!",
+    "rec": null
+   },
+   {
+    "text": "Myeongdong is always so lively and bustling, but all that walking surely makes you hungry. If a restaurant owner brings you an extra dish and says 'service', it means it is totally free! Koreans love sharing affection through freebies, so just smile and say 'gamsahamnida' to show your appreciation.",
+    "rec": null
+   },
+   {
+    "text": "Myeongdong is always so packed and lively, which can get a bit overwhelming. You should escape downstairs into the subway station's underground shopping arcade, a local favorite for budget-friendly shopping. We love it because trendy phone cases and cute socks are half the street price, so definitely go grab a bundle of character socks!",
+    "rec": {
+     "name": "Myeongdong Underground Shopping Center",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZNpfEW4yRG92yD9UwYi_ft2wt33En7oeuaODUVVCeWcsT_0qPmbOhd2ayucL8nRFRzmUDIkCemv4AdI34XI9TmPQEpwyuaeJYZ0F1R_UKJFq5i8OBhBwPolTe6DqJKXrVOxky9BcI_EXE-f2g=s4800-w400",
+     "addr": "124 Toegye-ro, Jung District, Seoul, South Korea",
+     "lng": 126.98535550000001,
+     "lat": 37.5608222,
+     "tip": "Head downstairs to the Myeongdong Underground Shopping Center and grab a cheap bundle of cute character socks from the stalls."
+    }
+   },
+   {
+    "text": "Myeongdong is always so lively and packed no matter the time, isn't it? To beat the crowds, Koreans love using 'beonhopyo' or number-tickets because it saves us from standing in lines. Just grab a ticket from the restaurant's kiosk first, then enjoy some fun window-shopping nearby until your turn comes!",
+    "rec": {
+     "name": "Myeongdong Kyoja",
+     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZNKDKsNPq8RUif6N2mIfJlxoGM-SbSUk3tEQoQ_S18Sx_y256jLKsJ7hPLGFJx2yDUcFn9hwwctByizn29TAcDGu9amISB7q2Ji1JkwI0m46gpeVo0MdVsr2yfOjVmCDrLV9w2Ph451m1xFVwXH9_qtEA=s4800-w400",
+     "addr": "129 Toegye-ro, Jung District, Seoul, South Korea",
+     "lng": 126.9860829,
+     "lat": 37.5610151,
+     "tip": "Grab your number ticket, window-shop nearby, then head inside to order their famous garlic-rich Kalguksu noodles and steamed mandu."
+    }
+   }
+  ]
+ }
+}

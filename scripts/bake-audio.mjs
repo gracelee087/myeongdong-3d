@@ -30,17 +30,37 @@ async function tts(text) {
 
 // must stay byte-identical to INTRO in js/main.js
 const INTRO =
-  "You're standing at Myeongdong Station, Exit six — the front door of Myeongdong. " +
-  "Pop your earphones in and follow the yellow line. Every time we pass somewhere special, I'll tell you all about it. Let's go.";
+  "Welcome to Seoul! I'm so glad you're here, standing right outside Myeongdong Station Exit 6. " +
+  "You are stepping into a place unlike anywhere else in Korea—this is the country's most expensive land, welcoming up to a million visitors every single day. " +
+  "But Myeongdong is so much more than just shopping; back in the 1950s, it was Seoul's very own Montmartre, where artists and poets filled the cozy tea rooms. " +
+  "Ever since, almost every major Korean trend has started right on these streets. " +
+  "Now, pop your earphones in, follow the yellow line, and I'll share its stories as we walk.";
 
 const pois = JSON.parse(fs.readFileSync("data/myeongdong-pois.json", "utf8")).pois;
 const fillers = JSON.parse(fs.readFileSync("data/myeongdong-fillers.json", "utf8")).fillers;
 const zones = JSON.parse(fs.readFileSync("data/myeongdong-zones.json", "utf8")).zones;
+const photoTips = fs.existsSync("data/photo-spots.json")
+  ? JSON.parse(fs.readFileSync("data/photo-spots.json", "utf8")).spots.map((s) => s.tip) : [];
+const tipEntries = fs.existsSync("data/local-tips.json")
+  ? Object.values(JSON.parse(fs.readFileSync("data/local-tips.json", "utf8")).tips).flat() : [];
+const localTips = tipEntries.flatMap((t) => {
+  const text = t.text || t;
+  // recommendation line template — must match js/main.js exactly
+  if (!t.rec) return [text];
+  return [text, `Locals' favourite for this is ${t.rec.name}, just around here.`,
+    ...(t.rec.tip ? [t.rec.tip] : [])];
+});
 const texts = [
   INTRO,
   ...pois.filter((p) => BEST.includes(p.title)).map((p) => p.script).filter(Boolean),
   ...zones.flatMap((z) => z.facts),
   ...fillers,
+  ...photoTips,
+  ...localTips,
+  ...Array.from({ length: 12 }, (_, i) => `Local tip number ${i + 1}.`),
+  // turn-by-turn + arrival-side callouts (templates must match js/main.js)
+  "Coming up — turn left.", "Coming up — turn right.",
+  "Look to your left.", "Look to your right.",
 ];
 
 fs.mkdirSync("audio", { recursive: true });

@@ -11,9 +11,16 @@ const ROUTE = 0xffd27a;
 // warm pastel palette (Tokyo-diorama): mostly cream, a few soft accents
 const CREAMS = [0xe9e2d3, 0xe3dbc9, 0xefe8da, 0xded5c2, 0xe6e0d5];
 const ACCENTS = [0xf5c8b8, 0xbcd9d0, 0xc7cfe8, 0xe8d3ba, 0xd9c8e0];
-const TYPE_PIN = { food: "#ff7a59", attraction: "#4f8cff", culture: "#7c5cff", shopping: "#35c88b", beauty: "#f25c9a", custom: "#ffd27a" };
+const TYPE_PIN = { food: "#ff7a59", attraction: "#4f8cff", culture: "#7c5cff", shopping: "#35c88b", beauty: "#f25c9a", custom: "#ffd27a", photo: "#ff8ac2" };
 // saturated awning/storefront tints — Myeongdong street level is colourful
 const SHOPS = [0xff7a59, 0x35c88b, 0x4f8cff, 0xffd27a, 0xf25c9a, 0x7c5cff, 0xffb347];
+// building style — diorama ("architect's model": muted greige palette, contact
+// AO, glass towers, rooftop clutter) is the DEFAULT; ?style=classic reverts,
+// ?style=split shows old vs new half-and-half
+const STYLE = new URLSearchParams(location.search).get("style") || "diorama";
+const CREAMS_P = [0xe7e3da, 0xdedad1, 0xd6d1c5, 0xe3dcd0, 0xd0cabf, 0xeae7e1];
+const ACCENTS_P = [0xc9b8a8, 0xaab3ab, 0xa6aebc, 0xd3bfae, 0x9aa1a9];
+const SHOPS_P = [0xc26a4e, 0x3f8f72, 0x51709f, 0xc9a05a, 0xa85878, 0x7e6ca8, 0xbd854d];
 
 const S = {
   renderer: null, scene: null, camera: null,
@@ -21,7 +28,7 @@ const S = {
   avatar: null, avatarHeading: 0, bobT: 0,
   pins: new Map(), pinGroups: new Map(), pinActive: null, routeMeshes: [],
   camPos: new THREE.Vector3(), camLook: new THREE.Vector3(), camInit: false,
-  orbitAngle: 20, zoom: 1,
+  orbitAngle: 20, orbitEl: 34, orbitTarget: new THREE.Vector3(0, 0, 0), lastCamTouch: 0, zoom: 1,
   wallMat: null, shopMat: null, sun: null, hemi: null,
   // environment: current (lerped every frame) vs target (set by clock/weather)
   env: null, envT: null, particles: null, particleKind: "none", pVel: null,
@@ -45,6 +52,10 @@ function facadeTexture() {
     c.fillStyle = ["#3b4a66", "#42526f", "#38465f"][(i * 7 + row * 13) % 3];
     c.fillRect(x + 32, y + 21, 64, 54);                               // glass
     c.fillStyle = "rgba(255,255,255,.28)"; c.fillRect(x + 32, y + 21, 64, 11); // sky reflection
+    if (STYLE === "diorama" || STYLE === "split") {
+      c.fillStyle = "rgba(8,14,26,.42)"; c.fillRect(x + 32, y + 21, 64, 10);   // inset shadow (depth)
+      c.fillStyle = "rgba(255,255,255,.16)"; c.fillRect(x + 32, y + 66, 64, 8); // sill light catch
+    }
     c.fillStyle = "#e2e0da"; c.fillRect(0, y + 90, 1024, 6);          // floor slab line
   }
   const tex = new THREE.CanvasTexture(cv);
@@ -92,15 +103,24 @@ function makeBuildings(geojson) {
   const walls = { pos: [], nor: [], uv: [], col: [], idx: [] };
   const shops = { pos: [], nor: [], uv: [], col: [], idx: [] };
   const roofG = [];
+  const props = [];            // rooftop water tanks / AC units (diorama style)
+  const tintGeo = (g, hex) => {
+    const c = new THREE.Color(hex), n = g.attributes.position.count, arr = new Float32Array(n * 3);
+    for (let i = 0; i < n; i++) { arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b; }
+    g.setAttribute("color", new THREE.BufferAttribute(arr, 3));
+    return g;
+  };
   const col = new THREE.Color(), shopCol = new THREE.Color();
   const SHOP_H = 3.6;
   S.bIndex = [];               // per-building centroid + colour ranges (for course highlight)
   let roofVerts = 0;
 
-  const pushQuad = (B, x1, z1, x2, z2, y0, y1, u0, u1, v0, v1, nx, nz, c) => {
+  // cb = colour at the ground, ct = colour at the top (AO gradient when they differ)
+  const pushQuad = (B, x1, z1, x2, z2, y0, y1, u0, u1, v0, v1, nx, nz, cb, ct) => {
     const i = B.pos.length / 3;
     B.pos.push(x1, y0, z1, x2, y0, z2, x2, y1, z2, x1, y1, z1);
-    for (let k = 0; k < 4; k++) { B.nor.push(nx, 0, nz); B.col.push(c.r, c.g, c.b); }
+    for (let k = 0; k < 4; k++) B.nor.push(nx, 0, nz);
+    B.col.push(cb.r, cb.g, cb.b, cb.r, cb.g, cb.b, ct.r, ct.g, ct.b, ct.r, ct.g, ct.b);
     B.uv.push(u0, v0, u1, v0, u1, v1, u0, v1);
     B.idx.push(i, i + 1, i + 2, i, i + 2, i + 3);
   };
@@ -111,9 +131,23 @@ function makeBuildings(geojson) {
     const h = Math.max(4, f.properties.height || 10);
     const seed = (f.properties.id || 1) % 97;
     const bRec = { w0: walls.col.length / 3, r0: roofVerts, cx: 0, cz: 0, pts: null, h };
-    col.setHex(seed % 11 === 0 ? ACCENTS[seed % ACCENTS.length] : CREAMS[seed % CREAMS.length]);
+    const first = rings[0]?.[0]?.[0];
+    const prem = STYLE === "diorama" || (STYLE === "split" && first && toXZ(first[0], first[1])[0] > 0);
+    if (prem) {
+      // tall towers read as cool glass offices, low-rise stays warm greige
+      if (h >= 40) col.setHex([0xaec2d2, 0x9cb2c6, 0xbccbd8][seed % 3]);
+      else col.setHex(seed % 9 === 0 ? ACCENTS_P[seed % ACCENTS_P.length] : CREAMS_P[seed % CREAMS_P.length]);
+      shopCol.setHex(SHOPS_P[seed % SHOPS_P.length]);
+    } else {
+      col.setHex(seed % 11 === 0 ? ACCENTS[seed % ACCENTS.length] : CREAMS[seed % CREAMS.length]);
+      shopCol.setHex(SHOPS[seed % SHOPS.length]);
+    }
     col.multiplyScalar(0.94 + (seed % 7) * 0.015);
-    shopCol.setHex(SHOPS[seed % SHOPS.length]);
+    if (prem) shopCol.multiplyScalar(0.82);
+    // AO concentrated at ground contact (0..8m), not diluted over the full wall
+    const cAO = prem ? col.clone().multiplyScalar(0.3) : null;
+    const cTop = prem ? col.clone().multiplyScalar(1.08) : null;
+    const roofK = prem ? 0.8 : 0.6;
 
     for (const poly of rings) {
       // roof (with holes) at height h
@@ -132,7 +166,10 @@ function makeBuildings(geojson) {
       }
       const rg = new THREE.ShapeGeometry(shape);
       rg.rotateX(-Math.PI / 2); rg.translate(0, h, 0);
-      const rc = col.clone().multiplyScalar(0.6);
+      // a quarter of the low-rise gets Korea's signature green waterproof roof paint
+      const rc = prem && h <= 13 && seed % 4 === 0
+        ? new THREE.Color(0x4b8a5f).multiplyScalar(0.78 + (seed % 5) * 0.035)
+        : col.clone().multiplyScalar(roofK);
       const n = rg.attributes.position.count, arr = new Float32Array(n * 3);
       for (let i = 0; i < n; i++) { arr[i * 3] = rc.r; arr[i * 3 + 1] = rc.g; arr[i * 3 + 2] = rc.b; }
       rg.setAttribute("color", new THREE.BufferAttribute(arr, 3));
@@ -157,16 +194,39 @@ function makeBuildings(geojson) {
           const [x1, z1] = pts[i], [x2, z2] = pts[i + 1];
           const len = Math.hypot(x2 - x1, z2 - z1); if (len < 0.01) continue;
           const nx = (z1 - z2) / len, nz = (x2 - x1) / len; // outward for CW-normalised ring
-          pushQuad(walls, x1, z1, x2, z2, 0, h, acc / FAC_W, (acc + len) / FAC_W, 0, h / FAC_H, nx, nz, col);
+          if (prem) {
+            const yb = Math.min(8, h * 0.6);
+            pushQuad(walls, x1, z1, x2, z2, 0, yb, acc / FAC_W, (acc + len) / FAC_W, 0, yb / FAC_H, nx, nz, cAO, col);
+            if (h > yb) pushQuad(walls, x1, z1, x2, z2, yb, h, acc / FAC_W, (acc + len) / FAC_W, yb / FAC_H, h / FAC_H, nx, nz, col, cTop);
+          } else {
+            pushQuad(walls, x1, z1, x2, z2, 0, h, acc / FAC_W, (acc + len) / FAC_W, 0, h / FAC_H, nx, nz, col, col);
+          }
           const off = 0.14;
           pushQuad(shops, x1 + nx * off, z1 + nz * off, x2 + nx * off, z2 + nz * off,
-            0, SHOP_H, acc / 4.5, (acc + len) / 4.5, 0, 1, nx, nz, shopCol);
+            0, SHOP_H, acc / 4.5, (acc + len) / 4.5, 0, 1, nx, nz, shopCol, shopCol);
           acc += len;
         }
       }
     }
     bRec.w1 = walls.col.length / 3; bRec.r1 = roofVerts;
     S.bIndex.push(bRec);
+
+    // rooftop clutter on larger roofs — the detail that sells the "model city" look
+    if (prem && bRec.pts && h >= 6) {
+      let pa = 0; const P = bRec.pts;
+      for (let i = 0; i < P.length - 1; i++) pa += P[i][0] * P[i + 1][1] - P[i + 1][0] * P[i][1];
+      if (Math.abs(pa) / 2 > 130) {
+        const jx = ((seed % 7) - 3) * 0.6, jz = ((seed % 5) - 2) * 0.7;
+        const tank = new THREE.CylinderGeometry(1.25, 1.25, 2.3, 10);
+        tank.translate(bRec.cx + jx, h + 1.15, bRec.cz + jz);
+        props.push(tintGeo(tank, seed % 3 === 0 ? 0xe3c268 : 0xd9dee3));
+        for (let a2 = 0, nAc = 1 + (seed % 3); a2 < nAc; a2++) {
+          const ac = new THREE.BoxGeometry(1.6, 0.8, 0.7);
+          ac.translate(bRec.cx - jx + 2.4 - a2 * 2.1, h + 0.4, bRec.cz - jz + (a2 % 2) * 1.6 - 0.8);
+          props.push(tintGeo(ac, 0xc6ccd4));
+        }
+      }
+    }
   }
 
   const build = (B) => {
@@ -199,6 +259,13 @@ function makeBuildings(geojson) {
   roofMesh.castShadow = true; roofMesh.receiveShadow = true;
   S.scene.add(roofMesh);
 
+  if (props.length) {
+    const pm = new THREE.Mesh(mergeGeometries(props, false),
+      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, metalness: 0.15 }));
+    pm.castShadow = true; pm.receiveShadow = true;
+    S.scene.add(pm);
+  }
+
   S.wallMesh = wallMesh; S.roofMesh = roofMesh;
   S.origWallCol = Float32Array.from(wallMesh.geometry.attributes.color.array);
   S.origRoofCol = Float32Array.from(roofMesh.geometry.attributes.color.array);
@@ -206,18 +273,23 @@ function makeBuildings(geojson) {
 
 // tint the buildings that belong to the active course (honey gold — sits well
 // next to the yellow route) + a glow disc at their feet so it reads at night too
-// course-highlight colour: cool mint — complementary to the warm route/windows,
-// matches the UI's green accent, and is easy on the eyes at night
+// course-highlight colour: mint at night (reads against the dark city), warm
+// coral by day (mint would blend into the green rooftops)
+const HL_NIGHT = new THREE.Color(0x4fd6a8), HL_DAY = new THREE.Color(0x8f7cf5); // mint night / violet day (nothing else in the city is violet)
 const HL = new THREE.Color(0x4fd6a8);
 export function highlightCourse(lngLats) {
   if (!S.wallMesh) return;
+  S._hlLL = lngLats;
+  const isDay = (S.env?.glow ?? 1) < 0.5;
+  HL.copy(isDay ? HL_DAY : HL_NIGHT);
+  const shellOpacity = isDay ? 0.13 : 0.22, discOpacity = isDay ? 0.2 : 0.3;
   const wc = S.wallMesh.geometry.attributes.color;
   const rc = S.roofMesh.geometry.attributes.color;
   wc.array.set(S.origWallCol); rc.array.set(S.origRoofCol);
   if (!S.hl) { S.hl = new THREE.Group(); S.scene.add(S.hl); }
   S.hl.clear();
   const discGeo = new THREE.CircleGeometry(11, 24);
-  const discMat = new THREE.MeshBasicMaterial({ color: HL, transparent: true, opacity: 0.3, toneMapped: false, side: THREE.DoubleSide });
+  const discMat = new THREE.MeshBasicMaterial({ color: HL, transparent: true, opacity: discOpacity, toneMapped: false, side: THREE.DoubleSide });
   const tmp = new THREE.Color();
   const shellGeoms = [];
   for (const [lng, lat] of lngLats) {
@@ -258,7 +330,7 @@ export function highlightCourse(lngLats) {
   if (shellGeoms.length) {
     const shell = new THREE.Mesh(mergeGeometries(shellGeoms, false),
       new THREE.MeshBasicMaterial({
-        color: HL, transparent: true, opacity: 0.22, toneMapped: false,
+        color: HL, transparent: true, opacity: shellOpacity, toneMapped: false,
         side: THREE.DoubleSide, depthWrite: false,
       }));
     S.hl.add(shell);
@@ -306,17 +378,21 @@ function makeRoads(streets) {
 function waterTexture() {
   const cv = document.createElement("canvas"); cv.width = 256; cv.height = 64;
   const c = cv.getContext("2d");
-  c.fillStyle = "#3f7fb8"; c.fillRect(0, 0, 256, 64);
-  // soft current streaks, brighter mid-channel
-  for (let i = 0; i < 26; i++) {
+  c.fillStyle = "#4f9fd8"; c.fillRect(0, 0, 256, 64);
+  // lively current: many bright streaks + white foam glints
+  for (let i = 0; i < 40; i++) {
     const y = Math.random() * 64, len = 40 + Math.random() * 90;
     const g = c.createLinearGradient(0, 0, len, 0);
-    g.addColorStop(0, "rgba(160,210,240,0)");
-    g.addColorStop(0.5, `rgba(160,215,245,${0.14 + Math.random() * 0.22})`);
-    g.addColorStop(1, "rgba(160,210,240,0)");
+    g.addColorStop(0, "rgba(190,230,255,0)");
+    g.addColorStop(0.5, `rgba(195,235,255,${0.28 + Math.random() * 0.3})`);
+    g.addColorStop(1, "rgba(190,230,255,0)");
     c.fillStyle = g;
     c.save(); c.translate(Math.random() * 256, y);
-    c.fillRect(0, -1.2, len, 2.4); c.restore();
+    c.fillRect(0, -1.4, len, 2.8); c.restore();
+  }
+  for (let i = 0; i < 14; i++) {                       // sparkling foam dashes
+    c.fillStyle = `rgba(255,255,255,${0.35 + Math.random() * 0.35})`;
+    c.fillRect(Math.random() * 256, Math.random() * 64, 6 + Math.random() * 14, 1.3);
   }
   const tex = new THREE.CanvasTexture(cv);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.colorSpace = THREE.SRGBColorSpace;
@@ -335,7 +411,8 @@ function makeWater(water) {
   S.waterTex = waterTexture();
   const mesh = new THREE.Mesh(mergeGeometries(geoms, false),
     new THREE.MeshStandardMaterial({
-      map: S.waterTex, color: 0xbdd6ea, roughness: 0.2, metalness: 0.15, side: THREE.DoubleSide,
+      map: S.waterTex, color: 0xaee2ff, roughness: 0.15, metalness: 0.1, side: THREE.DoubleSide,
+      emissive: 0x2a6a9e, emissiveIntensity: 0.35,   // stays visibly blue even at night
     }));
   mesh.receiveShadow = true;
   S.scene.add(mesh);
@@ -399,27 +476,33 @@ function makePins(pois, glyphs) {
 
 // subway stations — every tourist arrives underground, so mark them clearly
 function subwaySprite(st) {
-  const cv = document.createElement("canvas"); cv.width = 512; cv.height = 112;
+  // two lines: station name + "SUBWAY STATION", sized so text never touches the box
+  const cv = document.createElement("canvas"); cv.width = 512; cv.height = 150;
   const c = cv.getContext("2d");
   c.font = "800 42px 'Segoe UI', sans-serif";
-  const tw = c.measureText(st.en).width;
-  const w = 22 + st.lines.length * 58 + 12 + tw + 30;   // pad · line badges · gap · text · pad
+  const tw1 = c.measureText(st.en).width;
+  c.font = "700 25px 'Segoe UI', sans-serif";
+  const tw2 = c.measureText("SUBWAY STATION").width;
+  const textW = Math.max(tw1, tw2);
+  const w = 22 + st.lines.length * 58 + 14 + textW + 30;   // pad · line badges · gap · text · pad
   const x0 = (512 - w) / 2;
   c.fillStyle = "rgba(10,14,24,0.95)";
   c.strokeStyle = "#ffffff"; c.lineWidth = 6;
-  c.beginPath(); c.roundRect(x0, 14, w, 84, 42); c.fill(); c.stroke();
+  c.beginPath(); c.roundRect(x0, 10, w, 130, 40); c.fill(); c.stroke();
   let x = x0 + 22;
   for (const ln of st.lines) {
-    c.fillStyle = ln.c; c.beginPath(); c.arc(x + 26, 56, 26, 0, Math.PI * 2); c.fill();
+    c.fillStyle = ln.c; c.beginPath(); c.arc(x + 26, 75, 26, 0, Math.PI * 2); c.fill();
     c.fillStyle = "#fff"; c.font = "800 36px 'Segoe UI', sans-serif";
-    c.textAlign = "center"; c.fillText(ln.n, x + 26, 69); c.textAlign = "left";
+    c.textAlign = "center"; c.fillText(ln.n, x + 26, 88); c.textAlign = "left";
     x += 58;
   }
   c.fillStyle = "#ffffff"; c.font = "800 42px 'Segoe UI', sans-serif";
-  c.fillText(st.en, x + 12, 71);
+  c.fillText(st.en, x + 14, 70);
+  c.fillStyle = "#a9bbd2"; c.font = "700 25px 'Segoe UI', sans-serif";
+  c.fillText("SUBWAY STATION", x + 14, 110);
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false }));
-  sp.scale.set(46, 10, 1);
+  sp.scale.set(46, 13.5, 1);
   return sp;
 }
 function makeSubway(stations) {
@@ -472,8 +555,194 @@ function makeAvatar() {
   sp.scale.set(76, 15.2, 1); sp.position.y = 26; sp.renderOrder = 10;
   g.add(sp);
   S.youLabel = sp;
+  // the player must NEVER disappear behind a building, yet must never look
+  // like they're standing ON a roof either — so: normal render up close, plus
+  // a ghost silhouette that only shows through whatever is in front (x-ray)
+  const ghostMat = new THREE.MeshBasicMaterial({
+    color: 0xbfe0ff, transparent: true, opacity: 0.5,
+    depthWrite: false, depthFunc: THREE.GreaterDepth, toneMapped: false,
+  });
+  const bodies = [];
+  g.traverse((o) => { if (o.isMesh && o.material !== ring.material) bodies.push(o); });
+  for (const o of bodies) {
+    const gh = new THREE.Mesh(o.geometry, ghostMat);   // child ⇒ follows animation
+    gh.renderOrder = 9;
+    o.add(gh);
+  }
   S.scene.add(g);
   S.avatar = g;
+}
+
+// ---------- landmarks: Namsan, name plates, cathedral, LED billboards ----------
+function landmarkSprite(name) {
+  const cv = document.createElement("canvas"); cv.width = 640; cv.height = 112;
+  const c = cv.getContext("2d");
+  c.font = "800 40px 'Segoe UI', sans-serif";
+  let t = name;
+  while (t.length > 2 && c.measureText("★ " + t).width > 520) t = t.slice(0, -1);
+  const starW = c.measureText("★ ").width, tw = c.measureText(t).width;
+  const w = 28 + starW + tw + 28, x0 = (640 - w) / 2;
+  c.fillStyle = "rgba(26,21,12,0.93)";
+  c.strokeStyle = "#e9c46a"; c.lineWidth = 5;
+  c.beginPath(); c.roundRect(x0, 14, w, 84, 42); c.fill(); c.stroke();
+  c.fillStyle = "#e9c46a"; c.fillText("★ ", x0 + 28, 70);
+  c.fillStyle = "#f7f3e8"; c.fillText(t, x0 + 28 + starW, 70);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false }));
+  sp.scale.set(52, 9.1, 1);
+  return sp;
+}
+
+// famous big buildings get a name plate on the roof
+const LANDMARKS = [
+  ["Lotte Hotel Seoul", 126.98111, 37.56536],
+  ["Lotte Department Store", 126.98210, 37.56465],
+  ["Shinsegae Department Store", 126.98095, 37.56060],
+  ["Myeongdong Cathedral (1898)", 126.98737, 37.56358],
+  ["The Westin Josun Seoul", 126.97980, 37.56440],
+  ["Bank of Korea Museum (1912)", 126.98185, 37.55975],
+  ["Seoul City Hall", 126.97830, 37.56640],
+];
+const nearestBuilding = (x, z, r) => {
+  let best = null, bd = r;
+  for (const b of S.bIndex) { const d = Math.hypot(b.cx - x, b.cz - z); if (d < bd) { bd = d; best = b; } }
+  return best;
+};
+function makeLandmarks() {
+  for (const [name, lng, lat] of LANDMARKS) {
+    const [x, z] = toXZ(lng, lat);
+    const b = nearestBuilding(x, z, 80);
+    const sp = landmarkSprite(name);
+    sp.position.set(b ? b.cx : x, (b ? b.h : 20) + 14, b ? b.cz : z);
+    sp.renderOrder = 5;
+    S.scene.add(sp);
+  }
+}
+
+// Namsan rises just south of Myeongdong — the one thing every visitor recognises
+// forest-y hill: jitter the cone vertices + blend two greens so it isn't a smooth blob
+function forestCone(r, h, seg) {
+  // low-poly faceted mountain: hash-jittered vertices + flat shading
+  const geo = new THREE.ConeGeometry(r, h, seg, 5).toNonIndexed();
+  const p = geo.attributes.position, n = p.count;
+  const cA = new THREE.Color(0x33523d), cB = new THREE.Color(0x466a4a), t = new THREE.Color();
+  const colors = new Float32Array(n * 3);
+  const hash = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
+  for (let i = 0; i < n; i++) {
+    const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+    const rim = 1 - Math.abs(y) / (h / 2);           // keep apex + base ring in place
+    const j = (hash(x, z) - 0.5) * 2;
+    p.setX(i, x + j * r * 0.06 * rim);
+    p.setZ(i, z + (hash(z, x) - 0.5) * 2 * r * 0.06 * rim);
+    p.setY(i, Math.max(-h / 2, y + j * h * 0.06 * rim));
+  }
+  // flat facets: one colour per triangle
+  for (let f = 0; f < n; f += 3) {
+    const m = hash(p.getX(f), p.getZ(f));
+    t.copy(cA).lerp(cB, m);
+    for (let k = 0; k < 3; k++) t.toArray(colors, (f + k) * 3);
+  }
+  geo.computeVertexNormals();
+  geo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  return geo;
+}
+function makeNamsan() {
+  const [px, pz] = toXZ(126.9882, 37.5512);
+  const g = new THREE.Group();
+  const hillMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 1, flatShading: true });
+  const hill = new THREE.Mesh(forestCone(400, 215, 26), hillMat);
+  hill.position.set(px, 107, pz); g.add(hill);
+  const side = new THREE.Mesh(forestCone(280, 120, 20), hillMat);
+  side.position.set(px - 270, 59, pz + 70); g.add(side);
+  const side2 = new THREE.Mesh(forestCone(240, 100, 18), hillMat);
+  side2.position.set(px + 250, 49, pz + 90); g.add(side2);
+  // summit pad grounds the tower into the ridge (no floating gap)
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(30, 44, 14, 18),
+    new THREE.MeshStandardMaterial({ color: 0x3c5a44, roughness: 1, flatShading: true }));
+  pad.position.set(px, 198, pz); g.add(pad);
+  const BASE = 190; // tower rises out of the summit, well below the jittered peak
+  const towerMat = new THREE.MeshStandardMaterial({ color: 0xe8ecf1, roughness: 0.5 });
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(5, 9, 100, 12), towerMat);
+  shaft.position.set(px, BASE + 50, pz); g.add(shaft);
+  const deck = new THREE.Mesh(new THREE.CylinderGeometry(16, 13, 15, 12), towerMat);
+  deck.position.set(px, BASE + 107, pz); g.add(deck);
+  const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 2.4, 42, 8),
+    new THREE.MeshStandardMaterial({ color: 0xd95f4b, roughness: 0.6 }));
+  ant.position.set(px, BASE + 136, pz); g.add(ant);
+  const sp = landmarkSprite("N Seoul Tower · Namsan");
+  sp.position.set(px, BASE + 176, pz); sp.scale.multiplyScalar(1.7); g.add(sp);
+  S.scene.add(g);
+}
+
+// Myeongdong Cathedral — Korea's first Gothic church deserves better than a box:
+// brick-tinted walls + a spire with a cross
+function designCathedral() {
+  const [x, z] = toXZ(126.98737, 37.56358);
+  const b = nearestBuilding(x, z, 70);
+  if (!b) { console.warn("[cathedral] no building matched"); return; }
+  const brick = new THREE.Color(0xa8705c), roofBrick = new THREE.Color(0x6e4a3c);
+  const tmp = new THREE.Color();
+  for (let i = b.w0; i < b.w1; i++)
+    tmp.fromArray(S.origWallCol, i * 3).lerp(brick, 0.8).toArray(S.origWallCol, i * 3);
+  for (let i = b.r0; i < b.r1; i++)
+    tmp.fromArray(S.origRoofCol, i * 3).lerp(roofBrick, 0.85).toArray(S.origRoofCol, i * 3);
+  S.wallMesh.geometry.attributes.color.array.set(S.origWallCol);
+  S.roofMesh.geometry.attributes.color.array.set(S.origRoofCol);
+  S.wallMesh.geometry.attributes.color.needsUpdate = true;
+  S.roofMesh.geometry.attributes.color.needsUpdate = true;
+  const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 4.6, 26, 4),
+    new THREE.MeshStandardMaterial({ color: 0x9b6b58, roughness: 0.8 }));
+  spire.position.set(b.cx, b.h + 13, b.cz); spire.rotation.y = Math.PI / 4;
+  spire.castShadow = true;
+  const cm = new THREE.MeshStandardMaterial({ color: 0xd9c9a3, roughness: 0.5 });
+  const cv = new THREE.Mesh(new THREE.BoxGeometry(0.5, 5, 0.5), cm);
+  cv.position.set(b.cx, b.h + 28.5, b.cz);
+  const ch = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.5, 0.5), cm);
+  ch.position.set(b.cx, b.h + 29.4, b.cz);
+  S.scene.add(spire, cv, ch);
+}
+
+// animated LED marquees on the main shopping drag — Myeongdong at full volume
+function billboardTexture() {
+  const cv = document.createElement("canvas"); cv.width = 1024; cv.height = 128;
+  const c = cv.getContext("2d");
+  c.fillStyle = "#140a2e"; c.fillRect(0, 0, 1024, 128);
+  const msgs = [["MYEONGDONG", "#ff5fa2"], ["K-BEAUTY", "#5fd3ff"], ["SEOUL ♥", "#ffd25f"], ["SALE 50%", "#7dffb0"]];
+  c.font = "900 62px 'Segoe UI', sans-serif"; c.textBaseline = "middle";
+  let x = 30;
+  for (const [t, col] of msgs) {
+    c.fillStyle = col; c.shadowColor = col; c.shadowBlur = 16;
+    c.fillText(t, x, 66);
+    x += c.measureText(t).width + 72;
+  }
+  c.shadowBlur = 0;
+  const tex = new THREE.CanvasTexture(cv);
+  tex.wrapS = THREE.RepeatWrapping; tex.colorSpace = THREE.SRGBColorSpace;
+  tex.repeat.set(0.55, 1);
+  return tex;
+}
+const BILLBOARDS = [[126.98530, 37.56320], [126.98430, 37.56435], [126.98625, 37.56180]];
+function makeBillboards() {
+  S.bbTex = billboardTexture();
+  const mat = new THREE.MeshBasicMaterial({ map: S.bbTex, toneMapped: false, side: THREE.DoubleSide });
+  const frameMat = new THREE.MeshStandardMaterial({ color: 0x30363f, roughness: 0.8 });
+  for (const [lng, lat] of BILLBOARDS) {
+    const [x, z] = toXZ(lng, lat);
+    // tallest building within 90 m (the nearest one is often a tiny shop)
+    let b = null;
+    for (const c of S.bIndex) {
+      const d = Math.hypot(c.cx - x, c.cz - z);
+      if (d < 90 && (!b || c.h > b.h)) b = c;
+    }
+    if (!b || b.h < 8) { console.warn("[billboard] no building near", lng, lat); continue; }
+    const w = 20, hgt = 6;
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(w, hgt), mat);
+    panel.position.set(b.cx, b.h + 4 + hgt / 2, b.cz);
+    const p1 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 4 + hgt, 0.5), frameMat);
+    p1.position.set(b.cx - w / 2 + 1, b.h + (4 + hgt) / 2, b.cz - 0.3);
+    const p2 = p1.clone(); p2.position.x = b.cx + w / 2 - 1;
+    S.scene.add(panel, p1, p2);
+  }
 }
 
 // ---------- public API ----------
@@ -519,6 +788,10 @@ export function initScene({ container, buildings, streets, walkPath, pois, cente
   makePins(pois, glyphs);
   if (subway) makeSubway(subway);
   makeAvatar();
+  makeNamsan();
+  makeLandmarks();
+  designCathedral();
+  makeBillboards();
 
   addEventListener("resize", () => {
     S.camera.aspect = innerWidth / innerHeight;
@@ -531,7 +804,34 @@ export function initScene({ container, buildings, streets, walkPath, pois, cente
   S.renderer.domElement.addEventListener("wheel", (e) => {
     e.preventDefault();
     S.zoom = clampZoom(S.zoom * (e.deltaY > 0 ? 1.13 : 0.885));
+    S.lastCamTouch = Date.now();       // pause the idle spin while inspecting
   }, { passive: false });
+  // idle-orbit camera control: drag = rotate/tilt, right-drag = pan, wheel = zoom
+  const cv = S.renderer.domElement;
+  let drag = null;
+  cv.addEventListener("contextmenu", (e) => e.preventDefault());
+  cv.addEventListener("pointerdown", (e) => {
+    drag = { x: e.clientX, y: e.clientY, btn: e.button };
+    S.lastCamTouch = Date.now();
+    S._orbitGoal = null;               // manual control beats an in-flight glide
+  });
+  addEventListener("pointerup", () => { drag = null; });
+  addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    drag.x = e.clientX; drag.y = e.clientY;
+    S.lastCamTouch = Date.now();
+    if (drag.btn === 2) {                            // pan — grab the map
+      const a = S.orbitAngle * Math.PI / 180, k = 1.1 * S.zoom;
+      S.orbitTarget.x += (Math.cos(a) * dx - Math.sin(a) * dy) * k;
+      S.orbitTarget.z += (-Math.sin(a) * dx - Math.cos(a) * dy) * k;
+      S.orbitTarget.x = Math.min(1300, Math.max(-1300, S.orbitTarget.x));
+      S.orbitTarget.z = Math.min(1500, Math.max(-1300, S.orbitTarget.z));
+    } else {                                         // rotate + tilt
+      S.orbitAngle = (S.orbitAngle - dx * 0.25) % 360;
+      S.orbitEl = Math.min(80, Math.max(14, S.orbitEl + dy * 0.18));
+    }
+  });
   let pinchD = 0;
   S.renderer.domElement.addEventListener("touchmove", (e) => {
     if (e.touches.length !== 2) return;
@@ -567,12 +867,60 @@ export function followCam(lng, lat, headingDeg, dt) {
   S.camera.lookAt(S.camLook);
 }
 
+// glide the idle camera to a place (sidebar click → "show me where that is")
+export function flyTo(lng, lat) {
+  const [x, z] = toXZ(lng, lat);
+  S._orbitGoal = { x, z, zoom: 0.34 };   // close enough that the spot fills the view
+  S.lastCamTouch = Date.now();
+}
+
+// mid-walk peek: hand the camera from the follow rig to the orbit rig
+// seamlessly — seed angle/elevation/zoom from the current camera transform
+export function beginPeek() {
+  const c = S.camera.position;
+  S.orbitTarget.copy(S.camLook); S.orbitTarget.y = 0;
+  const dx = c.x - S.orbitTarget.x, dz = c.z - S.orbitTarget.z;
+  const R = Math.max(Math.hypot(dx, c.y, dz), 40);
+  S.orbitEl = Math.asin(Math.min(0.95, Math.max(0.06, c.y / R))) * 180 / Math.PI;
+  S.orbitAngle = Math.atan2(dx, dz) * 180 / Math.PI;
+  S.zoom = Math.min(5.5, Math.max(0.3, R / 940));
+  S._orbitGoal = null;
+  S.lastCamTouch = Date.now();
+}
+// ...and glide the follow camera back from wherever the peek ended
+export function endPeekCam() {
+  S.camPos.copy(S.camera.position);
+  S.camLook.copy(S.orbitTarget); S.camLook.y = 6;
+  S.camInit = true;
+  S._orbitGoal = null;
+}
+
 export function orbitCam(dt, speedDeg) {
   S.camInit = false;
-  S.orbitAngle = (S.orbitAngle + speedDeg * dt) % 360;
-  const a = S.orbitAngle * Math.PI / 180, zm = S.zoom;
-  S.camera.position.set(Math.sin(a) * 780 * zm, 520 * zm, Math.cos(a) * 780 * zm);
-  S.camera.lookAt(0, 0, 0);
+  if (S._orbitGoal) {
+    const g = S._orbitGoal, k = 1 - Math.exp(-dt * 3);
+    S.orbitTarget.x += (g.x - S.orbitTarget.x) * k;
+    S.orbitTarget.z += (g.z - S.orbitTarget.z) * k;
+    S.zoom += (g.zoom - S.zoom) * k;
+    S.lastCamTouch = Date.now();          // hold the auto-spin while flying
+    if (Math.hypot(g.x - S.orbitTarget.x, g.z - S.orbitTarget.z) < 2 && Math.abs(g.zoom - S.zoom) < 0.02)
+      S._orbitGoal = null;
+  }
+  // auto-spin only when the user hasn't touched the camera for a while
+  if (Date.now() - S.lastCamTouch > 10000) S.orbitAngle = (S.orbitAngle + speedDeg * dt) % 360;
+  const a = S.orbitAngle * Math.PI / 180, el = S.orbitEl * Math.PI / 180;
+  const R = 940 * S.zoom, t = S.orbitTarget;
+  S.camera.position.set(
+    t.x + Math.sin(a) * Math.cos(el) * R,
+    Math.sin(el) * R,
+    t.z + Math.cos(a) * Math.cos(el) * R);
+  S.camera.lookAt(t);
+}
+
+// back to the classic slowly-spinning overview (Reset button)
+export function resetOrbit() {
+  S.orbitTarget.set(0, 0, 0); S.orbitAngle = 20; S.orbitEl = 34; S.zoom = 1;
+  S.lastCamTouch = 0; S._orbitGoal = null;
 }
 
 export function markVisited(id) {
@@ -584,7 +932,8 @@ export function markVisited(id) {
 export function setPinActive(ids) {
   S.pinActive = ids;
   for (const [id, sp] of S.pins) {
-    const on = !ids || ids.has(id);
+    // photo spots stay visible on every course
+    const on = !ids || ids.has(id) || String(id).startsWith("ps-");
     sp.material.color.set(0xffffff);
     sp.material.transparent = true;
     sp.material.opacity = on ? 1 : 0.12;
@@ -653,6 +1002,12 @@ export function setEnvironment(date, weather) {
   T.sunColor.setHex(0xffb46b).lerp(new THREE.Color(0xfff2dd), Math.min(1, Math.max(0, elev / 35)));
   T.sunI = (0.05 + 1.7 * day) * dim;
   T.hemi = (0.38 + 0.75 * day) * (1 - 0.25 * cloud);
+  if (STYLE === "diorama") {
+    // film-miniature daylight: stronger golden sun, lower ambient → deeper shadows
+    T.sunI = (0.05 + 2.05 * day) * dim;
+    T.hemi = (0.38 + 0.5 * day) * (1 - 0.25 * cloud);
+    T.sunColor.lerp(new THREE.Color(0xffdba8), 0.35 * day);
+  }
   T.bg.setHex(0x0b0d12).lerp(new THREE.Color(0xa9c2ea), day).multiplyScalar(1 - 0.3 * cloud * day);
   T.glow = 1 - day;                                           // window lights at night
 
@@ -700,6 +1055,9 @@ function envTick(dt) {
   S.hemi.intensity = E.hemi;
   S.sun.intensity = E.sunI; S.sun.color.copy(E.sunColor); S.sun.position.copy(E.sunPos);
   if (S.wallMat) { S.wallMat.emissiveIntensity = E.glow * 1.15; S.shopMat.emissiveIntensity = E.glow * 0.8; }
+  // day/night flip → re-tint the course highlight in the right colour
+  const dayHL = E.glow < 0.5;
+  if (S._hlIsDay !== dayHL) { S._hlIsDay = dayHL; if (S._hlLL?.length) highlightCourse(S._hlLL); }
 
   if (S.particles) {
     const p = S.particles.geometry.attributes.position, c = S.camLook;
@@ -716,14 +1074,27 @@ function envTick(dt) {
 
 export function render(dt) {
   // river current — slide the streak texture along the stream
-  if (S.waterTex) S.waterTex.offset.x -= dt * 0.055;
+  if (S.waterTex) S.waterTex.offset.x -= dt * 0.085;
+  if (S.bbTex) S.bbTex.offset.x = (S.bbTex.offset.x + dt * 0.045) % 1;
   // avatar walk bob + YOU-ARE-HERE pulse (find yourself at a glance)
   if (S.avatar) {
     S.bobT += dt * 9;
     S.avatar.position.y = Math.abs(Math.sin(S.bobT)) * 0.9;
     const s = 1 + 0.055 * Math.sin(S.bobT * 0.35);
     // label scales with zoom: dominant when zoomed out, out of the way up close
-    const w = Math.min(96, Math.max(15, 62 * S.zoom)) * s;
+    // big on the idle overview (find yourself at a glance), modest while
+    // walking, and GONE when you zoom right onto the avatar — you can see
+    // yourself, the label would just block the view
+    const w = S.camInit
+      ? Math.min(68, Math.max(14, 48 * S.zoom)) * s
+      : Math.min(130, Math.max(22, 86 * S.zoom)) * s;
+    if (S.youLabel) {
+      const m = S.youLabel.material;
+      const show = S.zoom > (S.camInit ? 0.62 : 0.4);
+      m.transparent = true;
+      m.opacity += ((show ? 1 : 0) - m.opacity) * 0.14;
+      S.youLabel.visible = m.opacity > 0.04;
+    }
     S.youLabel?.scale.set(w, w * 0.2, 1);
     if (S.avatarRing) S.avatarRing.scale.setScalar(1 + 0.25 * Math.abs(Math.sin(S.bobT * 0.35)));
   }

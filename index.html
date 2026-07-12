@@ -88,7 +88,24 @@
     <button class="btn primary" id="startBtn" disabled>▶ Start Walk</button>
     <button class="btn ghost" id="pauseBtn" disabled>Pause</button>
     <button class="btn ghost" id="skipBtn" disabled>Next ›</button>
+    <button class="btn ghost" id="snapBtn" title="Snap a photo — tagged to where you are right now">📷</button>
     <button class="btn ghost" id="resetBtn" title="Reset everything">↺</button>
+  </div>
+
+  <!-- shows while peeking at a list spot mid-walk -->
+  <button class="peek-back hidden" id="peekBackBtn">🚶 Resume journey</button>
+
+  <!-- stamp-rally camera (phones open the camera app directly) -->
+  <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+
+  <!-- trip album — Gemini writes your day, ElevenLabs tells it over your photos -->
+  <div class="album" id="album" hidden>
+    <button class="album-close" id="albumClose">✕</button>
+    <div class="album-stage">
+      <img id="albumImg" alt="">
+      <div class="album-cap" id="albumCap"></div>
+    </div>
+    <div class="album-title" id="albumTitle"></div>
   </div>
 
   <!-- Video preview modal -->
