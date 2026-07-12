@@ -863,6 +863,9 @@ html, body {
   color: var(--good); text-transform: uppercase;
 }
 
+/* mobile-only course/sidebar toggle chips (hidden on desktop) */
+.mob-chips { display: none; }
+
 @media (max-width: 520px) {
   .topbar { padding: 12px 14px; }
   .topbar .sub { display: none; }
@@ -874,12 +877,45 @@ html, body {
   .env-chip { top: 52px; right: 10px; font-size: 11px; padding: 6px 11px; }
   .hud { top: 96px; }
   .toast { top: 100px; }
-  .spot-card { bottom: 86px; left: 12px; width: min(380px, calc(100vw - 24px)); }
-  .course-bar { bottom: 88px; }
-  .course-bar button { padding: 7px 10px; border-radius: 12px; }
-  .course-bar .ci { font-size: 15px; }
-  .course-bar .cn { font-size: 11px; }
-  .dock { bottom: 12px; gap: 7px; padding: 8px 9px; max-width: calc(100vw - 16px); }
-  .btn { font-size: 12.5px; padding: 10px 12px; }
+  .spot-card { bottom: 130px; left: 12px; width: min(380px, calc(100vw - 24px)); }
   .disc-name { font-size: 22px; }
+
+  /* ONE bottom bar: the dock. Buttons never wrap to two lines. */
+  .dock { bottom: 12px; gap: 6px; padding: 8px 9px; max-width: calc(100vw - 12px); }
+  .btn { font-size: 12px; padding: 10px 11px; white-space: nowrap; }
+
+  /* the course picker hides behind the ⭐ Course chip */
+  .course-bar { display: none; }
+  .course-bar.open {
+    display: flex;
+    bottom: 126px;
+  }
+  .mob-chips {
+    position: fixed;
+    left: 50%; bottom: 78px;
+    transform: translateX(-50%);
+    z-index: 12;
+    display: flex; gap: 8px;
+  }
+  .mob-chips button {
+    border: 1px solid var(--stroke);
+    background: var(--panel);
+    color: var(--text);
+    font-weight: 800; font-size: 12px;
+    padding: 8px 14px; border-radius: 999px;
+    backdrop-filter: blur(14px);
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    white-space: nowrap;
+    max-width: 46vw; overflow: hidden; text-overflow: ellipsis;
+  }
+  .mob-chips button.on {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent; color: #fff;
+  }
+  .mob-chips.hidden { display: none; }
+
+  /* sidebar opens over the map from the right, under the top bars */
+  .side { top: 118px; bottom: 170px; right: 8px; width: min(88vw, 340px); }
+  .side.wide { width: min(94vw, 384px); }
 }

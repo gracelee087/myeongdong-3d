@@ -595,8 +595,17 @@ function applyCourse(id) {
   highlightCourse(state.coursePois.map((p) => [p.lng, p.lat]));
   updateHud();
   document.querySelectorAll("#courseBar button").forEach((b) => b.classList.toggle("active", b.dataset.course === id));
+  el("courseBar").classList.remove("open");   // mobile: picking a course closes the picker
+  syncMobChips();
   renderSidebar();
   el("startBtn").disabled = !state.coursePois.length;
+}
+// mobile chips mirror the current course + sidebar state
+function syncMobChips() {
+  const c = COURSES.find((x) => x.id === state.courseId);
+  const mc = el("mobCourse");
+  if (mc && c) mc.textContent = `${c.icon} ${c.name}`;
+  el("mobList")?.classList.toggle("on", !el("sidebar").classList.contains("folded"));
 }
 
 // ---------- My Picks — build your own route ----------
@@ -1108,6 +1117,8 @@ function startWalk() {
   state.tour.running = true; state.tour.paused = false;
   updateHud(); setNowPlaying(""); showHud(true);
   el("courseBar").classList.add("hidden");
+  el("courseBar").classList.remove("open");
+  el("mobCourse").style.display = "none";     // course is locked while walking
   setControls(true);
   toast("🚶 Myeongdong Station, Exit 6 — let's walk");
   // the guide greets you at the exit before you start moving
@@ -1124,6 +1135,7 @@ function endWalk() {
   state.tour.running = false; state.tour.paused = false; audioStop();
   state.activeId = null; setNowPlaying(""); showHud(false);
   el("courseBar").classList.remove("hidden");
+  el("mobCourse").style.display = "";
   el("startBtn").disabled = false; el("startBtn").textContent = "▶ Restart Walk";
   el("pauseBtn").disabled = true; el("skipBtn").disabled = true; el("pauseBtn").textContent = "Pause";
   if (state.mode === "gps") startGPS();
@@ -1394,11 +1406,21 @@ function wireControls() {
       .find((it) => e.clientY < it.getBoundingClientRect().top + it.offsetHeight / 2);
     after ? el("sideList").insertBefore(dragging, after) : el("sideList").append(dragging);
   });
-  el("sideFold").addEventListener("click", (e) => { e.stopPropagation(); el("sidebar").classList.toggle("folded"); });
+  el("sideFold").addEventListener("click", (e) => { e.stopPropagation(); el("sidebar").classList.toggle("folded"); syncMobChips(); });
   // phones: start with the sidebar folded to its edge tab so the map breathes
   if (matchMedia("(max-width: 900px)").matches) el("sidebar").classList.add("folded");
+  syncMobChips();
   el("sidebar").addEventListener("click", () => {
-    if (el("sidebar").classList.contains("folded")) el("sidebar").classList.remove("folded");
+    if (el("sidebar").classList.contains("folded")) { el("sidebar").classList.remove("folded"); syncMobChips(); }
+  });
+  // mobile chips: ⭐ opens the course picker, 📋 opens the spot list
+  el("mobCourse").addEventListener("click", () => {
+    if (state.tour.running) return;
+    el("courseBar").classList.toggle("open");
+  });
+  el("mobList").addEventListener("click", () => {
+    el("sidebar").classList.toggle("folded");
+    syncMobChips();
   });
   el("spotClose").addEventListener("click", (e) => { e.stopPropagation(); el("spotCard").classList.remove("show"); });
   el("videoClose").addEventListener("click", closeVideo);

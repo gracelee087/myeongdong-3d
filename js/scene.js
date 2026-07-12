@@ -1135,9 +1135,11 @@ export function render(dt) {
     // big on the idle overview (find yourself at a glance), modest while
     // walking, and GONE when you zoom right onto the avatar — you can see
     // yourself, the label would just block the view
-    const w = S.camInit
+    // narrow portrait screens: the same world-width fills the view — shrink it
+    const narrow = window.innerWidth < 560 ? 0.5 : 1;
+    const w = (S.camInit
       ? Math.min(68, Math.max(14, 48 * S.zoom)) * s
-      : Math.min(130, Math.max(22, 86 * S.zoom)) * s;
+      : Math.min(130, Math.max(22, 86 * S.zoom)) * s) * narrow;
     if (S.youLabel) {
       const m = S.youLabel.material;
       const show = S.zoom > (S.camInit ? 0.62 : 0.4);
