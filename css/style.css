@@ -264,51 +264,123 @@ html, body {
   color: #fff; font-weight: 800; font-size: 12.5px;
   cursor: pointer;
 }
+.album-make:disabled { opacity: .5; cursor: default; }
+/* 🎞 My Album tab — photo rows with a delete action */
+.ph-del {
+  border: 0; background: none;
+  font-size: 15px; cursor: pointer;
+  align-self: center; opacity: .55;
+}
+.ph-del:hover { opacity: 1; }
 .album {
+  /* scrapbook look ported from the trip-shorts album video */
+  --alb-paper: #f6efe3; --alb-ink: #3a2f24; --alb-soft: #8a7a63;
+  --alb-accent: #c96f4a; --alb-tape: rgba(233, 200, 130, .75);
   position: fixed; inset: 0; z-index: 90;
-  background: #05070c;
+  background:
+    radial-gradient(ellipse 140% 100% at 50% 30%, rgba(255,252,244,.9) 0%, transparent 60%),
+    var(--alb-paper);
   display: flex; align-items: center; justify-content: center;
+  color: var(--alb-ink);
 }
 .album[hidden] { display: none; }
+.album-grain {
+  position: absolute; inset: 0; opacity: .5; pointer-events: none;
+  background-image: repeating-linear-gradient(115deg, rgba(58,47,36,.022) 0 2px, transparent 2px 6px),
+    repeating-linear-gradient(25deg, rgba(58,47,36,.018) 0 3px, transparent 3px 8px);
+}
 .album-stage {
   position: relative;
-  width: min(92vw, 980px); height: min(80vh, 640px);
-  overflow: hidden; border-radius: 20px;
-  box-shadow: 0 20px 80px rgba(0,0,0,.6);
-  background: #10141d;
+  display: flex; flex-direction: column; align-items: center;
+  width: min(92vw, 660px);
+}
+.album-kick {
+  margin-bottom: 20px;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px; letter-spacing: 5px;
+  color: var(--alb-soft);
+}
+.album-print {
+  position: relative;
+  width: 100%;
+  background: #fffdf8;
+  padding: 16px 16px 58px;
+  box-shadow: 0 24px 60px rgba(58,47,36,.28), 0 4px 14px rgba(58,47,36,.16);
+  transition: transform .6s ease;
+}
+.album-print.tilt-l { transform: rotate(-1.6deg); }
+.album-print.tilt-r { transform: rotate(1.3deg); }
+.album-tape {
+  position: absolute; top: -16px; left: 50%;
+  width: 150px; height: 34px; margin-left: -75px;
+  background: var(--alb-tape);
+  transform: rotate(-1deg);
+  box-shadow: 0 2px 6px rgba(58,47,36,.12);
+}
+.album-win {
+  position: relative; width: 100%;
+  aspect-ratio: 3 / 2; max-height: 52vh;
+  overflow: hidden; background: #e8e0d2;
 }
 #albumImg { width: 100%; height: 100%; object-fit: cover; }
 #albumImg.kb1 { animation: kb1 9s ease-in-out both; }
 #albumImg.kb2 { animation: kb2 9s ease-in-out both; }
 @keyframes kb1 { from { transform: scale(1.03); } to { transform: scale(1.15) translate(-2%, -1.5%); } }
 @keyframes kb2 { from { transform: scale(1.15) translate(2%, 1.5%); } to { transform: scale(1.03); } }
-.album-cap {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 30px 30px 40px;
-  font-size: 20px; font-weight: 800; color: #fff;
-  background: linear-gradient(transparent, rgba(0,0,0,.72));
-}
 .album-meta {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 0 30px 16px;
-  font-size: 13px; font-weight: 600; letter-spacing: .04em;
-  color: rgba(255,255,255,.82);
+  position: absolute; left: 22px; right: 110px; bottom: 16px;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 12px; letter-spacing: 1.5px;
+  color: var(--alb-soft);
   font-variant-numeric: tabular-nums;
+}
+.album-meta .alb-geo {
+  display: block; margin-top: 3px;
+  font-size: 10px; letter-spacing: 1px;
+  color: rgba(138,122,99,.65);
+}
+.album-page {
+  position: absolute; right: 22px; bottom: 16px;
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 11px; letter-spacing: 2px;
+  color: rgba(138,122,99,.65);
+}
+.album-cap {
+  margin-top: 26px; padding: 0 12px;
+  max-width: 560px; text-align: center;
+  font-family: "EB Garamond", Georgia, serif;
+  font-style: italic; font-size: clamp(16px, 2.4vw, 21px); line-height: 1.5;
+  color: var(--alb-ink);
 }
 .album-title {
   position: fixed; inset: 0; z-index: 92;
-  display: flex; align-items: center; justify-content: center;
-  padding: 40px; text-align: center;
-  font-size: clamp(28px, 5vw, 54px); font-weight: 900; color: #fff;
-  background: rgba(4,6,10,.55);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; padding: 40px; text-align: center;
+  background:
+    radial-gradient(ellipse 140% 100% at 50% 30%, rgba(255,252,244,.9) 0%, transparent 60%),
+    var(--alb-paper);
   opacity: 0; pointer-events: none;
   transition: opacity .5s ease;
 }
 .album-title.show { opacity: 1; }
+.album-title .at-kick {
+  font-family: "Space Mono", ui-monospace, monospace;
+  font-size: 13px; letter-spacing: 6px;
+  color: var(--alb-soft);
+}
+.album-title .at-main {
+  font-family: "EB Garamond", Georgia, serif;
+  font-weight: 700; font-size: clamp(30px, 6vw, 58px); line-height: 1.15;
+  color: var(--alb-ink);
+}
+.album-title .at-rule {
+  width: 120px; height: 3px;
+  background: var(--alb-accent);
+}
 .album-close {
   position: fixed; top: 18px; right: 20px; z-index: 95;
   width: 40px; height: 40px; border-radius: 999px;
-  border: 0; background: rgba(255,255,255,.14); color: #fff;
+  border: 0; background: rgba(58,47,36,.12); color: var(--alb-ink);
   font-size: 17px; cursor: pointer;
 }
 

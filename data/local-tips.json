@@ -186,9 +186,13 @@
    },
    {
     "text": "Look at those gorgeous neon signs lighting up Myeongdong tonight! This is the perfect time for our 'ee-cha' culture — it literally means 'round two'. A night out here comes in rounds: dinner is round one, then everyone moves somewhere new to keep the fun going. So after dinner, head to a nearby noraebang for your round two and order some cold draft beer!",
+    "food": {
+     "name": "Noraebang night",
+     "img": "img/tips/noraebang-night.jpg"
+    },
     "rec": {
      "name": "JUNCO MUSIC TOWN Jonggak",
-     "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMPEjSNndSVQMg2NuZAergZnRiUI6EJA52tD6j2h0g0oEiQL51fumcsK7UE-Mi7hmfDflynmd_5wVyUJuDY6gyZKDBar4_WKBqGRLm88WO6ZR9NVut9KU0901Px3gdH0maOQ95V-5M_q7wDXw=s4800-w400",
+     "image": "img/tips/noraebang-night.jpg",
      "addr": "63-8 Jong-ro, Jongno District, Seoul, South Korea",
      "lng": 126.9848856,
      "lat": 37.5705987,
@@ -197,13 +201,17 @@
    },
    {
     "text": "Look at all these bright neon signs lighting up the Myeongdong night! You should head upstairs to a 'noraebang,' or private singing room, which Koreans love for destressing since no one can hear you. Just grab a tambourine, choose a song on the remote, and sing your heart out!",
+    "food": {
+     "name": "Noraebang",
+     "img": "img/tips/noraebang-booth.jpg"
+    },
     "rec": {
      "name": "K-Pop Coin Karaoke",
-     "image": "",
+     "image": "img/tips/noraebang-booth.jpg",
      "addr": "87-14 Garwol-dong, Yongsan District, Seoul, South Korea",
      "lng": 126.97177959999999,
      "lat": 37.5439644,
-     "tip": "Slip into a neon-lit booth at K-Pop Coin Karaoke tonight, grab a tambourine, and belt out your favorite BTS song."
+     "tip": "Slip into a neon-lit booth at K-Pop Coin Karaoke tonight, grab a tambourine, and belt out your favorite BTS song — and bring a pocketful of coins, the booths run on them!"
     }
    }
   ],

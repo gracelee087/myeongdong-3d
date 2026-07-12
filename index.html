@@ -6,6 +6,9 @@
   <title>Myeongdong in 3D — GPS Walking Audio Guide</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗼</text></svg>" />
   <link rel="stylesheet" href="./css/style.css" />
+  <!-- scrapbook fonts for the trip album (falls back to serif/monospace offline) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Space+Mono&display=swap" />
 </head>
 <body>
   <!-- 3D map mounts here -->
@@ -98,13 +101,21 @@
   <!-- stamp-rally camera (phones open the camera app directly) -->
   <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
 
-  <!-- trip album — Gemini writes your day, ElevenLabs tells it over your photos -->
+  <!-- trip album — Gemini writes your day, ElevenLabs tells it over your photos.
+       Styled like the printed scrapbook of the trip-shorts video: paper, taped
+       photo prints, mono labels, serif story lines. -->
   <div class="album" id="album" hidden>
     <button class="album-close" id="albumClose">✕</button>
+    <div class="album-grain"></div>
     <div class="album-stage">
-      <img id="albumImg" alt="">
+      <div class="album-kick" id="albumKick"></div>
+      <div class="album-print tilt-l" id="albumPrint">
+        <div class="album-tape"></div>
+        <div class="album-win"><img id="albumImg" alt=""></div>
+        <div class="album-meta" id="albumMeta"></div>
+        <div class="album-page" id="albumPage"></div>
+      </div>
       <div class="album-cap" id="albumCap"></div>
-      <div class="album-meta" id="albumMeta"></div>
     </div>
     <div class="album-title" id="albumTitle"></div>
   </div>

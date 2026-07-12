@@ -29,6 +29,9 @@ const COURSES = [
   // trip journal — every place the guide narrated (or you ✓-marked) lands here,
   // saved on this device so you can relive the trip back home
   { id: "journal", icon: "📒", name: "My Trip", pick: (p) => state.tripLog.has(p.id) },
+  // my album — the photos you snapped (location + time tags), and where the
+  // Gemini-narrated album is made. Not a route: it lists photos, not POIs.
+  { id: "album", icon: "🎞", name: "My Album", pick: () => false },
 ];
 
 // nearby subway stations — every tourist arrives underground
@@ -512,7 +515,8 @@ function localStory(pos) {
   return { text: state.fillers[state.fi++ % state.fillers.length], where: "", img: "" };
 }
 async function walkNarrationLoop() {
-  let lastNarrateDist = -FILLER_EVERY_M;
+  // on state so a mid-walk reroute (insertStopMidWalk) can reset the pacing
+  state._lastNarrate = -FILLER_EVERY_M;
   while (state.tour.running) {
     if (state.tour.paused) { await sleep(150); continue; }
     const a = state.avatarPos;
@@ -526,7 +530,7 @@ async function walkNarrationLoop() {
         toast(`📍 ${poi.enName || poi.title}`);
         await narratePoi(poi);
         state.tour.paused = false;
-        lastNarrateDist = state.walkDist;
+        state._lastNarrate = state.walkDist;
       } else if (!isPlaying()) {
         const turn = upcomingTurn();
         const ps = turn ? null : nearestPhotoSpot(a, 40);
@@ -537,12 +541,12 @@ async function walkNarrationLoop() {
           state.photoDone.add(ps.id);
           earcon("photo");
           showPhotoCard(ps); setNowPlaying(`📸 ${ps.enName}`); playNarration(ps.tip);
-          lastNarrateDist = state.walkDist;
-        } else if (state.walkDist - lastNarrateDist > FILLER_EVERY_M
+          state._lastNarrate = state.walkDist;
+        } else if (state.walkDist - state._lastNarrate > FILLER_EVERY_M
                    && !nearestUnvisitedWithin(a[0], a[1], FILLER_GUARD_M)) {
           const { text, where, img } = localStory(a);
           showFillerCard(text, where, img); setNowPlaying(`🎧 ${where || "About Myeongdong"}`); playNarration(text);
-          lastNarrateDist = state.walkDist;
+          state._lastNarrate = state.walkDist;
         }
       }
     }
@@ -661,50 +665,47 @@ async function onCamPick(e) {
   savePhotos();
   if (p) logVisit(p);
   earcon("photo");
-  toast(`📸 Tagged at ${entry.name}${wxLabel(entry.wx) ? " · " + wxLabel(entry.wx) : ""} — stamped into your trip`);
+  toast(`📸 Tagged at ${entry.name}${wxLabel(entry.wx) ? " · " + wxLabel(entry.wx) : ""} — saved to 🎞 My Album`);
+  albumChip();
   renderSidebar();
 }
 
 // ---------- the album: Gemini narrates your day, ElevenLabs speaks it ----------
+const ALBUM_VOICE = "ZF6FPAbjXT4488VcRRnw"; // "Amelia" — same expressive storyteller as the guide
 function wxLabel(wx) {
   if (!wx) return "";
   return `${WX_EMOJI[wx.kind] || "☀️"} ${wx.temp != null ? wx.temp + "°" : wx.kind}`;
 }
 function sceneMeta(s) {
-  const parts = [];
+  // scrapbook print label: "MYEONGDONG CATHEDRAL · 14:20 · ☀️ 29°" + a small geo line
+  const parts = [s.name || "MYEONGDONG"];
   if (s.ts) parts.push(new Date(s.ts).toTimeString().slice(0, 5));
   const w = wxLabel(s.wx);
   if (w) parts.push(w);
-  if (s.lat != null && s.lng != null) parts.push(`📍 ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`);
-  return parts.join(" · ");
+  const geo = s.lat != null && s.lng != null ? `<span class="alb-geo">📍 ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}</span>` : "";
+  return `${parts.join(" · ").toUpperCase()}${geo}`;
 }
 function albumTimeline() {
-  const scenes = [];
-  for (const [id, ts] of state.tripLog) {
-    const p = state.pois.find((x) => x.id === id);
-    if (!p) continue;
-    const shot = state.photos.filter((s) => s.poiId === id).pop();
-    scenes.push({
-      name: p.enName || p.title, img: shot?.dataUrl || fixImg(p.image), ts, photo: !!shot,
-      lng: p.lng, lat: p.lat, wx: shot?.wx || null,
-    });
-  }
-  for (const s of state.photos) if (!s.poiId)
-    scenes.push({ name: s.name, img: s.dataUrl, ts: s.ts, photo: true, lng: s.lng, lat: s.lat, wx: s.wx || null });
-  scenes.sort((a, b) => a.ts - b.ts);
-  return scenes.filter((s) => s.img).slice(0, 14);
+  // the album is the traveller's own camera roll — only photos they snapped, in order
+  return state.photos
+    .filter((s) => s.dataUrl)
+    .map((s) => ({ name: s.name, img: s.dataUrl, ts: s.ts, photo: true, lng: s.lng, lat: s.lat, wx: s.wx || null }))
+    .sort((a, b) => a.ts - b.ts)
+    .slice(0, 14);
 }
 async function makeAlbum() {
   const scenes = albumTimeline();
-  if (!scenes.length) { toast("Nothing to remember yet — ✓ places you visit or snap 📷 photos first!"); return; }
+  if (!scenes.length) { toast("No photos yet — snap 📷 at the places you visit, then make your album!"); return; }
   toast("🎞 Gemini is writing your album…");
   let story = null;
   try {
     const r = await fetch("/api/album", {
       method: "POST", headers: { "content-type": "application/json" },
       body: JSON.stringify({
+        // the photos themselves go along — Gemini looks at what's IN each shot
+        // and writes the story from that; the location tag is only a hint
         stops: scenes.map((s) => ({
-          name: s.name, photo: s.photo,
+          name: s.name, photo: s.photo, img: s.img,
           time: new Date(s.ts).toTimeString().slice(0, 5),
           weather: s.wx ? `${s.wx.kind}${s.wx.temp != null ? " " + s.wx.temp + "°C" : ""}` : null,
         })),
@@ -725,26 +726,36 @@ async function makeAlbum() {
   el("album").hidden = false;
   runAlbum();
 }
+function albumTitleCard(A, dateTs) {
+  const kick = "MYEONGDONG · " + new Date(dateTs).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }).toUpperCase();
+  return `<div class="at-kick">${kick}</div><div class="at-main">${A.story.title}</div><div class="at-rule"></div>`;
+}
 async function runAlbum() {
   const A = state._album;
   const img = el("albumImg"), cap = el("albumCap"), ttl = el("albumTitle");
-  ttl.textContent = A.story.title; ttl.classList.add("show");
+  const n = A.scenes.length;
+  // no cover card — a one-line scene-setter is spoken OVER the first photo,
+  // and the small standing header line carries the title
+  el("albumKick").textContent = `MYEONGDONG TRIP · ${new Date(A.scenes[0].ts || Date.now()).getFullYear()}`;
+  el("albumPrint").className = "album-print tilt-l";
   img.src = A.scenes[0].img; img.className = "kb1"; cap.textContent = "";
-  el("albumMeta").textContent = "";
-  await playNarration(A.story.intro);
+  el("albumMeta").innerHTML = sceneMeta(A.scenes[0]);
+  el("albumPage").textContent = `01 / ${String(n).padStart(2, "0")}`;
+  await playNarration(A.story.intro, { voiceId: ALBUM_VOICE });
   if (!A.on) return;
-  ttl.classList.remove("show");
-  for (let i = 0; i < A.scenes.length && A.on; i++) {
+  for (let i = 0; i < n && A.on; i++) {
+    el("albumPrint").className = "album-print " + (i % 2 ? "tilt-r" : "tilt-l");
     img.src = A.scenes[i].img; img.className = i % 2 ? "kb2" : "kb1";
-    cap.textContent = A.scenes[i].name;
-    el("albumMeta").textContent = sceneMeta(A.scenes[i]);
-    await playNarration(A.story.scenes[i] || A.scenes[i].name);
+    cap.textContent = A.story.scenes[i] || A.scenes[i].name;
+    el("albumMeta").innerHTML = sceneMeta(A.scenes[i]);
+    el("albumPage").textContent = `${String(i + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
+    await playNarration(A.story.scenes[i] || A.scenes[i].name, { voiceId: ALBUM_VOICE });
     if (!A.on) return;
     await sleep(400);
   }
   if (!A.on) return;
-  ttl.textContent = A.story.title; ttl.classList.add("show");
-  await playNarration(A.story.outro);
+  ttl.innerHTML = albumTitleCard(A, A.scenes[0].ts || Date.now()); ttl.classList.add("show");
+  await playNarration(A.story.outro, { voiceId: ALBUM_VOICE });
   await sleep(1200);
   closeAlbum();
 }
@@ -774,11 +785,17 @@ function toggleBeen(poi) {
 }
 
 function togglePick(poi) {
-  state.picks.has(poi.id) ? state.picks.delete(poi.id) : state.picks.add(poi.id);
+  const adding = !state.picks.has(poi.id);
+  adding ? state.picks.add(poi.id) : state.picks.delete(poi.id);
   savePicks();
   const chip = document.querySelector('#courseBar button[data-course="picks"] .cs');
   if (chip) chip.textContent = `${state.picks.size} spots`;
-  if (state.courseId === "picks") applyCourse("picks");
+  if (adding && state.tour.running) {
+    // walking: ＋ doesn't just bookmark it — it detours the live route there
+    insertStopMidWalk(poi);
+    return;
+  }
+  if (state.courseId === "picks" && !state.tour.running) applyCourse("picks");
   else {
     document.querySelectorAll(`.side-item[data-id="${poi.id}"] .si-add`)
       .forEach((b) => b.classList.toggle("on", state.picks.has(poi.id)));
@@ -842,8 +859,44 @@ function addGooglePlace(g, row) {
   state.picks.add(id);
   savePicks();
   row?.querySelector(".si-add")?.classList.add("on");
+  if (state.tour.running) {
+    insertStopMidWalk(state.pois.find((p) => p.id === id));
+    return;
+  }
   toast(`🎯 ${g.name} added to My Picks (${state.picks.size})`);
   if (state.courseId === "picks") applyCourse("picks");
+}
+
+// mid-walk detour: slot a new stop into the REMAINING route and re-path from
+// where you stand — visited stamps and the running narration survive intact
+function insertStopMidWalk(poi) {
+  const a = state.avatarPos;
+  if (!poi || !a || !state.tour.running) return;
+  if (state.visited.has(poi.id)) { toast(`✓ Already visited ${poi.enName || poi.title} on this walk`); return; }
+  if (!state.coursePois.find((x) => x.id === poi.id)) state.coursePois.push(poi);
+  const remaining = state.route.filter((p) => !state.visited.has(p.id) && p.id !== poi.id);
+  // nearest-insertion: put the new stop where it adds the least extra walking
+  const pts = [a, ...remaining.map((p) => [p.lng, p.lat])];
+  let best = 0, bd = Infinity;
+  for (let i = 0; i < pts.length; i++) {
+    const nxt = pts[i + 1] || null;
+    const added = metersBetween(pts[i], [poi.lng, poi.lat], poi.lat)
+      + (nxt ? metersBetween([poi.lng, poi.lat], nxt, poi.lat) - metersBetween(pts[i], nxt, poi.lat) : 0);
+    if (added < bd) { bd = added; best = i; }
+  }
+  remaining.splice(best, 0, poi);
+  state.route = [...state.route.filter((p) => state.visited.has(p.id)), ...remaining];
+  state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, { lng: a[0], lat: a[1] }, remaining), remaining);
+  state.cum = [0];
+  for (let i = 1; i < state.walkPath.length; i++) state.cum[i] = state.cum[i - 1] + metersBetween(state.walkPath[i - 1], state.walkPath[i], state.walkPath[i][1]);
+  state.pathLen = state.cum[state.cum.length - 1];
+  state.walkDist = 0; state.cumI = 1; state._turnIdx = -1; state._lastNarrate = 0;
+  updateRoute(state.walkPath);
+  setPinActive(new Set(state.coursePois.map((p) => p.id)));
+  highlightCourse(state.coursePois.map((p) => [p.lng, p.lat]));
+  updateHud();
+  renderSidebar();
+  toast(`🧭 Detour! ${poi.enName || poi.title} is now on your route`);
 }
 
 // ---------- sidebar: the current course as a browsable list ----------
@@ -859,35 +912,31 @@ function renderSidebar() {
   el("sideCount").textContent = `${state.coursePois.length}`;
   const list = el("sideList");
   list.innerHTML = "";
-  if (state.courseId === "picks") {
+  if (state.courseId === "album") { renderAlbumTab(list); return; }
+  // Google search lives in My Picks — and during a walk too, so you can
+  // spot a place on the street and detour to it without stopping the tour
+  if (state.courseId === "picks" || state.tour.running) {
     const s = document.createElement("div");
     s.className = "side-search";
-    s.innerHTML = `<input id="gSearch" type="search" placeholder="🔍 Add any place — Google search" autocomplete="off" />
+    s.innerHTML = `<input id="gSearch" type="search" placeholder="${state.tour.running
+      ? "🔍 Add a stop mid-walk — Google search" : "🔍 Add any place — Google search"}" autocomplete="off" />
       <div id="gResults"></div>`;
     s.querySelector("#gSearch").addEventListener("keydown", (e) => {
       if (e.key === "Enter" && e.target.value.trim()) googleSearch(e.target.value.trim());
     });
     list.append(s);
-    if (!state.coursePois.length) {
+    if (state.courseId === "picks" && !state.coursePois.length) {
       const h = document.createElement("div");
       h.className = "g-hint";
       h.textContent = "Search Google above, or tap ＋ in any course list.";
       list.append(h);
     }
   }
-  if (state.courseId === "journal") {
-    // the payoff: Gemini writes your day like a friend, ElevenLabs tells it
-    const b = document.createElement("button");
-    b.className = "album-make";
-    b.textContent = "🎞 Make my album — Gemini writes it, Matilda tells it";
-    b.addEventListener("click", makeAlbum);
-    list.append(b);
-    if (!state.coursePois.length && !state.photos.length) {
-      const h = document.createElement("div");
-      h.className = "g-hint";
-      h.textContent = "Your trip diary is empty — walk a course, tap ✓ on places, or snap 📷 photos, and your day is saved here even after you fly home.";
-      list.append(h);
-    }
+  if (state.courseId === "journal" && !state.coursePois.length) {
+    const h = document.createElement("div");
+    h.className = "g-hint";
+    h.textContent = "Your trip diary is empty — walk a course and tap ✓ on places you've been. Photos live in 🎞 My Album.";
+    list.append(h);
   }
   const pois = (state.courseMods[state.courseId]?.order || state.courseId === "picks") ? state.coursePois
     : state.courseId === "journal"
@@ -962,6 +1011,48 @@ function renderSidebar() {
     list.append(item);
   }
 }
+// 🎞 My Album — the photos you snapped, with their location/time tags,
+// and the button that turns them into the narrated album
+function renderAlbumTab(list) {
+  el("sideCount").textContent = `${state.photos.length}`;
+  const b = document.createElement("button");
+  b.className = "album-make";
+  b.textContent = "🎞 Make my album — Gemini writes it, Jessica tells it";
+  b.disabled = !state.photos.length;
+  b.addEventListener("click", makeAlbum);
+  list.append(b);
+  if (!state.photos.length) {
+    const h = document.createElement("div");
+    h.className = "g-hint";
+    h.textContent = "No photos yet — tap 📷 on any spot (or while walking) and they collect here with time, weather and location.";
+    list.append(h);
+    return;
+  }
+  for (const s of [...state.photos].sort((a, b2) => a.ts - b2.ts)) {
+    const row = document.createElement("div");
+    row.className = "side-item";
+    const meta = [new Date(s.ts).toTimeString().slice(0, 5), wxLabel(s.wx)].filter(Boolean).join(" · ");
+    row.innerHTML = `<img draggable="false" src="${s.dataUrl}" alt="">
+      <div class="si-body">
+        <div class="si-name">${s.name}</div>
+        <div class="si-meta">${meta}</div>
+        <div class="si-meta">📍 ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}</div>
+      </div>
+      <button class="ph-del" title="Delete this photo">🗑</button>`;
+    row.querySelector(".ph-del").addEventListener("click", (e) => {
+      e.stopPropagation();
+      state.photos = state.photos.filter((x) => x.id !== s.id);
+      savePhotos(); albumChip(); renderSidebar();
+      toast("🗑 Photo removed");
+    });
+    row.addEventListener("click", () => flyTo(s.lng, s.lat));
+    list.append(row);
+  }
+}
+function albumChip() {
+  const chip = document.querySelector('#courseBar button[data-course="album"] .cs');
+  if (chip) chip.textContent = `${state.photos.length} photos`;
+}
 // after a drag: whatever order you see is the order you'll walk
 function commitSidebarOrder() {
   const ids = [...document.querySelectorAll("#sideList .side-item")].map((it) => it.dataset.id);
@@ -986,10 +1077,12 @@ function renderCourseBar() {
     const n = state.pois.filter(c.pick).length;
     const b = document.createElement("button");
     b.dataset.course = c.id;
-    b.innerHTML = `<span class="ci">${c.icon}</span><span class="cn">${c.name}</span><span class="cs">${c.id === "picks" && !n ? "build yours" : n + " spots"}</span>`;
+    b.innerHTML = `<span class="ci">${c.icon}</span><span class="cn">${c.name}</span><span class="cs">${
+      c.id === "album" ? `${state.photos.length} photos` : c.id === "picks" && !n ? "build yours" : n + " spots"}</span>`;
     b.addEventListener("click", () => {
       if (state.tour.running) return;
       applyCourse(c.id);
+      if (c.id === "album") { toast("🎞 Your photos — snap 📷 at spots, then make your album"); return; }
       const cnt = state.coursePois.length;
       if (c.id === "picks" && !cnt) { toast("🎯 Tap ＋ in the list to build your own route"); return; }
       const min = Math.round(state.pathLen / 70 + cnt * 1.5); // 4.2 km/h + ~90s listening per spot
