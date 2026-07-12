@@ -255,9 +255,15 @@ const gmapsUrl = (p) =>
 // ---------- video preview (know a place BEFORE you walk in) ----------
 function openVideo(p) {
   if (p.video) {
-    // auto-pause the tour + narration while the preview plays
-    if (state.tour.running && !state.tour.paused) { togglePause(); state._videoPaused = true; }
-    else if (!state.tour.running && isPlaying()) { audioPause(); state._videoPaused = "audio"; }
+    // the video owns the speakers: pause the walk + whatever is talking, and
+    // kill any narration still being fetched (it would start OVER the video)
+    const wasPlaying = isPlaying();
+    if (state.tour.running && !state.tour.paused) {
+      state.tour.paused = true; el("pauseBtn").textContent = "Resume";
+      state._videoPaused = true;
+    }
+    if (wasPlaying) { audioPause(); if (!state._videoPaused) state._videoPaused = "audio"; }
+    else audioStop(); // nothing audible yet → invalidate in-flight TTS so it stays silent
     el("videoTitle").textContent = p.videoTitle || (p.enName || p.title);
     el("videoFrame").src = `https://www.youtube-nocookie.com/embed/${p.video}?autoplay=1`;
     el("videoModal").classList.add("show");
@@ -270,9 +276,11 @@ function openVideo(p) {
 function closeVideo() {
   el("videoModal").classList.remove("show");
   el("videoFrame").src = "";
-  // resume exactly what we paused
-  if (state._videoPaused === true && state.tour.running && state.tour.paused) togglePause();
-  else if (state._videoPaused === "audio") audioResume();
+  // resume exactly what we paused (directly — togglePause has peek-mode detours)
+  if (state._videoPaused === true && state.tour.running && state.tour.paused) {
+    state.tour.paused = false; el("pauseBtn").textContent = "Pause";
+    audioResume();
+  } else if (state._videoPaused === "audio") audioResume();
   state._videoPaused = false;
 }
 
@@ -1387,6 +1395,8 @@ function wireControls() {
     after ? el("sideList").insertBefore(dragging, after) : el("sideList").append(dragging);
   });
   el("sideFold").addEventListener("click", (e) => { e.stopPropagation(); el("sidebar").classList.toggle("folded"); });
+  // phones: start with the sidebar folded to its edge tab so the map breathes
+  if (matchMedia("(max-width: 900px)").matches) el("sidebar").classList.add("folded");
   el("sidebar").addEventListener("click", () => {
     if (el("sidebar").classList.contains("folded")) el("sidebar").classList.remove("folded");
   });

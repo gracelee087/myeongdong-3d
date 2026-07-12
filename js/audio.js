@@ -5,6 +5,7 @@
 const cache = new Map(); // text -> objectURL
 let current = { audio: null, resolve: null };
 let speaking = false;
+let gen = 0; // bumped by stop(): a narration still fetching when stop() ran must never play
 
 // pre-baked clips (audio/manifest.json) — demo path plays without spending credits
 const hash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); };
@@ -32,6 +33,7 @@ function speakFallback(text) {
 }
 
 export async function playNarration(text, { voiceId } = {}) {
+  const g = gen;
   let url = cache.get(text) || bakedUrl(text);
   if (!url) {
     try {
@@ -44,12 +46,14 @@ export async function playNarration(text, { voiceId } = {}) {
       url = URL.createObjectURL(await res.blob());
       cache.set(text, url);
     } catch (e) {
+      if (g !== gen) return;
       console.warn("[audio] TTS failed → browser voice fallback:", e.message);
       stop();
       await speakFallback(text);
       return;
     }
   }
+  if (g !== gen) return; // stopped while loading (e.g. a video opened) — stay silent
   await new Promise((resolve) => {
     stop();
     const a = new Audio(url);
@@ -75,6 +79,7 @@ export function prefetch(text, { voiceId } = {}) {
 }
 
 export function stop() {
+  gen++;
   if (current.audio) current.audio.pause();
   if (speaking) { try { speechSynthesis.cancel(); } catch { } speaking = false; }
   const r = current.resolve;

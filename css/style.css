@@ -459,7 +459,12 @@ html, body {
 .si-add.on::before { content: "✓"; }
 .si-add.on { font-size: 0; }
 .si-add.on::before { font-size: 13px; color: #fff; }
-@media (max-width: 900px) { .side { display: none; } }
+/* phones/tablets: the sidebar folds to an edge tab (JS folds it on boot)
+   instead of disappearing — 📷 / picks / album all live in there */
+@media (max-width: 900px) {
+  .side { top: 152px; bottom: 160px; right: 10px; width: min(84vw, 322px); }
+  .side.wide { width: min(92vw, 384px); }
+}
 
 /* ---------- Themed course picker ---------- */
 .course-bar {
@@ -859,8 +864,22 @@ html, body {
 }
 
 @media (max-width: 520px) {
+  .topbar { padding: 12px 14px; }
   .topbar .sub { display: none; }
-  .spot-card { bottom: 84px; }
-  .hud { top: 58px; }
+  .topbar .brand { font-size: 16px; }
+  .mode-toggle { top: 10px; right: 10px; }
+  .mode-toggle button { font-size: 11.5px; padding: 6px 10px; }
+  .look-toggle { top: 52px; left: 12px; }
+  .look-toggle button { font-size: 11.5px; padding: 6px 10px; }
+  .env-chip { top: 52px; right: 10px; font-size: 11px; padding: 6px 11px; }
+  .hud { top: 96px; }
+  .toast { top: 100px; }
+  .spot-card { bottom: 86px; left: 12px; width: min(380px, calc(100vw - 24px)); }
+  .course-bar { bottom: 88px; }
+  .course-bar button { padding: 7px 10px; border-radius: 12px; }
+  .course-bar .ci { font-size: 15px; }
+  .course-bar .cn { font-size: 11px; }
+  .dock { bottom: 12px; gap: 7px; padding: 8px 9px; max-width: calc(100vw - 16px); }
+  .btn { font-size: 12.5px; padding: 10px 12px; }
   .disc-name { font-size: 22px; }
 }
