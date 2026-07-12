@@ -284,9 +284,16 @@ html, body {
 @keyframes kb2 { from { transform: scale(1.15) translate(2%, 1.5%); } to { transform: scale(1.03); } }
 .album-cap {
   position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 30px 30px 22px;
+  padding: 30px 30px 40px;
   font-size: 20px; font-weight: 800; color: #fff;
   background: linear-gradient(transparent, rgba(0,0,0,.72));
+}
+.album-meta {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 0 30px 16px;
+  font-size: 13px; font-weight: 600; letter-spacing: .04em;
+  color: rgba(255,255,255,.82);
+  font-variant-numeric: tabular-nums;
 }
 .album-title {
   position: fixed; inset: 0; z-index: 92;
@@ -357,6 +364,26 @@ html, body {
   cursor: pointer;
 }
 .tip-save:disabled { background: #2e6b4f; opacity: .9; cursor: default; }
+.tip-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tip-btns .tip-save { margin-top: 0; }
+.tip-yt {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: rgba(255, 82, 82, .22);
+  color: #ffb3ad; font-weight: 700; font-size: 11.5px;
+  cursor: pointer;
+}
+.tip-yt:hover { background: rgba(255, 82, 82, .35); }
+.tip-map {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,.08);
+  color: #bfe3c9; font-weight: 700; font-size: 11.5px;
+  text-decoration: none; display: inline-block;
+}
+.tip-map:hover { background: rgba(255,255,255,.16); }
 .si-add.on::before { content: "✓"; }
 .si-add.on { font-size: 0; }
 .si-add.on::before { font-size: 13px; color: #fff; }

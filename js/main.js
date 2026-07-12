@@ -451,10 +451,22 @@ function showTipCard(n, tip) {
   const text = tip.text || tip;                 // tolerate plain-string tips
   const rec = tip.rec
     ? `<br><br>📍 <b>${tip.rec.name}</b>${tip.rec.addr ? " · " + tip.rec.addr.replace(/,?\s*South Korea/, "") : ""}` +
-      (tip.rec.tip ? `<br>👉 ${tip.rec.tip}` : "") +
-      (tip.rec.lng !== undefined ? `<br><button class="tip-save">🎯 Save for later</button>` : "")
+      (tip.rec.tip ? `<br>👉 ${tip.rec.tip}` : "")
     : "";
-  el("spotBlurb").innerHTML = `<span class="audio-dot"></span>${text}${rec}`;
+  // one wrapping button row — order: preview → save → maps (maps may wrap)
+  const btns = [];
+  if (tip.food?.video) btns.push(`<button class="tip-yt">🎬 Watch preview</button>`);
+  if (tip.rec?.lng !== undefined) btns.push(`<button class="tip-save">🎯 Save for later</button>`);
+  if (tip.rec?.name) {
+    const q = encodeURIComponent(tip.rec.name + (tip.rec.addr ? " " + tip.rec.addr : ""));
+    btns.push(`<a class="tip-map" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank" rel="noopener">🗺️ Google Maps</a>`);
+  }
+  const btnRow = btns.length ? `<div class="tip-btns">${btns.join("")}</div>` : "";
+  el("spotBlurb").innerHTML = `<span class="audio-dot"></span>${text}${rec}${btnRow}`;
+  el("spotBlurb").querySelector(".tip-yt")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openVideo({ video: tip.food.video, videoTitle: tip.food.videoTitle, title: tip.food.name, enName: tip.food.name });
+  });
   el("spotBlurb").querySelector(".tip-save")?.addEventListener("click", (e) => {
     e.stopPropagation();
     saveTipRec(n, tip);
@@ -463,7 +475,8 @@ function showTipCard(n, tip) {
   });
   el("spotAddrRow").style.display = "none";
   const img = el("spotPhoto");
-  if (tip.rec?.image) { img.src = tip.rec.image; img.hidden = false; } else img.hidden = true;
+  // food tips show the FOOD itself; a tip never needs the shop's storefront photo
+  if (tip.food?.img) { img.src = tip.food.img; img.hidden = false; } else img.hidden = true;
   document.querySelector(".spot-actions").style.display = "none";
   el("spotCard").classList.add("show");
 }
@@ -642,25 +655,42 @@ async function onCamPick(e) {
     id: "shot-" + Date.now(), poiId: p?.id || null,
     name: p ? (p.enName || p.title) : nearestSpotName(pos),
     lng: pos[0], lat: pos[1], ts: Date.now(), dataUrl,
+    wx: env.weather ? { kind: env.weather.kind, temp: env.weather.temp } : null,
   };
   state.photos.push(entry);
   savePhotos();
   if (p) logVisit(p);
   earcon("photo");
-  toast(`📸 Tagged at ${entry.name} — stamped into your trip`);
+  toast(`📸 Tagged at ${entry.name}${wxLabel(entry.wx) ? " · " + wxLabel(entry.wx) : ""} — stamped into your trip`);
   renderSidebar();
 }
 
 // ---------- the album: Gemini narrates your day, ElevenLabs speaks it ----------
+function wxLabel(wx) {
+  if (!wx) return "";
+  return `${WX_EMOJI[wx.kind] || "☀️"} ${wx.temp != null ? wx.temp + "°" : wx.kind}`;
+}
+function sceneMeta(s) {
+  const parts = [];
+  if (s.ts) parts.push(new Date(s.ts).toTimeString().slice(0, 5));
+  const w = wxLabel(s.wx);
+  if (w) parts.push(w);
+  if (s.lat != null && s.lng != null) parts.push(`📍 ${s.lat.toFixed(4)}, ${s.lng.toFixed(4)}`);
+  return parts.join(" · ");
+}
 function albumTimeline() {
   const scenes = [];
   for (const [id, ts] of state.tripLog) {
     const p = state.pois.find((x) => x.id === id);
     if (!p) continue;
     const shot = state.photos.filter((s) => s.poiId === id).pop();
-    scenes.push({ name: p.enName || p.title, img: shot?.dataUrl || fixImg(p.image), ts, photo: !!shot });
+    scenes.push({
+      name: p.enName || p.title, img: shot?.dataUrl || fixImg(p.image), ts, photo: !!shot,
+      lng: p.lng, lat: p.lat, wx: shot?.wx || null,
+    });
   }
-  for (const s of state.photos) if (!s.poiId) scenes.push({ name: s.name, img: s.dataUrl, ts: s.ts, photo: true });
+  for (const s of state.photos) if (!s.poiId)
+    scenes.push({ name: s.name, img: s.dataUrl, ts: s.ts, photo: true, lng: s.lng, lat: s.lat, wx: s.wx || null });
   scenes.sort((a, b) => a.ts - b.ts);
   return scenes.filter((s) => s.img).slice(0, 14);
 }
@@ -676,6 +706,7 @@ async function makeAlbum() {
         stops: scenes.map((s) => ({
           name: s.name, photo: s.photo,
           time: new Date(s.ts).toTimeString().slice(0, 5),
+          weather: s.wx ? `${s.wx.kind}${s.wx.temp != null ? " " + s.wx.temp + "°C" : ""}` : null,
         })),
       }),
     });
@@ -699,12 +730,14 @@ async function runAlbum() {
   const img = el("albumImg"), cap = el("albumCap"), ttl = el("albumTitle");
   ttl.textContent = A.story.title; ttl.classList.add("show");
   img.src = A.scenes[0].img; img.className = "kb1"; cap.textContent = "";
+  el("albumMeta").textContent = "";
   await playNarration(A.story.intro);
   if (!A.on) return;
   ttl.classList.remove("show");
   for (let i = 0; i < A.scenes.length && A.on; i++) {
     img.src = A.scenes[i].img; img.className = i % 2 ? "kb2" : "kb1";
     cap.textContent = A.scenes[i].name;
+    el("albumMeta").textContent = sceneMeta(A.scenes[i]);
     await playNarration(A.story.scenes[i] || A.scenes[i].name);
     if (!A.on) return;
     await sleep(400);
@@ -820,7 +853,7 @@ function poiDistance(p) {
   return metersBetween(from, [p.lng, p.lat], p.lat);
 }
 function renderSidebar() {
-  el("sidebar").classList.remove("wide");   // fresh rows start collapsed
+  el("sidebar").classList.toggle("wide", !!state._actsOpen);   // rows remember open/closed across re-renders
   const course = COURSES.find((c) => c.id === state.courseId);
   el("sideTitle").textContent = `${course.icon} ${course.name}`;
   el("sideCount").textContent = `${state.coursePois.length}`;
@@ -862,7 +895,7 @@ function renderSidebar() {
       : [...state.coursePois].sort((a, b) => poiDistance(a) - poiDistance(b));
   for (const p of pois) {
     const item = document.createElement("div");
-    item.className = "side-item" + (state.visited.has(p.id) ? " done" : "");
+    item.className = "side-item" + (state.visited.has(p.id) ? " done" : "") + (state._actsOpen ? " acts" : "");
     item.dataset.id = p.id;
     const img = p.image ? `<img loading="lazy" draggable="false" src="${fixImg(p.image)}" alt="">`
       : `<div class="si-ph">${TYPE_GLYPH[p.type] || "📍"}</div>`;
@@ -886,9 +919,10 @@ function renderSidebar() {
       </div>`;
     item.querySelector(".si-more").addEventListener("click", (e) => {
       e.stopPropagation();
-      item.classList.toggle("acts");
-      // the box breathes: widen while any row's actions are out, shrink back after
-      el("sidebar").classList.toggle("wide", !!document.querySelector(".side-item.acts"));
+      // one tap rules them all: every row's actions open and close together
+      state._actsOpen = !state._actsOpen;
+      document.querySelectorAll(".side-item").forEach((it) => it.classList.toggle("acts", state._actsOpen));
+      el("sidebar").classList.toggle("wide", state._actsOpen);
     });
     item.querySelector(".si-cam").addEventListener("click", (e) => { e.stopPropagation(); snapPhoto(p); });
     item.querySelector(".si-vid").addEventListener("click", (e) => { e.stopPropagation(); openVideo(p); });
@@ -1259,7 +1293,7 @@ function wireControls() {
       .find((it) => e.clientY < it.getBoundingClientRect().top + it.offsetHeight / 2);
     after ? el("sideList").insertBefore(dragging, after) : el("sideList").append(dragging);
   });
-  el("sideFold").addEventListener("click", () => el("sidebar").classList.toggle("folded"));
+  el("sideFold").addEventListener("click", (e) => { e.stopPropagation(); el("sidebar").classList.toggle("folded"); });
   el("sidebar").addEventListener("click", () => {
     if (el("sidebar").classList.contains("folded")) el("sidebar").classList.remove("folded");
   });

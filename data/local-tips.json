@@ -11,6 +11,13 @@
      "lng": 126.98340560000001,
      "lat": 37.564866699999996,
      "tip": "Head inside Sulbing and order the classic Injeolmi red bean bingsu topped with chewy rice cakes to instantly cool down."
+    },
+    "food": {
+     "name": "Patbingsu",
+     "img": "img/food/patbingsu.jpg",
+     "yt": "https://www.youtube.com/results?search_query=patbingsu%20korean%20shaved%20ice",
+     "video": "qCzadMYWNJA",
+     "videoTitle": "명동 팥고당에서 빙수먹방~^^"
     }
    },
    {
@@ -22,6 +29,13 @@
      "lng": 126.9841225,
      "lat": 37.5633343,
      "tip": "Head inside Baekje Samgyetang and order a steaming bowl of their signature wild ginseng chicken soup served with ginseng wine."
+    },
+    "food": {
+     "name": "Samgyetang",
+     "img": "img/food/samgyetang.jpg",
+     "yt": "https://www.youtube.com/results?search_query=samgyetang%20ginseng%20chicken%20soup",
+     "video": "VOiwfKlkLkc",
+     "videoTitle": "서울 삼계탕 맛집 매출 Top3"
     }
    },
    {
@@ -33,6 +47,13 @@
      "lng": 126.9858497,
      "lat": 37.5611499,
      "tip": ""
+    },
+    "food": {
+     "name": "Ice-cup coffee",
+     "img": "img/food/ice-cup-coffee.jpg",
+     "yt": "https://www.youtube.com/results?search_query=korean%20convenience%20store%20ice%20cup",
+     "video": "sT7ZYo87bAY",
+     "videoTitle": "외국인들이 한국 오자마자 먹는 조합 #쿠팡꿀템 #편의점조합 #외국인반응 #바나나우유 #아메리카노"
     }
    },
    {
@@ -57,6 +78,13 @@
      "lng": 126.98525,
      "lat": 37.56335,
      "tip": "Order one odeng skewer, then help yourself to the hot broth — refilling your paper cup again and again is exactly what everyone does."
+    },
+    "food": {
+     "name": "Odeng (fish cake)",
+     "img": "img/food/odeng-fish-cake.jpg",
+     "yt": "https://www.youtube.com/results?search_query=odeng%20korean%20fish%20cake%20street%20food",
+     "video": "szUtMQHzpJs",
+     "videoTitle": "집앞 길거리 포장마차 오뎅 붕어빵 겨울이온다~"
     }
    },
    {
@@ -92,6 +120,13 @@
      "lng": 126.98806200000001,
      "lat": 37.5618045,
      "tip": "Grab a table at Myeongdong Jijimi and order a crispy haemul pajeon paired with a bowl of sweet makgeolli."
+    },
+    "food": {
+     "name": "Pajeon & makgeolli",
+     "img": "img/food/pajeon-makgeolli.jpg",
+     "yt": "https://www.youtube.com/results?search_query=pajeon%20makgeolli%20rainy%20day",
+     "video": "uDklfnTBsQQ",
+     "videoTitle": "비오는날 파전에 막걸리에 얼큰하게 한잔했습니다,,! (소주는 서비스) "
     }
    },
    {
@@ -120,6 +155,13 @@
      "lng": 126.98611799999998,
      "lat": 37.5641885,
      "tip": "Head to Myeongdong Shopping Street and buy a hot bag of roasted sweet potatoes from a street vendor's giant metal drum."
+    },
+    "food": {
+     "name": "Gun-goguma",
+     "img": "img/food/gun-goguma.jpg",
+     "yt": "https://www.youtube.com/results?search_query=gungoguma%20roasted%20sweet%20potato%20korea",
+     "video": "cwV3YlnbwkI",
+     "videoTitle": "고구마 간식 쉽게 만드세요! #간식 #고구마간식 #쉬운레시피 #고구마요리"
     }
    }
   ],
@@ -133,10 +175,17 @@
      "lng": 126.9772952,
      "lat": 37.5606787,
      "tip": "Order the signature vegetable hotteok tonight, brush it with savory soy sauce, and eat it standing right next to the cart."
+    },
+    "food": {
+     "name": "Hotteok",
+     "img": "img/food/hotteok.jpg",
+     "yt": "https://www.youtube.com/results?search_query=hotteok%20korean%20street%20food",
+     "video": "ew_bIXfj3xc",
+     "videoTitle": "명동 길거리 꿀호떡 명소! 새벽부터 직접 반죽 준비하는 호떡 달인! - Korean Street Food"
     }
    },
    {
-    "text": "Look at those gorgeous neon signs lighting up Myeongdong tonight! This is the perfect time to experience our 2-cha culture, where we keep the night going in rounds to stretch the fun. After dinner, head to a nearby noraebang for round two and order some cold draft beer!",
+    "text": "Look at those gorgeous neon signs lighting up Myeongdong tonight! This is the perfect time for our 'ee-cha' culture — it literally means 'round two'. A night out here comes in rounds: dinner is round one, then everyone moves somewhere new to keep the fun going. So after dinner, head to a nearby noraebang for your round two and order some cold draft beer!",
     "rec": {
      "name": "JUNCO MUSIC TOWN Jonggak",
      "image": "https://lh3.googleusercontent.com/place-photos/AJRVUZMPEjSNndSVQMg2NuZAergZnRiUI6EJA52tD6j2h0g0oEiQL51fumcsK7UE-Mi7hmfDflynmd_5wVyUJuDY6gyZKDBar4_WKBqGRLm88WO6ZR9NVut9KU0901Px3gdH0maOQ95V-5M_q7wDXw=s4800-w400",
@@ -179,6 +228,13 @@
      "lng": 126.98548780000002,
      "lat": 37.5629753,
      "tip": "Order the Ham Special Toast with its famous sweet sauce for a quick, satisfying breakfast when they open this morning."
+    },
+    "food": {
+     "name": "Isaac Toast",
+     "img": "img/food/isaac-toast.jpg",
+     "yt": "https://www.youtube.com/results?search_query=isaac%20toast%20korea",
+     "video": "aykR42VYgh4",
+     "videoTitle": "토스트는 이삭토스트..ㅎ햄치즈토스트 베이컨베스트 스크램블 리얼양념치킨 불갈비 토스트 먹어보겠슴다!!! 먹방 ASMR Mukbang  Isaac Toast EATING SHOW"
     }
    }
   ],
@@ -233,6 +289,13 @@
      "lng": 126.9860829,
      "lat": 37.5610151,
      "tip": "Grab your number ticket, window-shop nearby, then head inside to order their famous garlic-rich Kalguksu noodles and steamed mandu."
+    },
+    "food": {
+     "name": "Kalguksu",
+     "img": "img/food/kalguksu.jpg",
+     "yt": "https://www.youtube.com/results?search_query=myeongdong%20kyoja%20kalguksu",
+     "video": "F91KjCZmu_I",
+     "videoTitle": "이 칼국수, 볶는 게 포인트! 명동칼국수 완벽 재현하기!"
     }
    }
   ]

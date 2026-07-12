@@ -13,7 +13,7 @@ export default async (req) => {
   if (!key) return Response.json({ error: "GEMINI_API_KEY not set" }, { status: 500 });
 
   const day = stops.slice(0, 14).map((s, i) =>
-    `${i + 1}. ${s.name} at ${s.time}${s.photo ? " — they took a photo here" : ""}`).join("\n");
+    `${i + 1}. ${s.name} at ${s.time}${s.weather ? ` (${s.weather})` : ""}${s.photo ? " — they took a photo here" : ""}`).join("\n");
   const r = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
     {
@@ -28,7 +28,8 @@ export default async (req) => {
               "title: a short album title, max 6 words. " +
               "intro: 1-2 warm sentences opening the memory, like 'So — remember this day?'. " +
               "scenes: EXACTLY one entry per numbered stop, in the same order — each ONE casual spoken sentence " +
-              "(max 20 words) about being there together; when a photo was taken, tease them about posing for it. " +
+              "(max 20 words) about being there together; when a photo was taken, tease them about posing for it; " +
+              "when weather is given, weave it in naturally sometimes ('that sunny afternoon...') without reciting numbers. " +
               "outro: 1-2 sentences closing the day warmly, with a promise to come back. " +
               "Natural spoken English, like a close friend talking. No emojis, no lists.",
           }],

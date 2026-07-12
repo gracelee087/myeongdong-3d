@@ -19,3 +19,9 @@ _shot.mjs
 .DS_Store
 Thumbs.db
 scratchpad_*
+
+# video production artifacts (not part of the app)
+trip-shorts/
+voice-samples/
+myeongdong-album.mp4
+myeongdong-trip.mp4

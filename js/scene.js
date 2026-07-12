@@ -427,8 +427,46 @@ function makeRoute(walkPath) {
   // faint glow underlay
   const glow = new THREE.Mesh(ribbonGeometry(pts, 14, 0.35),
     new THREE.MeshBasicMaterial({ color: ROUTE, transparent: true, opacity: 0.18, toneMapped: false, side: THREE.DoubleSide }));
-  S.scene.add(mesh); S.scene.add(glow);
-  S.routeMeshes = [mesh, glow];
+  // x-ray pass: the yellow route must NEVER vanish behind a building —
+  // occluded stretches still glow through whatever hides them
+  const xray = new THREE.Mesh(ribbonGeometry(pts, 6, 0.6),
+    new THREE.MeshBasicMaterial({
+      color: ROUTE, transparent: true, opacity: 0.35, toneMapped: false, side: THREE.DoubleSide,
+      depthWrite: false, depthFunc: THREE.GreaterDepth,
+    }));
+  xray.renderOrder = 8;
+  // painted direction chevrons every ~16 m — at a fork you SEE which branch is yours
+  const A = { pos: [], idx: [] };
+  const pushArrow = (ax, az, ux, uz) => {
+    // one SOLID triangle — reads as an arrow from any distance, never as an "x"
+    const px = -uz, pz = ux, i = A.pos.length / 3, y = 0.78;
+    A.pos.push(
+      ax + ux * 2.4, y, az + uz * 2.4,
+      ax - ux * 1.4 + px * 1.7, y, az - uz * 1.4 + pz * 1.7,
+      ax - ux * 1.4 - px * 1.7, y, az - uz * 1.4 - pz * 1.7,
+    );
+    A.idx.push(i, i + 1, i + 2);
+  };
+  let acc = 0, next = 8;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const [x1, z1] = pts[i], [x2, z2] = pts[i + 1];
+    const seg = Math.hypot(x2 - x1, z2 - z1);
+    if (seg < 0.01) continue;
+    const ux = (x2 - x1) / seg, uz = (z2 - z1) / seg;
+    while (next <= acc + seg) {
+      const d = next - acc;
+      pushArrow(x1 + ux * d, z1 + uz * d, ux, uz);
+      next += 16;
+    }
+    acc += seg;
+  }
+  const arrowGeo = new THREE.BufferGeometry();
+  arrowGeo.setAttribute("position", new THREE.Float32BufferAttribute(A.pos, 3));
+  arrowGeo.setIndex(A.idx);
+  const arrows = new THREE.Mesh(arrowGeo,
+    new THREE.MeshBasicMaterial({ color: 0x6b4a00, toneMapped: false, side: THREE.DoubleSide }));
+  S.scene.add(mesh); S.scene.add(glow); S.scene.add(xray); S.scene.add(arrows);
+  S.routeMeshes = [mesh, glow, xray, arrows];
 }
 export function updateRoute(walkPath) { makeRoute(walkPath); }
 
@@ -555,17 +593,19 @@ function makeAvatar() {
   sp.scale.set(76, 15.2, 1); sp.position.y = 26; sp.renderOrder = 10;
   g.add(sp);
   S.youLabel = sp;
-  // the player must NEVER disappear behind a building, yet must never look
-  // like they're standing ON a roof either — so: normal render up close, plus
-  // a ghost silhouette that only shows through whatever is in front (x-ray)
-  const ghostMat = new THREE.MeshBasicMaterial({
-    color: 0xbfe0ff, transparent: true, opacity: 0.5,
-    depthWrite: false, depthFunc: THREE.GreaterDepth, toneMapped: false,
-  });
+  // the player is the protagonist: buildings stay untouched, but the character
+  // must ALWAYS be fully visible. Second x-ray pass per part in the part's OWN
+  // colour (GreaterDepth ⇒ drawn only where something covers it) — behind a
+  // building the character looks exactly like themselves, not a dim ghost; the
+  // x-ray route + feet ring below give the "behind, not on the roof" context.
   const bodies = [];
-  g.traverse((o) => { if (o.isMesh && o.material !== ring.material) bodies.push(o); });
+  g.traverse((o) => { if (o.isMesh) bodies.push(o); });
   for (const o of bodies) {
-    const gh = new THREE.Mesh(o.geometry, ghostMat);   // child ⇒ follows animation
+    const gh = new THREE.Mesh(o.geometry, new THREE.MeshBasicMaterial({
+      color: o.material.color.clone(),
+      transparent: true, opacity: o.material === ring.material ? 0.55 : 0.96,
+      depthWrite: false, depthFunc: THREE.GreaterDepth, toneMapped: false,
+    }));   // child ⇒ follows animation
     gh.renderOrder = 9;
     o.add(gh);
   }
@@ -672,6 +712,15 @@ function makeNamsan() {
   const sp = landmarkSprite("N Seoul Tower · Namsan");
   sp.position.set(px, BASE + 176, pz); sp.scale.multiplyScalar(1.7); g.add(sp);
   S.scene.add(g);
+}
+
+// Cheonggyecheon has no roof to hang a plate on — float its name over the
+// stream head (Cheonggye Plaza) so you know what that blue ribbon IS
+function labelCheonggyecheon() {
+  const [x, z] = toXZ(126.9779, 37.5689);
+  const sp = landmarkSprite("Cheonggyecheon Stream · 청계천");
+  sp.position.set(x, 26, z);
+  S.scene.add(sp);
 }
 
 // Myeongdong Cathedral — Korea's first Gothic church deserves better than a box:
@@ -790,6 +839,7 @@ export function initScene({ container, buildings, streets, walkPath, pois, cente
   makeAvatar();
   makeNamsan();
   makeLandmarks();
+  labelCheonggyecheon();
   designCathedral();
   makeBillboards();
 
