@@ -881,8 +881,24 @@ html, body {
   .disc-name { font-size: 22px; }
 
   /* ONE bottom bar: the dock. Buttons never wrap to two lines. */
-  .dock { bottom: 12px; gap: 6px; padding: 8px 9px; max-width: calc(100vw - 12px); }
-  .btn { font-size: 12px; padding: 10px 11px; white-space: nowrap; }
+  .dock { bottom: 12px; gap: 5px; padding: 7px 8px; max-width: calc(100vw - 10px); }
+  .btn { font-size: 11.5px; padding: 10px 9px; white-space: nowrap; }
+
+  /* spot/tip/story card: never taller than the screen, and a close bar that's
+     impossible to miss (the top-right ✕ hid under the folded sidebar tab) */
+  .spot-card {
+    display: flex; flex-direction: column;
+    max-height: calc(100vh - 250px);
+  }
+  .spot-body { overflow-y: auto; padding-bottom: 62px; }
+  .spot-close {
+    top: auto; bottom: 10px; left: 10px; right: 10px;
+    width: auto; height: 40px; border-radius: 12px;
+    font-size: 13px; font-weight: 800;
+    background: rgba(255,255,255,.14);
+  }
+  .spot-close::after { content: " Close"; }
+  .spot-photo { flex: none; height: 120px; }
 
   /* the course picker hides behind the ⭐ Course chip */
   .course-bar { display: none; }
@@ -915,7 +931,9 @@ html, body {
   }
   .mob-chips.hidden { display: none; }
 
-  /* sidebar opens over the map from the right, under the top bars */
+  /* sidebar opens over the map from the right, under the top bars;
+     folded = fully off-screen (the 📋 Spots chip is the opener) */
   .side { top: 118px; bottom: 170px; right: 8px; width: min(88vw, 340px); }
   .side.wide { width: min(94vw, 384px); }
+  .side.folded { transform: translateX(calc(100% + 16px)); }
 }

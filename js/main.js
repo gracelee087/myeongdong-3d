@@ -98,6 +98,7 @@ const state = {
   activeId: null, visited: new Set(),
   mode: "sim", walkDist: 0, camHeading: 20, avatarPos: null,
   tour: { running: false, paused: false }, gps: { watchId: null, heading: 0 },
+  _played: [], _playedIdx: null,   // ‹ Prev — everything the guide already said this walk
   peek: null,          // POI being "peeked at" mid-walk (camera detour)
   courseMods: {},      // per-course edits: { removed:Set, order:[ids] }
   photos: [],          // stamp-rally: {id, poiId|null, name, lng, lat, ts, dataUrl}
@@ -370,6 +371,7 @@ function checkOffSidebar(id) {
   });
 }
 async function narratePoi(poi) {
+  pushPlayed({ kind: "poi", poi });
   state.activeId = poi.id; state.visited.add(poi.id); markVisited(poi.id); logVisit(poi);
   earcon(poi.type === "food" ? "food" : "arrive");
   checkOffSidebar(poi.id);
@@ -548,11 +550,13 @@ async function walkNarrationLoop() {
         } else if (ps) {
           state.photoDone.add(ps.id);
           earcon("photo");
+          pushPlayed({ kind: "photo", ps });
           showPhotoCard(ps); setNowPlaying(`📸 ${ps.enName}`); playNarration(ps.tip);
           state._lastNarrate = state.walkDist;
         } else if (state.walkDist - state._lastNarrate > FILLER_EVERY_M
                    && !nearestUnvisitedWithin(a[0], a[1], FILLER_GUARD_M)) {
           const { text, where, img } = localStory(a);
+          pushPlayed({ kind: "story", text, where, img });
           showFillerCard(text, where, img); setNowPlaying(`🎧 ${where || "About Myeongdong"}`); playNarration(text);
           state._lastNarrate = state.walkDist;
         }
@@ -1012,7 +1016,10 @@ function renderSidebar() {
       e.dataTransfer.effectAllowed = "move";
     });
     item.addEventListener("dragend", () => { item.classList.remove("dragging"); commitSidebarOrder(); });
-    item.addEventListener("click", () => {
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();   // don't bubble to the sidebar's unfold-on-tap handler
+      // phones: the list is nearly full-width — get it out of the card's way
+      if (matchMedia("(max-width: 900px)").matches) { el("sidebar").classList.add("folded"); syncMobChips(); }
       showSpot(p);
       if (!state.tour.running) {
         // browsing before the walk: fly the camera there + speak the story now
@@ -1114,6 +1121,7 @@ function startWalk() {
   if (state.tour.running) return;
   state.walkDist = 0; state.cumI = 1; state.visited.clear(); state.activeId = null; resetPins();
   state.usedFacts.clear(); state.fi = 0;
+  state._played = []; state._playedIdx = null;
   state.tour.running = true; state.tour.paused = false;
   updateHud(); setNowPlaying(""); showHud(true);
   el("courseBar").classList.add("hidden");
@@ -1138,11 +1146,13 @@ function endWalk() {
   el("mobCourse").style.display = "";
   el("startBtn").disabled = false; el("startBtn").textContent = "▶ Restart Walk";
   el("pauseBtn").disabled = true; el("skipBtn").disabled = true; el("pauseBtn").textContent = "Pause";
+  el("prevBtn").disabled = !state._played.length;   // after the walk you can still re-listen
   if (state.mode === "gps") startGPS();
 }
 function setControls(on) {
   el("startBtn").disabled = on; el("startBtn").textContent = on ? "▶ Walking…" : "▶ Start Walk";
   el("pauseBtn").disabled = !on; el("skipBtn").disabled = !on;
+  el("prevBtn").disabled = !state._played.length;
 }
 
 // ---------- per-frame loop ----------
@@ -1332,6 +1342,37 @@ function endPeekMode() {
 }
 function togglePause() { if (state.peek) { endPeekMode(); return; } const t = state.tour; if (!t.running) return; t.paused = !t.paused; el("pauseBtn").textContent = t.paused ? "Resume" : "Pause"; if (t.paused) audioPause(); else audioResume(); }
 function skip() { if (state.mode === "sim" && state.tour.running) { audioStop(); state.tour.paused = false; } }
+// ---------- ‹ Prev: replay what the guide already said ----------
+function pushPlayed(seg) {
+  state._played.push(seg);
+  if (state._played.length > 40) state._played.shift();
+  state._playedIdx = null;                 // a fresh segment resets the rewind cursor
+  el("prevBtn").disabled = false;
+}
+async function playPrev() {
+  const h = state._played;
+  if (!h.length) return;
+  // while something is talking, ‹ goes to the item BEFORE it; when idle it
+  // replays the last thing said; pressing again keeps walking further back
+  const base = state._playedIdx ?? (isPlaying() ? h.length - 1 : h.length);
+  const idx = Math.max(0, base - 1);
+  state._playedIdx = idx;
+  const seg = h[idx];
+  audioStop();
+  if (seg.kind === "poi") {
+    setNowPlaying(`⏪ ${seg.poi.enName || seg.poi.title}`);
+    showSpot(seg.poi);
+    await playNarration(seg.poi.script || seg.poi.overview || (seg.poi.enName || seg.poi.title));
+  } else if (seg.kind === "photo") {
+    setNowPlaying(`⏪ ${seg.ps.enName}`);
+    showPhotoCard(seg.ps);
+    await playNarration(seg.ps.tip);
+  } else {
+    setNowPlaying(`⏪ ${seg.where || "About Myeongdong"}`);
+    showFillerCard(seg.text, seg.where, seg.img);
+    await playNarration(seg.text);
+  }
+}
 function setMode(mode) {
   state.mode = mode;
   document.querySelectorAll("#modeToggle button").forEach((b) => b.classList.toggle("active", b.dataset.mode === mode));
@@ -1391,6 +1432,16 @@ function wireControls() {
   el("startBtn").addEventListener("click", startExperience);
   el("pauseBtn").addEventListener("click", togglePause);
   el("skipBtn").addEventListener("click", skip);
+  el("prevBtn").addEventListener("click", playPrev);
+  // phones: tapping the open map (anything outside the sidebar/chips) folds the list
+  document.addEventListener("pointerdown", (e) => {
+    if (!matchMedia("(max-width: 900px)").matches) return;
+    const sb = el("sidebar");
+    if (sb.classList.contains("folded")) return;
+    if (sb.contains(e.target) || e.target.closest("#mobChips")) return;
+    sb.classList.add("folded");
+    syncMobChips();
+  });
   el("resetBtn").addEventListener("click", resetAll);
   el("peekBackBtn").addEventListener("click", endPeekMode);
   el("snapBtn").addEventListener("click", () => snapPhoto(null));
