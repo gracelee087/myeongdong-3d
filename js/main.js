@@ -1017,7 +1017,7 @@ function renderAlbumTab(list) {
   el("sideCount").textContent = `${state.photos.length}`;
   const b = document.createElement("button");
   b.className = "album-make";
-  b.textContent = "🎞 Make my album — Gemini writes it, Jessica tells it";
+  b.textContent = "🎞 Make my album — Gemini writes it, Amelia tells it";
   b.disabled = !state.photos.length;
   b.addEventListener("click", makeAlbum);
   list.append(b);
