@@ -875,7 +875,12 @@ html, body {
   .look-toggle { top: 52px; left: 12px; }
   .look-toggle button { font-size: 11.5px; padding: 6px 10px; }
   .env-chip { top: 52px; right: 10px; font-size: 11px; padding: 6px 11px; }
-  .hud { top: 96px; }
+  /* walk HUD: small, tucked top-left under the day/night toggle */
+  .hud { top: 96px; left: 12px; right: auto; align-items: flex-start; transform: translateY(-8px); }
+  .hud.show { transform: translateY(0); }
+  .hud-top { font-size: 11.5px; padding: 5px 11px; gap: 7px; }
+  .hud-bar { width: 56px; height: 6px; }
+  .hud-now { font-size: 11px; padding: 5px 11px; max-width: 62vw; }
   .toast { top: 100px; }
   .spot-card { bottom: 130px; left: 12px; width: min(380px, calc(100vw - 24px)); }
   .disc-name { font-size: 22px; }
