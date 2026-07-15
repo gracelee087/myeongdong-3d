@@ -185,19 +185,35 @@ function buildRoute(start, pois) {
 // looks silly, so splice out short loops that don't serve any stop
 function pruneWalkLoops(path, pois) {
   if (path.length < 8) return path;
-  const cum = [0];
-  for (let i = 1; i < path.length; i++) cum[i] = cum[i - 1] + metersBetween(path[i - 1], path[i], path[i][1]);
-  for (let i = 0; i < path.length - 3; i++) {
-    for (let j = i + 3; j < path.length && cum[j] - cum[i] < 110; j++) {
-      if (metersBetween(path[i], path[j], path[i][1]) >= 14) continue;
-      const loopServes = pois.some((p) => {
-        if (metersBetween(path[i], [p.lng, p.lat], p.lat) < 42) return false; // trigger fires at the junction anyway
-        for (let k = i + 1; k < j; k++) if (metersBetween(path[k], [p.lng, p.lat], p.lat) < 40) return true;
-        return false;
-      });
-      if (!loopServes) {
-        path.splice(i + 1, j - i - 1);
-        return pruneWalkLoops(path, pois);    // re-scan after the splice
+  // POI proximity per path point, computed ONCE — the old per-pair scan over
+  // every POI was O(points² × pois) and froze boot for ~16s on big courses
+  const near40 = path.map(() => null), near42 = path.map(() => null);
+  for (let k = 0; k < path.length; k++) {
+    for (let pi = 0; pi < pois.length; pi++) {
+      const p = pois[pi];
+      if (Math.abs(p.lat - path[k][1]) > 0.0005 || Math.abs(p.lng - path[k][0]) > 0.0007) continue; // >~55m away
+      const d = metersBetween(path[k], [p.lng, p.lat], p.lat);
+      if (d < 40) (near40[k] ??= []).push(pi);
+      if (d < 42) (near42[k] ??= []).push(pi);
+    }
+  }
+  let restart = true;
+  while (restart) {
+    restart = false;
+    const cum = [0];
+    for (let i = 1; i < path.length; i++) cum[i] = cum[i - 1] + metersBetween(path[i - 1], path[i], path[i][1]);
+    for (let i = 0; i < path.length - 3 && !restart; i++) {
+      for (let j = i + 3; j < path.length && cum[j] - cum[i] < 110; j++) {
+        if (metersBetween(path[i], path[j], path[i][1]) >= 14) continue;
+        let loopServes = false; // does the loop pass a POI the junction itself doesn't already cover?
+        for (let k = i + 1; k < j && !loopServes; k++) {
+          if (near40[k]) for (const pi of near40[k]) if (!near42[i]?.includes(pi)) { loopServes = true; break; }
+        }
+        if (!loopServes) {
+          path.splice(i + 1, j - i - 1);
+          near40.splice(i + 1, j - i - 1); near42.splice(i + 1, j - i - 1);
+          restart = true; break;              // re-scan after the splice
+        }
       }
     }
   }
@@ -1402,8 +1418,11 @@ async function boot() {
     state.center = pois.center ? { lng: pois.center.mapX, lat: pois.center.mapY } : state.center;
 
     state.graph = buildGraph(streets);
-    state.coursePois = state.pois;
-    state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, state.start, buildRoute(state.start, state.pois)), state.pois);
+    // initial path: default course only — applyCourse() below recomputes the
+    // real route anyway, and routing ALL POIs here blocked boot for ~16s
+    const pois0 = state.pois.filter(COURSES.find((c) => c.id === state.courseId).pick);
+    state.coursePois = pois0;
+    state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, state.start, buildRoute(state.start, pois0)), pois0);
 
     initScene({
       container: el("map"), buildings, streets,
