@@ -753,6 +753,7 @@ html, body {
 .overlay.hidden { display: none; }
 .overlay .title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
 .overlay .msg { color: var(--muted); font-size: 14px; max-width: 460px; line-height: 1.6; }
+.overlay .eta { color: var(--accent); font-size: 13px; font-weight: 700; letter-spacing: 0.02em; }
 .spinner {
   width: 42px; height: 42px;
   border-radius: 50%;

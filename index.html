@@ -147,7 +147,20 @@
     <div class="spinner" id="spinner"></div>
     <div class="title" id="overlayTitle">Building Myeongdong…</div>
     <div class="msg" id="overlayMsg">Extruding 1,400 real buildings into a 3D miniature.</div>
+    <div class="eta" id="overlayEta"></div>
   </div>
+  <script>
+    // countdown so the wait feels finite — stops once boot hides the overlay
+    (() => {
+      const eta = document.getElementById("overlayEta");
+      let s = 6;
+      const iv = setInterval(() => {
+        if (document.getElementById("overlay").classList.contains("hidden")) return clearInterval(iv);
+        eta.textContent = s > 0 ? `Ready in ~${s--}s` : "Almost there…";
+      }, 1000);
+      eta.textContent = `Ready in ~${s--}s`;
+    })();
+  </script>
 
   <script type="importmap">
   {

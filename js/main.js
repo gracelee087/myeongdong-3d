@@ -240,7 +240,7 @@ function pointAlongPath(d) {
 }
 
 // ---------- ui ----------
-function showError(t, m) { el("overlay").classList.remove("hidden"); el("spinner").style.display = "none"; el("overlayTitle").textContent = t; el("overlayMsg").innerHTML = m; }
+function showError(t, m) { el("overlay").classList.remove("hidden"); el("spinner").style.display = "none"; el("overlayTitle").textContent = t; el("overlayMsg").innerHTML = m; el("overlayEta").textContent = ""; }
 const hideOverlay = () => el("overlay").classList.add("hidden");
 let toastTimer;
 function toast(msg, ms = 3600) { const t = el("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); if (ms) toastTimer = setTimeout(() => t.classList.remove("show"), ms); }
@@ -584,6 +584,7 @@ async function walkNarrationLoop() {
 }
 
 // ---------- themed courses ----------
+const ROUTE_CACHE = new Map();
 function routeOrigin() {
   // GPS: route from wherever you are; simulation: always Myeongdong Stn Exit 4
   return state.mode === "gps" && state.avatarPos
@@ -604,8 +605,16 @@ function applyCourse(id) {
   }
   if (state.coursePois.length) {
     const origin = routeOrigin();
-    state.route = mods?.order ? state.coursePois.slice() : buildRoute(origin, state.coursePois);
-    state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, origin, state.route), state.coursePois);
+    // routing is the expensive part (dijkstra + loop-pruning) — reuse it when
+    // the same course is re-picked from the same origin with the same stops
+    const key = `${origin.lng.toFixed(5)},${origin.lat.toFixed(5)}|${mods?.order ? "ord|" : ""}${state.coursePois.map((p) => p.id).join(",")}`;
+    const hit = ROUTE_CACHE.get(key);
+    if (hit) { state.route = hit.route; state.walkPath = hit.walkPath; }
+    else {
+      state.route = mods?.order ? state.coursePois.slice() : buildRoute(origin, state.coursePois);
+      state.walkPath = pruneWalkLoops(buildWalkPath(state.graph, origin, state.route), state.coursePois);
+      ROUTE_CACHE.set(key, { route: state.route, walkPath: state.walkPath });
+    }
     state.cum = [0]; for (let i = 1; i < state.walkPath.length; i++) state.cum[i] = state.cum[i - 1] + metersBetween(state.walkPath[i - 1], state.walkPath[i], state.walkPath[i][1]);
     state.pathLen = state.cum[state.cum.length - 1];
     updateRoute(state.walkPath);
@@ -1121,12 +1130,17 @@ function renderCourseBar() {
       c.id === "album" ? `${state.photos.length} photos` : c.id === "picks" && !n ? "build yours" : n + " spots"}</span>`;
     b.addEventListener("click", () => {
       if (state.tour.running) return;
-      applyCourse(c.id);
-      if (c.id === "album") { toast("🎞 Your photos — snap 📷 at spots, then make your album"); return; }
-      const cnt = state.coursePois.length;
-      if (c.id === "picks" && !cnt) { toast("🎯 Tap ＋ in the list to build your own route"); return; }
-      const min = Math.round(state.pathLen / 70 + cnt * 1.5); // 4.2 km/h + ~90s listening per spot
-      toast(`${c.icon} ${c.name} — ${cnt} spots · ~${min} min real walk`);
+      // paint feedback first — routing a big course blocks the thread for a moment
+      document.querySelectorAll("#courseBar button").forEach((x) => x.classList.toggle("active", x === b));
+      if (n > 60) toast(`${c.icon} Routing ${n} spots…`, 0);
+      requestAnimationFrame(() => setTimeout(() => {
+        applyCourse(c.id);
+        if (c.id === "album") { toast("🎞 Your photos — snap 📷 at spots, then make your album"); return; }
+        const cnt = state.coursePois.length;
+        if (c.id === "picks" && !cnt) { toast("🎯 Tap ＋ in the list to build your own route"); return; }
+        const min = Math.round(state.pathLen / 70 + cnt * 1.5); // 4.2 km/h + ~90s listening per spot
+        toast(`${c.icon} ${c.name} — ${cnt} spots · ~${min} min real walk`);
+      }, 20));
     });
     bar.append(b);
   }
