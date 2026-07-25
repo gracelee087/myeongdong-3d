@@ -85,4 +85,4 @@ Demo query params: `?time=day` / `?time=night` / `?wx=rain` / `?wx=snow`.
 
 - ## Post-deadline commits
 
-After the submission deadline (2026-07-13 06:59 UTC), only CSS and JS files were modified to improve page load performance. No features were added or changed.
+After the submission deadline. only CSS and JS files were modified to improve page load performance. No features were added or changed.
