@@ -82,3 +82,7 @@ Demo query params: `?time=day` / `?time=night` / `?wx=rain` / `?wx=snow`.
 - Seoul has no public photorealistic 3D tiles (Google's 3D coverage excludes Korea),
   which is why the city is stylised — every building is true 3D geometry.
 - A few shops without published hours show `(typical)` and say so.
+
+- ## Post-deadline commits
+
+After the submission deadline (2026-07-13 06:59 UTC), only CSS and JS files were modified to improve page load performance. No features were added or changed.
