@@ -339,6 +339,12 @@ function showSpot(poi) {
   }
   el("spotGmap").href = gmapsUrl(poi);
   el("spotCard").classList.add("show"); flagCardUpdate();
+  // touch devices: teach the swipe-away gesture until it's used once
+  if ("ontouchstart" in window && !state._userSwiped && !el("spotCard").classList.contains("min")) {
+    el("swipeHint").classList.add("show");
+    clearTimeout(state._swipeHintTimer);
+    state._swipeHintTimer = setTimeout(() => el("swipeHint").classList.remove("show"), 5000);
+  }
 }
 function showPhotoCard(ps) {
   el("spotType").textContent = "📸 PHOTO SPOT"; el("spotType").className = "badge beauty";
@@ -533,7 +539,11 @@ function showTipCard(n, tip) {
 }
 // ---------- mobile: swipe the card sideways → it tucks into an ⓘ chip ----------
 // narration keeps playing; new stops pulse the chip instead of re-opening the card
-function minimizeCard() { el("spotCard").classList.add("min"); el("cardMini").classList.add("show"); }
+function minimizeCard() {
+  state._userSwiped = true; // gesture learned — stop teaching it
+  el("swipeHint").classList.remove("show");
+  el("spotCard").classList.add("min"); el("cardMini").classList.add("show");
+}
 function restoreCard() { el("spotCard").classList.remove("min"); el("cardMini").classList.remove("show", "pulse"); }
 function flagCardUpdate() {
   if (!el("spotCard").classList.contains("min")) return;
@@ -1595,7 +1605,17 @@ function wireControls() {
     syncMobChips();
   });
   el("homeBtn").addEventListener("click", () => location.reload());
-  el("spotClose").addEventListener("click", (e) => { e.stopPropagation(); el("spotCard").classList.remove("show"); });
+  el("spotClose").addEventListener("click", (e) => {
+    e.stopPropagation();
+    el("spotCard").classList.remove("show");
+    // closing dismisses the narration too — kill the current clip AND the
+    // rest of its chain (tips); the walk itself keeps going
+    state._navEpoch = (state._navEpoch || 0) + 1;
+    audioStop();
+    // narration holds release the walk; an explicit user Pause (label says
+    // "Resume") stays paused
+    if (state.tour.running && el("pauseBtn").textContent === "Pause") state.tour.paused = false;
+  });
   // mobile: horizontal swipe tucks the card into the ⓘ chip; vertical scroll untouched
   {
     const card = el("spotCard");

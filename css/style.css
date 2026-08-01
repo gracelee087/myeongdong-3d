@@ -591,6 +591,21 @@ html, body {
 .card-mini.show { display: block; animation: miniPop .25s ease; }
 .card-mini.pulse { animation: vidPulse 1.2s ease-in-out 3; }
 @keyframes miniPop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+/* teaches the gesture (touch devices, until first use) */
+.swipe-hint {
+  position: absolute; top: 10px; left: 50%;
+  z-index: 3; display: none;
+  background: rgba(10, 13, 20, .84); color: #fff;
+  font-size: 11.5px; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px;
+  pointer-events: none; white-space: nowrap;
+  animation: swipeNudge 1.2s ease-in-out infinite;
+}
+.swipe-hint.show { display: block; }
+@keyframes swipeNudge {
+  0%, 100% { transform: translateX(-50%); }
+  50% { transform: translateX(calc(-50% - 12px)); }
+}
 .spot-card { padding: 0; overflow: hidden; }
 .spot-close {
   position: absolute;
@@ -936,18 +951,14 @@ html, body {
   .dock { bottom: 12px; gap: 5px; padding: 7px 8px; max-width: calc(100vw - 10px); }
   .btn { font-size: 11.5px; padding: 10px 9px; white-space: nowrap; }
 
-  /* spot/tip/story card: compact — we walk watching the street while the
-     narration talks, so the card must never swallow the screen. Long text
-     scrolls inside the body; a close bar that's impossible to miss (the
-     top-right ✕ hid under the folded sidebar tab) */
+  /* spot/tip/story card: never taller than the screen, and a close bar that's
+     impossible to miss (the top-right ✕ hid under the folded sidebar tab).
+     Too big for the street view? Swipe it into the ⓘ chip. */
   .spot-card {
     display: flex; flex-direction: column;
-    max-height: min(48vh, calc(100vh - 250px));
+    max-height: calc(100vh - 250px);
   }
   .spot-body { overflow-y: auto; padding-bottom: 62px; }
-  /* clamp the story text (the narration reads it aloud anyway) so the
-     photo, Watch-preview / Maps buttons and Close always stay on screen */
-  #spotBlurb { max-height: 4.7em; overflow-y: auto; }
   .spot-close {
     top: auto; bottom: 10px; left: 10px; right: 10px;
     width: auto; height: 40px; border-radius: 12px;
@@ -955,7 +966,7 @@ html, body {
     background: rgba(255,255,255,.14);
   }
   .spot-close::after { content: " Close"; }
-  .spot-photo { flex: none; height: 72px; }
+  .spot-photo { flex: none; height: 120px; }
 
   /* the course picker hides behind the ⭐ Course chip */
   .course-bar { display: none; }
