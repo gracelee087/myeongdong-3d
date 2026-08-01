@@ -6,7 +6,7 @@
 import fs from "node:fs";
 
 const KEY = (fs.readFileSync(".env", "utf8").match(/^ELEVENLABS_API_KEY=(.+)$/m) || [])[1]?.trim();
-const VOICE = "FGY2WhTYpPnrIDTdsKH5"; // Laura — must match netlify/functions/tts.js (existing baked clips are Amelia; don't re-bake them)
+const VOICE = "ZF6FPAbjXT4488VcRRnw"; // Amelia — must match netlify/functions/tts.js
 const MODEL = "eleven_turbo_v2_5";    // 0.5 credits/char — lets the whole demo path fit the quota
 
 const BEST = ["명동", "서울 명동성당", "명동교자", "왕비집", "남산케이블카", "남산골한옥마을",
@@ -56,8 +56,9 @@ const texts = [
   ...zones.flatMap((z) => z.facts),
   ...fillers,
   ...photoTips,
-  // localTips intentionally NOT baked — they play live (same Amelia voice) and
-  // only 2-3 fire per walk; baking all 59 would blow the remaining quota
+  // ALL local tips baked too — after this, no live credits are ever needed
+  // for the guide (only the dynamic album narration stays live)
+  ...localTips,
   ...Array.from({ length: 12 }, (_, i) => `Local tip number ${i + 1}.`),
   // turn-by-turn + arrival-side callouts (templates must match js/main.js)
   "Coming up — turn left.", "Coming up — turn right.",
