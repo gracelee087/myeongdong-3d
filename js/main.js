@@ -338,7 +338,7 @@ function showSpot(poi) {
     state._videoHintTimer = setTimeout(clear, 12000);
   }
   el("spotGmap").href = gmapsUrl(poi);
-  el("spotCard").classList.add("show");
+  el("spotCard").classList.add("show"); flagCardUpdate();
 }
 function showPhotoCard(ps) {
   el("spotType").textContent = "📸 PHOTO SPOT"; el("spotType").className = "badge beauty";
@@ -347,7 +347,7 @@ function showPhotoCard(ps) {
   el("spotAddrRow").style.display = "none";
   el("spotPhoto").hidden = true;
   document.querySelector(".spot-actions").style.display = "none";
-  el("spotCard").classList.add("show");
+  el("spotCard").classList.add("show"); flagCardUpdate();
 }
 function showFillerCard(text, where = "", zoneImg = "") {
   el("spotType").textContent = where ? "LOCAL STORY" : "MYEONGDONG"; el("spotType").className = "badge attraction";
@@ -359,7 +359,7 @@ function showFillerCard(text, where = "", zoneImg = "") {
   const src = zoneImg || state.mdImage;
   if (src) { img.src = src; img.hidden = false; } else img.hidden = true;
   document.querySelector(".spot-actions").style.display = "none";
-  el("spotCard").classList.add("show");
+  el("spotCard").classList.add("show"); flagCardUpdate();
 }
 
 // ---------- narration ----------
@@ -402,6 +402,9 @@ function checkOffSidebar(id) {
   });
 }
 async function narratePoi(poi) {
+  // Next/Prev bump _navEpoch: a stale narration chain must stop between clips
+  const ep = state._navEpoch || 0;
+  const alive = () => ep === (state._navEpoch || 0);
   pushPlayed({ kind: "poi", poi });
   state.activeId = poi.id; state.visited.add(poi.id); markVisited(poi.id); logVisit(poi);
   earcon(poi.type === "food" ? "food" : "arrive");
@@ -410,8 +413,9 @@ async function narratePoi(poi) {
   showSpot(poi); updateHud(); showDiscovery(poi); setNowPlaying(`🎧 ${poi.enName || poi.title}`);
   const next = state.coursePois.find((p) => !state.visited.has(p.id));
   if (next) prefetch(next.script);
-  if (side) await playNarration(`Look to your ${side}.`);
+  if (side) { await playNarration(`Look to your ${side}.`); if (!alive()) return; }
   await playNarration(poi.script || poi.overview || `${poi.enName || poi.title}, a favourite spot in Myeongdong.`);
+  if (!alive()) return;
   // non-food stops earn an insider tip matched to the live weather/time
   if (poi.type !== "food") {
     const tip = pickLocalTip();
@@ -421,9 +425,12 @@ async function narratePoi(poi) {
       showTipCard(state.tipI, tip); setNowPlaying(`💡 Local tip #${state.tipI}`);
       // separate clips so every part hits the baked-audio cache
       await playNarration(`Local tip number ${state.tipI}.`);
+      if (!alive()) return;
       await playNarration(tip.text);
+      if (!alive()) return;
       if (tip.rec) {
         await playNarration(`Locals' favourite for this is ${tip.rec.name}, just around here.`);
+        if (!alive()) return;
         if (tip.rec.tip) await playNarration(tip.rec.tip);
       }
     }
@@ -522,8 +529,18 @@ function showTipCard(n, tip) {
   // food tips show the FOOD itself; a tip never needs the shop's storefront photo
   if (tip.food?.img) { img.src = tip.food.img; img.hidden = false; } else img.hidden = true;
   document.querySelector(".spot-actions").style.display = "none";
-  el("spotCard").classList.add("show");
+  el("spotCard").classList.add("show"); flagCardUpdate();
 }
+// ---------- mobile: swipe the card sideways → it tucks into an ⓘ chip ----------
+// narration keeps playing; new stops pulse the chip instead of re-opening the card
+function minimizeCard() { el("spotCard").classList.add("min"); el("cardMini").classList.add("show"); }
+function restoreCard() { el("spotCard").classList.remove("min"); el("cardMini").classList.remove("show", "pulse"); }
+function flagCardUpdate() {
+  if (!el("spotCard").classList.contains("min")) return;
+  const m = el("cardMini");
+  m.classList.remove("pulse"); void m.offsetWidth; m.classList.add("pulse");
+}
+
 // tip recommendation → a real My Picks stop, tagged so you remember why it's there
 function saveTipRec(n, tip) {
   const r = tip.rec;
@@ -1186,6 +1203,7 @@ function startWalk() {
 }
 function endWalk() {
   endPeekMode();
+  restoreCard();
   state.tour.running = false; state.tour.paused = false; audioStop();
   state.activeId = null; setNowPlaying(""); showHud(false);
   el("courseBar").classList.remove("hidden");
@@ -1388,6 +1406,60 @@ function endPeekMode() {
 }
 function togglePause() { if (state.peek) { endPeekMode(); return; } const t = state.tour; if (!t.running) return; t.paused = !t.paused; el("pauseBtn").textContent = t.paused ? "Resume" : "Pause"; if (t.paused) audioPause(); else audioResume(); }
 function skip() { if (state.mode === "sim" && state.tour.running) { audioStop(); state.tour.paused = false; } }
+// ---------- Next / Prev teleport the sim walker straight to the spot ----------
+function pathDistNear(poi) {
+  const P = state.walkPath, C = state.cum;
+  let best = 0, bd = Infinity;
+  for (let i = 0; i < P.length; i++) {
+    const d = metersBetween(P[i], [poi.lng, poi.lat], poi.lat);
+    if (d < bd) { bd = d; best = C[i]; }
+  }
+  return best;
+}
+// teleport, then narrate the spot directly — course order and the 40 m trigger
+// can't be trusted (some stops sit further off the pruned route)
+function teleportAndNarrate(poi, at) {
+  const ep = state._navEpoch;
+  state.walkDist = Math.min(at, state.pathLen);
+  state.cumI = 1; state._turnIdx = -1;
+  state.tour.paused = true;
+  (async () => {
+    await narratePoi(poi);
+    if (ep === state._navEpoch) { state.tour.paused = false; state._lastNarrate = state.walkDist; }
+  })();
+}
+function jumpNext() {
+  if (!(state.mode === "sim" && state.tour.running)) { skip(); return; }
+  state._navEpoch = (state._navEpoch || 0) + 1;
+  audioStop();
+  // the next stop = the unvisited one closest AHEAD along the path
+  const ahead = state.coursePois.filter((p) => !state.visited.has(p.id))
+    .map((p) => ({ p, at: pathDistNear(p) }))
+    .filter((x) => x.at > state.walkDist - 30)
+    .sort((a, b) => a.at - b.at);
+  if (!ahead.length) { state.tour.paused = false; return; }
+  toast(`⏭ ${ahead[0].p.enName || ahead[0].p.title}`);
+  teleportAndNarrate(ahead[0].p, ahead[0].at);
+}
+function jumpPrev() {
+  if (!(state.mode === "sim" && state.tour.running)) { playPrev(); return; }
+  const vis = [...state.visited];
+  if (!vis.length) { playPrev(); return; }
+  const findP = (id) => state.coursePois.find((p) => p.id === id) || state.pois.find((p) => p.id === id);
+  const last = findP(vis[vis.length - 1]);
+  // standing at the last spot → go one further back; mid-leg → return to that spot
+  let target = last;
+  if (last && state.walkDist <= pathDistNear(last) + 60 && vis.length >= 2) {
+    target = findP(vis[vis.length - 2]) || last;
+  }
+  state._navEpoch = (state._navEpoch || 0) + 1;
+  audioStop();
+  state.visited.delete(vis[vis.length - 1]); // current spot: Next can come back to it
+  if (!target) { state.tour.paused = false; return; }
+  state.visited.delete(target.id);           // narratePoi re-adds it on arrival
+  toast(`⏮ ${target.enName || target.title}`);
+  teleportAndNarrate(target, pathDistNear(target));
+}
 // ---------- ‹ Prev: replay what the guide already said ----------
 function pushPlayed(seg) {
   state._played.push(seg);
@@ -1480,8 +1552,8 @@ async function boot() {
 function wireControls() {
   el("startBtn").addEventListener("click", startExperience);
   el("pauseBtn").addEventListener("click", togglePause);
-  el("skipBtn").addEventListener("click", skip);
-  el("prevBtn").addEventListener("click", playPrev);
+  el("skipBtn").addEventListener("click", jumpNext);
+  el("prevBtn").addEventListener("click", jumpPrev);
   // phones: tapping the open map (anything outside the sidebar/chips) folds the list
   document.addEventListener("pointerdown", (e) => {
     if (!matchMedia("(max-width: 900px)").matches) return;
@@ -1524,6 +1596,30 @@ function wireControls() {
   });
   el("homeBtn").addEventListener("click", () => location.reload());
   el("spotClose").addEventListener("click", (e) => { e.stopPropagation(); el("spotCard").classList.remove("show"); });
+  // mobile: horizontal swipe tucks the card into the ⓘ chip; vertical scroll untouched
+  {
+    const card = el("spotCard");
+    let sx = null, sy = null, dragging = false;
+    card.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; dragging = false; }, { passive: true });
+    card.addEventListener("touchmove", (e) => {
+      if (sx == null) return;
+      const dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
+      if (!dragging && Math.abs(dx) > 18 && Math.abs(dx) > Math.abs(dy) * 1.3) dragging = true;
+      if (dragging) {
+        card.style.transition = "none";
+        card.style.transform = `translateX(${dx}px)`;
+        card.style.opacity = String(Math.max(0.25, 1 - Math.abs(dx) / 260));
+      }
+    }, { passive: true });
+    card.addEventListener("touchend", (e) => {
+      if (sx == null) return;
+      const dx = e.changedTouches[0].clientX - sx;
+      card.style.transition = ""; card.style.transform = ""; card.style.opacity = "";
+      if (dragging && Math.abs(dx) > 70) minimizeCard();
+      sx = sy = null; dragging = false;
+    });
+    el("cardMini").addEventListener("click", restoreCard);
+  }
   el("videoClose").addEventListener("click", closeVideo);
   el("videoModal").addEventListener("click", (e) => { if (e.target === el("videoModal")) closeVideo(); });
   document.querySelectorAll("#modeToggle button").forEach((b) => b.addEventListener("click", () => setMode(b.dataset.mode)));

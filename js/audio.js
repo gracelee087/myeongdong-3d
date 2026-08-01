@@ -6,6 +6,8 @@ const cache = new Map(); // text -> objectURL
 let current = { audio: null, resolve: null };
 let speaking = false;
 let gen = 0; // bumped by stop(): a narration still fetching when stop() ran must never play
+let held = false; // pause() holds NEW clips too — multi-clip sequences must not talk through a pause
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // pre-baked clips (audio/manifest.json) — demo path plays without spending credits
 const hash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); };
@@ -54,6 +56,8 @@ export async function playNarration(text, { voiceId } = {}) {
     }
   }
   if (g !== gen) return; // stopped while loading (e.g. a video opened) — stay silent
+  while (held && g === gen) await wait(120); // paused → hold the next clip until resume
+  if (g !== gen) return;
   await new Promise((resolve) => {
     stop();
     const a = new Audio(url);
@@ -80,6 +84,7 @@ export function prefetch(text, { voiceId } = {}) {
 
 export function stop() {
   gen++;
+  held = false;
   if (current.audio) current.audio.pause();
   if (speaking) { try { speechSynthesis.cancel(); } catch { } speaking = false; }
   const r = current.resolve;
@@ -87,10 +92,12 @@ export function stop() {
   if (r) r();
 }
 export function pause() {
+  held = true;
   current.audio && current.audio.pause();
   if (speaking) try { speechSynthesis.pause(); } catch { }
 }
 export function resume() {
+  held = false;
   current.audio && current.audio.play().catch(() => {});
   if (speaking) try { speechSynthesis.resume(); } catch { }
 }

@@ -574,6 +574,23 @@ html, body {
   transform: translateY(0);
   pointer-events: auto;
 }
+/* swiped sideways (mobile): card slides off, ⓘ chip takes its place — audio keeps going */
+.spot-card.min, .spot-card.min.show {
+  opacity: 0;
+  transform: translateX(-115%);
+  pointer-events: none;
+}
+.card-mini {
+  position: fixed; left: 12px; bottom: 136px; z-index: 11;
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 1px solid var(--stroke); background: var(--panel);
+  backdrop-filter: blur(16px); box-shadow: var(--shadow);
+  color: var(--text); font-size: 20px;
+  display: none; cursor: pointer;
+}
+.card-mini.show { display: block; animation: miniPop .25s ease; }
+.card-mini.pulse { animation: vidPulse 1.2s ease-in-out 3; }
+@keyframes miniPop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .spot-card { padding: 0; overflow: hidden; }
 .spot-close {
   position: absolute;
