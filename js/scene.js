@@ -32,6 +32,8 @@ const S = {
   wallMat: null, shopMat: null, sun: null, hemi: null,
   // environment: current (lerped every frame) vs target (set by clock/weather)
   env: null, envT: null, particles: null, particleKind: "none", pVel: null,
+  // intro: 0→1 drives the "city builds itself" opening wave
+  riseU: { value: 0 }, introDone: false, late: null, namsan: null,
 };
 
 // lng/lat → local metres (x east, z south so north = -z)
@@ -97,13 +99,41 @@ function shopTexture() {
 }
 
 // ---------- build steps ----------
+// intro "city builds itself": every building mesh is merged geometry, so the
+// rise is done in the vertex shader — squash y to 0 until uRise passes the
+// vertex's aBirth, then pop up with a slight back-out overshoot. Identity once
+// uRise ≥ 1, so the resting look of the city is untouched.
+function riseify(mat) {
+  mat.onBeforeCompile = (sh) => {
+    sh.uniforms.uRise = S.riseU;
+    sh.vertexShader = sh.vertexShader
+      .replace("#include <common>", "#include <common>\nattribute float aBirth;\nuniform float uRise;")
+      .replace("#include <begin_vertex>", `#include <begin_vertex>
+      {
+        float rt = clamp((uRise - aBirth) / 0.30, 0.0, 1.0);
+        float rb = rt - 1.0;
+        transformed.y *= 1.0 + 2.70158 * rb * rb * rb + 1.70158 * rb * rb;
+      }`);
+  };
+  return mat;
+}
+// shadows must rise with the walls — patch the shadow-pass material the same way
+const riseDepth = () => riseify(new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking }));
+
 // walls built edge-by-edge with metre UVs (u along street, v up) so the
 // window/storefront textures land at real-world scale on every building
 function makeBuildings(geojson) {
-  const walls = { pos: [], nor: [], uv: [], col: [], idx: [] };
-  const shops = { pos: [], nor: [], uv: [], col: [], idx: [] };
+  const walls = { pos: [], nor: [], uv: [], col: [], idx: [], birth: [] };
+  const shops = { pos: [], nor: [], uv: [], col: [], idx: [], birth: [] };
   const roofG = [];
   const props = [];            // rooftop water tanks / AC units (diorama style)
+  // per-vertex birth moment (constant per building) — the intro shader keeps a
+  // vertex flat on the ground until uRise passes its aBirth, then pops it up
+  const birthGeo = (g, birth) => {
+    g.setAttribute("aBirth", new THREE.BufferAttribute(
+      new Float32Array(g.attributes.position.count).fill(birth), 1));
+    return g;
+  };
   const tintGeo = (g, hex) => {
     const c = new THREE.Color(hex), n = g.attributes.position.count, arr = new Float32Array(n * 3);
     for (let i = 0; i < n; i++) { arr[i * 3] = c.r; arr[i * 3 + 1] = c.g; arr[i * 3 + 2] = c.b; }
@@ -132,6 +162,13 @@ function makeBuildings(geojson) {
     const seed = (f.properties.id || 1) % 97;
     const bRec = { w0: walls.col.length / 3, r0: roofVerts, cx: 0, cz: 0, pts: null, h };
     const first = rings[0]?.[0]?.[0];
+    // intro wave: birth radiates from the city centre outward, with jitter so
+    // neighbours don't rise in lockstep (all births ≤ ~0.69, rise span 0.30)
+    let birth = 0.5;
+    if (first) {
+      const [fx, fz] = toXZ(first[0], first[1]);
+      birth = Math.min(1, Math.hypot(fx, fz) / 900) * 0.62 + (seed % 13) * 0.006;
+    }
     const prem = STYLE === "diorama" || (STYLE === "split" && first && toXZ(first[0], first[1])[0] > 0);
     if (prem) {
       // tall towers read as cool glass offices, low-rise stays warm greige
@@ -173,7 +210,7 @@ function makeBuildings(geojson) {
       const n = rg.attributes.position.count, arr = new Float32Array(n * 3);
       for (let i = 0; i < n; i++) { arr[i * 3] = rc.r; arr[i * 3 + 1] = rc.g; arr[i * 3 + 2] = rc.b; }
       rg.setAttribute("color", new THREE.BufferAttribute(arr, 3));
-      roofG.push(rg);
+      roofG.push(birthGeo(rg, birth));
       roofVerts += n;
       // centroid + outer ring (for POI → building matching and the glow shell)
       let sx = 0, sz = 0;
@@ -210,6 +247,8 @@ function makeBuildings(geojson) {
     }
     bRec.w1 = walls.col.length / 3; bRec.r1 = roofVerts;
     S.bIndex.push(bRec);
+    while (walls.birth.length * 3 < walls.pos.length) walls.birth.push(birth);
+    while (shops.birth.length * 3 < shops.pos.length) shops.birth.push(birth);
 
     // rooftop clutter on larger roofs — the detail that sells the "model city" look
     if (prem && bRec.pts && h >= 6) {
@@ -219,11 +258,11 @@ function makeBuildings(geojson) {
         const jx = ((seed % 7) - 3) * 0.6, jz = ((seed % 5) - 2) * 0.7;
         const tank = new THREE.CylinderGeometry(1.25, 1.25, 2.3, 10);
         tank.translate(bRec.cx + jx, h + 1.15, bRec.cz + jz);
-        props.push(tintGeo(tank, seed % 3 === 0 ? 0xe3c268 : 0xd9dee3));
+        props.push(birthGeo(tintGeo(tank, seed % 3 === 0 ? 0xe3c268 : 0xd9dee3), birth));
         for (let a2 = 0, nAc = 1 + (seed % 3); a2 < nAc; a2++) {
           const ac = new THREE.BoxGeometry(1.6, 0.8, 0.7);
           ac.translate(bRec.cx - jx + 2.4 - a2 * 2.1, h + 0.4, bRec.cz - jz + (a2 % 2) * 1.6 - 0.8);
-          props.push(tintGeo(ac, 0xc6ccd4));
+          props.push(birthGeo(tintGeo(ac, 0xc6ccd4), birth));
         }
       }
     }
@@ -235,34 +274,38 @@ function makeBuildings(geojson) {
     g.setAttribute("normal", new THREE.Float32BufferAttribute(B.nor, 3));
     g.setAttribute("uv", new THREE.Float32BufferAttribute(B.uv, 2));
     g.setAttribute("color", new THREE.Float32BufferAttribute(B.col, 3));
+    g.setAttribute("aBirth", new THREE.Float32BufferAttribute(B.birth, 1));
     g.setIndex(B.idx);
     return g;
   };
-  S.wallMat = new THREE.MeshStandardMaterial({
+  S.wallMat = riseify(new THREE.MeshStandardMaterial({
     map: facadeTexture(), emissiveMap: facadeNightTexture(), emissive: 0xffd9a0,
     emissiveIntensity: 0, vertexColors: true, roughness: 0.85, side: THREE.DoubleSide,
-  });
+  }));
   const wallMesh = new THREE.Mesh(build(walls), S.wallMat);
   wallMesh.castShadow = true; wallMesh.receiveShadow = true;
+  wallMesh.customDepthMaterial = riseDepth();
   S.scene.add(wallMesh);
 
   const shopTex = shopTexture();
-  S.shopMat = new THREE.MeshStandardMaterial({
+  S.shopMat = riseify(new THREE.MeshStandardMaterial({
     map: shopTex, emissiveMap: shopTex, emissive: 0xffb45e,
     emissiveIntensity: 0, vertexColors: true, roughness: 0.8, side: THREE.DoubleSide,
-  });
+  }));
   const shopMesh = new THREE.Mesh(build(shops), S.shopMat);
   S.scene.add(shopMesh);
 
   const roofMesh = new THREE.Mesh(mergeGeometries(roofG, false),
-    new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95 }));
+    riseify(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95 })));
   roofMesh.castShadow = true; roofMesh.receiveShadow = true;
+  roofMesh.customDepthMaterial = riseDepth();
   S.scene.add(roofMesh);
 
   if (props.length) {
     const pm = new THREE.Mesh(mergeGeometries(props, false),
-      new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, metalness: 0.15 }));
+      riseify(new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, metalness: 0.15 })));
     pm.castShadow = true; pm.receiveShadow = true;
+    pm.customDepthMaterial = riseDepth();
     S.scene.add(pm);
   }
 
@@ -286,7 +329,7 @@ export function highlightCourse(lngLats) {
   const wc = S.wallMesh.geometry.attributes.color;
   const rc = S.roofMesh.geometry.attributes.color;
   wc.array.set(S.origWallCol); rc.array.set(S.origRoofCol);
-  if (!S.hl) { S.hl = new THREE.Group(); S.scene.add(S.hl); }
+  if (!S.hl) { S.hl = new THREE.Group(); S.hl.visible = S.introDone; S.scene.add(S.hl); }
   S.hl.clear();
   const discGeo = new THREE.CircleGeometry(11, 24);
   const discMat = new THREE.MeshBasicMaterial({ color: HL, transparent: true, opacity: discOpacity, toneMapped: false, side: THREE.DoubleSide });
@@ -655,7 +698,7 @@ function makeLandmarks() {
     const sp = landmarkSprite(name);
     sp.position.set(b ? b.cx : x, (b ? b.h : 20) + 14, b ? b.cz : z);
     sp.renderOrder = 5;
-    S.scene.add(sp);
+    S.late.add(sp);
   }
 }
 
@@ -711,6 +754,8 @@ function makeNamsan() {
   ant.position.set(px, BASE + 136, pz); g.add(ant);
   const sp = landmarkSprite("N Seoul Tower · Namsan");
   sp.position.set(px, BASE + 176, pz); sp.scale.multiplyScalar(1.7); g.add(sp);
+  g.scale.y = 0.001;            // grows out of the ground near the end of the intro
+  S.namsan = g;
   S.scene.add(g);
 }
 
@@ -720,7 +765,7 @@ function labelCheonggyecheon() {
   const [x, z] = toXZ(126.9779, 37.5689);
   const sp = landmarkSprite("Cheonggyecheon Stream · 청계천");
   sp.position.set(x, 26, z);
-  S.scene.add(sp);
+  S.late.add(sp);
 }
 
 // Myeongdong Cathedral — Korea's first Gothic church deserves better than a box:
@@ -748,7 +793,7 @@ function designCathedral() {
   cv.position.set(b.cx, b.h + 28.5, b.cz);
   const ch = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.5, 0.5), cm);
   ch.position.set(b.cx, b.h + 29.4, b.cz);
-  S.scene.add(spire, cv, ch);
+  S.late.add(spire, cv, ch);
 }
 
 // animated LED marquees on the main shopping drag — Myeongdong at full volume
@@ -790,7 +835,7 @@ function makeBillboards() {
     const p1 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 4 + hgt, 0.5), frameMat);
     p1.position.set(b.cx - w / 2 + 1, b.h + (4 + hgt) / 2, b.cz - 0.3);
     const p2 = p1.clone(); p2.position.x = b.cx + w / 2 - 1;
-    S.scene.add(panel, p1, p2);
+    S.late.add(panel, p1, p2);
   }
 }
 
@@ -829,6 +874,10 @@ export function initScene({ container, buildings, streets, walkPath, pois, cente
     new THREE.MeshStandardMaterial({ color: GROUND, roughness: 1 }));
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
   S.scene.add(ground);
+
+  // rooftop attachments (name plates, spire, billboards) pop in the moment
+  // the intro rise finishes — they'd float in mid-air while buildings grow
+  S.late = new THREE.Group(); S.late.visible = false; S.scene.add(S.late);
 
   makeRoads(streets);
   makeWater(water);
@@ -1123,6 +1172,22 @@ function envTick(dt) {
 }
 
 export function render(dt) {
+  // ---- intro: the city builds itself (~3.2 s after load) ----
+  if (!S.introDone) {
+    const t = S.riseU.value = Math.min(1, S.riseU.value + dt / 3.2);
+    if (S.namsan) {
+      const nt = Math.max(0, Math.min(1, (t - 0.66) / 0.30)), nb = nt - 1;
+      S.namsan.scale.y = Math.max(0.001, 1 + 2.70158 * nb * nb * nb + 1.70158 * nb * nb);
+    }
+    // gentle zoom pull-in, unless the user has already grabbed the camera
+    if (!S.lastCamTouch) S.zoom = 1 + 0.5 * (1 - t) * (1 - t);
+    if (t >= 1) {
+      S.introDone = true;
+      S.late.visible = true;
+      if (S.hl) S.hl.visible = true;
+      if (S.namsan) S.namsan.scale.y = 1;
+    }
+  }
   // river current — slide the streak texture along the stream
   if (S.waterTex) S.waterTex.offset.x -= dt * 0.085;
   if (S.bbTex) S.bbTex.offset.x = (S.bbTex.offset.x + dt * 0.045) % 1;
