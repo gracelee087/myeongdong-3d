@@ -51,6 +51,10 @@ const INTRO =
   "Ever since, almost every major Korean trend has started right on these streets. " +
   "Now, pop your earphones in, follow the yellow line, and I'll share its stories as we walk.";
 
+// spoken once per course at its first video spot — must stay byte-identical to scripts/bake-audio.mjs
+const VIDEO_HINT_LINE =
+  "By the way — tap the Watch preview button below this card to see a short video of this place before you step inside.";
+
 // real, famous photo spots — woven into EVERY course: when you pass one, the
 // guide tells you WHY it's famous and how to take the shot (no separate category).
 // Narrations below are fallbacks; data/photo-spots.json (written by Gemini via
@@ -412,6 +416,11 @@ async function narratePoi(poi) {
   if (next) prefetch(next.script);
   if (side) await playNarration(`Look to your ${side}.`);
   await playNarration(poi.script || poi.overview || `${poi.enName || poi.title}, a favourite spot in Myeongdong.`);
+  // once per course, at its first video spot: say out loud that previews exist
+  if (poi.video && !state._videoHintSpoken) {
+    state._videoHintSpoken = true;
+    await playNarration(VIDEO_HINT_LINE);
+  }
   // non-food stops earn an insider tip matched to the live weather/time
   if (poi.type !== "food") {
     const tip = pickLocalTip();
@@ -608,6 +617,7 @@ function routeOrigin() {
 function applyCourse(id) {
   state.courseId = id;
   state._videoHintShown = false; // re-point at Watch preview on each course's first spot
+  state._videoHintSpoken = false;
   const course = COURSES.find((c) => c.id === id);
   state.coursePois = state.pois.filter(course.pick);
   // user edits: ✕-removed stops drop out, dragged order wins over auto-routing
