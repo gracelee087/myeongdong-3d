@@ -6,7 +6,7 @@
 import fs from "node:fs";
 
 const KEY = (fs.readFileSync(".env", "utf8").match(/^ELEVENLABS_API_KEY=(.+)$/m) || [])[1]?.trim();
-const VOICE = "ZF6FPAbjXT4488VcRRnw"; // Amelia — must match netlify/functions/tts.js
+const VOICE = "FGY2WhTYpPnrIDTdsKH5"; // Laura — must match netlify/functions/tts.js (existing baked clips are Amelia; don't re-bake them)
 const MODEL = "eleven_turbo_v2_5";    // 0.5 credits/char — lets the whole demo path fit the quota
 
 const BEST = ["명동", "서울 명동성당", "명동교자", "왕비집", "남산케이블카", "남산골한옥마을",

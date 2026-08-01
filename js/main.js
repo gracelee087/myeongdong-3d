@@ -717,7 +717,7 @@ async function onCamPick(e) {
 }
 
 // ---------- the album: Gemini narrates your day, ElevenLabs speaks it ----------
-const ALBUM_VOICE = "ZF6FPAbjXT4488VcRRnw"; // "Amelia" — same expressive storyteller as the guide
+const ALBUM_VOICE = "FGY2WhTYpPnrIDTdsKH5"; // "Laura" — same live voice as the guide's unbaked lines
 function wxLabel(wx) {
   if (!wx) return "";
   return `${WX_EMOJI[wx.kind] || "☀️"} ${wx.temp != null ? wx.temp + "°" : wx.kind}`;

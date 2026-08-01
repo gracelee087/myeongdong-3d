@@ -1,6 +1,6 @@
 // ElevenLabs text-to-speech proxy. Keeps ELEVENLABS_API_KEY server-side.
 // POST { text, voiceId? } -> audio/mpeg
-const DEFAULT_VOICE = "ZF6FPAbjXT4488VcRRnw"; // "Amelia" — enthusiastic, expressive storyteller (ElevenLabs' most-used voice)
+const DEFAULT_VOICE = "FGY2WhTYpPnrIDTdsKH5"; // "Laura" — upbeat default voice (free API tier; Amelia is a library voice = paid-only, but the pre-baked clips keep her)
 const MODEL = "eleven_multilingual_v2";       // richer prosody than turbo (audio is cached, latency ok)
 
 export default async (req) => {
