@@ -62,8 +62,6 @@ const texts = [
   // turn-by-turn + arrival-side callouts (templates must match js/main.js)
   "Coming up — turn left.", "Coming up — turn right.",
   "Look to your left.", "Look to your right.",
-  // watch-preview pointer, spoken at each course's first video spot (VIDEO_HINT_LINE in main.js)
-  "By the way — tap the Watch preview button below this card to see a short video of this place before you step inside.",
 ];
 
 fs.mkdirSync("audio", { recursive: true });
