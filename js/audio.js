@@ -1,10 +1,10 @@
-// ElevenLabs narration playback with per-text caching and graceful fallback.
-// If TTS fails (no key / quota / network), we fall back to the browser's own
-// speech synthesis so the guide never goes silent.
+// ElevenLabs narration playback with per-text caching.
+// If TTS fails (no key / quota / network), the line is SKIPPED silently —
+// the card still shows its text, and silence beats the OS default voice
+// (often a Korean voice mangling English) reading the script.
 
 const cache = new Map(); // text -> objectURL
 let current = { audio: null, resolve: null };
-let speaking = false;
 let gen = 0; // bumped by stop(): a narration still fetching when stop() ran must never play
 let held = false; // pause() holds NEW clips too — multi-clip sequences must not talk through a pause
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -14,25 +14,6 @@ const hash = (s) => { let h = 5381; for (let i = 0; i < s.length; i++) h = ((h <
 let baked = {};
 fetch("./audio/manifest.json").then((r) => (r.ok ? r.json() : {})).then((m) => { baked = m; }).catch(() => {});
 const bakedUrl = (text) => { const f = baked[hash(text)]; return f ? "./audio/" + f : null; };
-
-// browser TTS fallback — robotic but never silent
-function speakFallback(text) {
-  return new Promise((resolve) => {
-    if (!("speechSynthesis" in window)) return setTimeout(resolve, 4000);
-    try {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      const voices = speechSynthesis.getVoices();
-      u.voice = voices.find((v) => /en[-_]/.test(v.lang) && /female|natural|samantha|zira|aria/i.test(v.name))
-        || voices.find((v) => /en[-_]/.test(v.lang)) || null;
-      u.rate = 0.98; u.pitch = 1.05;
-      speaking = true;
-      const done = () => { speaking = false; resolve(); };
-      u.onend = done; u.onerror = done;
-      speechSynthesis.speak(u);
-    } catch { setTimeout(resolve, 4000); }
-  });
-}
 
 export async function playNarration(text, { voiceId } = {}) {
   const g = gen;
@@ -48,10 +29,7 @@ export async function playNarration(text, { voiceId } = {}) {
       url = URL.createObjectURL(await res.blob());
       cache.set(text, url);
     } catch (e) {
-      if (g !== gen) return;
-      console.warn("[audio] TTS failed → browser voice fallback:", e.message);
-      stop();
-      await speakFallback(text);
+      console.warn("[audio] TTS unavailable — skipping this line:", e.message);
       return;
     }
   }
@@ -86,7 +64,6 @@ export function stop() {
   gen++;
   held = false;
   if (current.audio) current.audio.pause();
-  if (speaking) { try { speechSynthesis.cancel(); } catch { } speaking = false; }
   const r = current.resolve;
   current = { audio: null, resolve: null };
   if (r) r();
@@ -94,11 +71,9 @@ export function stop() {
 export function pause() {
   held = true;
   current.audio && current.audio.pause();
-  if (speaking) try { speechSynthesis.pause(); } catch { }
 }
 export function resume() {
   held = false;
   current.audio && current.audio.play().catch(() => {});
-  if (speaking) try { speechSynthesis.resume(); } catch { }
 }
-export function isPlaying() { return (!!current.audio && !current.audio.paused) || speaking; }
+export function isPlaying() { return !!current.audio && !current.audio.paused; }
