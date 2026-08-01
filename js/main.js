@@ -322,6 +322,19 @@ function showSpot(poi) {
   const vb = el("spotVideo");
   vb.textContent = poi.video ? "▶ Watch preview" : "▶ Preview";
   vb.onclick = () => openVideo(poi);
+  // first video spot of the session (왕비집 on the demo path): point out the tab
+  if (poi.video && !state._videoHintShown) {
+    state._videoHintShown = true;
+    const hint = document.createElement("div");
+    hint.className = "video-hint";
+    hint.textContent = "🎬 Tap below to watch a YouTube preview of this spot 👇";
+    document.querySelector(".spot-actions").appendChild(hint);
+    vb.classList.add("pulse");
+    const clear = () => { hint.remove(); vb.classList.remove("pulse"); };
+    hint.onclick = clear;
+    vb.addEventListener("click", clear, { once: true });
+    setTimeout(clear, 12000);
+  }
   el("spotGmap").href = gmapsUrl(poi);
   el("spotCard").classList.add("show");
 }
@@ -1506,6 +1519,7 @@ function wireControls() {
     el("sidebar").classList.toggle("folded");
     syncMobChips();
   });
+  el("homeBtn").addEventListener("click", () => location.reload());
   el("spotClose").addEventListener("click", (e) => { e.stopPropagation(); el("spotCard").classList.remove("show"); });
   el("videoClose").addEventListener("click", closeVideo);
   el("videoModal").addEventListener("click", (e) => { if (e.target === el("videoModal")) closeVideo(); });
