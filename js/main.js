@@ -322,9 +322,10 @@ function showSpot(poi) {
   const vb = el("spotVideo");
   vb.textContent = poi.video ? "▶ Watch preview" : "▶ Preview";
   vb.onclick = () => openVideo(poi);
-  // first video spot of the session (왕비집 on the demo path): point out the tab
+  // first video spot after picking a course: point out the preview tab
   if (poi.video && !state._videoHintShown) {
     state._videoHintShown = true;
+    document.querySelector(".spot-actions .video-hint")?.remove();
     const hint = document.createElement("div");
     hint.className = "video-hint";
     hint.textContent = "🎬 Tap below to watch a YouTube preview of this spot 👇";
@@ -333,7 +334,8 @@ function showSpot(poi) {
     const clear = () => { hint.remove(); vb.classList.remove("pulse"); };
     hint.onclick = clear;
     vb.addEventListener("click", clear, { once: true });
-    setTimeout(clear, 12000);
+    clearTimeout(state._videoHintTimer);
+    state._videoHintTimer = setTimeout(clear, 12000);
   }
   el("spotGmap").href = gmapsUrl(poi);
   el("spotCard").classList.add("show");
@@ -605,6 +607,7 @@ function routeOrigin() {
 }
 function applyCourse(id) {
   state.courseId = id;
+  state._videoHintShown = false; // re-point at Watch preview on each course's first spot
   const course = COURSES.find((c) => c.id === id);
   state.coursePois = state.pois.filter(course.pick);
   // user edits: ✕-removed stops drop out, dragged order wins over auto-routing
