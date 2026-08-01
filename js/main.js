@@ -339,12 +339,6 @@ function showSpot(poi) {
   }
   el("spotGmap").href = gmapsUrl(poi);
   el("spotCard").classList.add("show"); flagCardUpdate();
-  // touch devices: teach the swipe-away gesture until it's used once
-  if ("ontouchstart" in window && !state._userSwiped && !el("spotCard").classList.contains("min")) {
-    el("swipeHint").classList.add("show");
-    clearTimeout(state._swipeHintTimer);
-    state._swipeHintTimer = setTimeout(() => el("swipeHint").classList.remove("show"), 5000);
-  }
 }
 function showPhotoCard(ps) {
   el("spotType").textContent = "📸 PHOTO SPOT"; el("spotType").className = "badge beauty";
@@ -539,11 +533,7 @@ function showTipCard(n, tip) {
 }
 // ---------- mobile: swipe the card sideways → it tucks into an ⓘ chip ----------
 // narration keeps playing; new stops pulse the chip instead of re-opening the card
-function minimizeCard() {
-  state._userSwiped = true; // gesture learned — stop teaching it
-  el("swipeHint").classList.remove("show");
-  el("spotCard").classList.add("min"); el("cardMini").classList.add("show");
-}
+function minimizeCard() { el("spotCard").classList.add("min"); el("cardMini").classList.add("show"); }
 function restoreCard() { el("spotCard").classList.remove("min"); el("cardMini").classList.remove("show", "pulse"); }
 function flagCardUpdate() {
   if (!el("spotCard").classList.contains("min")) return;
@@ -1639,6 +1629,7 @@ function wireControls() {
       sx = sy = null; dragging = false;
     });
     el("cardMini").addEventListener("click", restoreCard);
+    el("spotMin").addEventListener("click", (e) => { e.stopPropagation(); minimizeCard(); });
   }
   el("videoClose").addEventListener("click", closeVideo);
   el("videoModal").addEventListener("click", (e) => { if (e.target === el("videoModal")) closeVideo(); });
